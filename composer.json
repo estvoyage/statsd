@@ -1,0 +1,11 @@
+{
+	"require": {
+		"atoum/atoum": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"seshat\\statsd\\world\\": "world",
+			"seshat\\statsd\\": "classes"
+		}
+	}
+}
