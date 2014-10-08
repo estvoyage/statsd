@@ -1,10 +1,10 @@
 <?php
 
-namespace seshat\statsd\connection;
+namespace estvoyage\statsd\connection;
 
 use
-	seshat\statsd\world\packet,
-	seshat\statsd\world\connection
+	estvoyage\statsd\world\packet,
+	estvoyage\statsd\world\connection
 ;
 
 class socket implements connection\socket

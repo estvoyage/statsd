@@ -1,6 +1,6 @@
 <?php
 
-namespace seshat\statsd\tests\units\connection\socket;
+namespace estvoyage\statsd\tests\units\connection\socket;
 
 require __DIR__ . '/../../../runner.php';
 
@@ -9,7 +9,7 @@ class writer extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->implements('seshat\statsd\world\connection\socket\writer')
+			->implements('estvoyage\statsd\world\connection\socket\writer')
 		;
 	}
 
@@ -43,7 +43,7 @@ class writer extends \atoum
 			)
 			->then
 				->exception(function() use ($data, $resource) { $this->testedInstance->writeOnResource($data, $resource); })
-					->isInstanceOf('seshat\statsd\connection\socket\writer\exception')
+					->isInstanceOf('estvoyage\statsd\connection\socket\writer\exception')
 					->hasMessage('Unable to write \'' . $data . '\'')
 		;
 	}

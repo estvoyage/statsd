@@ -1,6 +1,6 @@
 <?php
 
-namespace seshat\statsd\world\connection\socket;
+namespace estvoyage\statsd\world\connection\socket;
 
 interface writer
 {

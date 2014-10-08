@@ -1,11 +1,11 @@
 <?php
 
-namespace seshat\statsd\tests\units\value;
+namespace estvoyage\statsd\tests\units\value;
 
 require __DIR__ . '/../../runner.php';
 
 use
-	mock\seshat\statsd\world as statsd
+	mock\estvoyage\statsd\world as statsd
 ;
 
 class timing extends \atoum
@@ -13,7 +13,7 @@ class timing extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->extends('seshat\statsd\value')
+			->extends('estvoyage\statsd\value')
 		;
 	}
 
@@ -21,23 +21,23 @@ class timing extends \atoum
 	{
 		$this
 			->exception(function() { $this->newTestedInstance('x'); })
-				->isInstanceOf('seshat\statsd\value\timing\exception')
+				->isInstanceOf('estvoyage\statsd\value\timing\exception')
 				->hasMessage('Timing must be an integer greater than or equal to 0')
 
 			->exception(function() { $this->newTestedInstance(- rand(PHP_INT_MAX, -1)); })
-				->isInstanceOf('seshat\statsd\value\timing\exception')
+				->isInstanceOf('estvoyage\statsd\value\timing\exception')
 				->hasMessage('Timing must be an integer greater than or equal to 0')
 
 			->exception(function() { $this->newTestedInstance(uniqid()); })
-				->isInstanceOf('seshat\statsd\value\timing\exception')
+				->isInstanceOf('estvoyage\statsd\value\timing\exception')
 				->hasMessage('Timing must be an integer greater than or equal to 0')
 
 			->exception(function() { $this->newTestedInstance('1timing'); })
-				->isInstanceOf('seshat\statsd\value\timing\exception')
+				->isInstanceOf('estvoyage\statsd\value\timing\exception')
 				->hasMessage('Timing must be an integer greater than or equal to 0')
 
 			->exception(function() { $this->newTestedInstance(3.14); })
-				->isInstanceOf('seshat\statsd\value\timing\exception')
+				->isInstanceOf('estvoyage\statsd\value\timing\exception')
 				->hasMessage('Timing must be an integer greater than or equal to 0')
 		;
 	}

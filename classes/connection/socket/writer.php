@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\connection\socket;
+namespace estvoyage\statsd\connection\socket;
 
 use
-	seshat\statsd\world\connection\socket
+	estvoyage\statsd\world\connection\socket
 ;
 
 class writer implements socket\writer

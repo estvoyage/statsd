@@ -1,11 +1,11 @@
 <?php
 
-namespace seshat\statsd\tests\units;
+namespace estvoyage\statsd\tests\units;
 
 require __DIR__ . '/../runner.php';
 
 use
-	mock\seshat\statsd\world as statsd
+	mock\estvoyage\statsd\world as statsd
 ;
 
 class value extends \atoum
@@ -13,7 +13,7 @@ class value extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->implements('seshat\statsd\world\value')
+			->implements('estvoyage\statsd\world\value')
 		;
 	}
 
@@ -21,7 +21,7 @@ class value extends \atoum
 	{
 		$this
 			->exception(function() { $this->newTestedInstance(uniqid(), uniqid(), uniqid()); })
-				->isInstanceOf('seshat\statsd\value\exception')
+				->isInstanceOf('estvoyage\statsd\value\exception')
 				->hasMessage('Sample rate must be a float greater than 0.0')
 		;
 	}

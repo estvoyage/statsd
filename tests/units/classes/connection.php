@@ -1,13 +1,13 @@
 <?php
 
-namespace seshat\statsd\tests\units;
+namespace estvoyage\statsd\tests\units;
 
 require __DIR__ . '/../runner.php';
 
 use
-	seshat\statsd,
-	mock\seshat\statsd\world\packet,
-	mock\seshat\statsd\world\connection\socket
+	estvoyage\statsd,
+	mock\estvoyage\statsd\world\packet,
+	mock\estvoyage\statsd\world\connection\socket
 ;
 
 class connection extends \atoum
@@ -15,7 +15,7 @@ class connection extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->implements('seshat\statsd\world\connection')
+			->implements('estvoyage\statsd\world\connection')
 		;
 	}
 

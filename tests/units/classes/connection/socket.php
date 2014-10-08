@@ -1,12 +1,12 @@
 <?php
 
-namespace seshat\statsd\tests\units\connection;
+namespace estvoyage\statsd\tests\units\connection;
 
 require __DIR__ . '/../../runner.php';
 
 use
-	mock\seshat\statsd\world\packet,
-	mock\seshat\statsd\world\connection
+	mock\estvoyage\statsd\world\packet,
+	mock\estvoyage\statsd\world\connection
 ;
 
 class socket extends \atoum
@@ -14,7 +14,7 @@ class socket extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->implements('seshat\statsd\world\connection\socket')
+			->implements('estvoyage\statsd\world\connection\socket')
 		;
 	}
 
@@ -73,7 +73,7 @@ class socket extends \atoum
 			)
 			->then
 				->exception(function() use ($data, $host, $port) { $this->testedInstance->sendTo($data, $host, $port); })
-					->isInstanceOf('seshat\statsd\connection\socket\exception')
+					->isInstanceOf('estvoyage\statsd\connection\socket\exception')
 					->hasMessage('Unable to connect on host \'' . $host . '\' on port \'' . $port . '\': ' . $errorString)
 		;
 	}

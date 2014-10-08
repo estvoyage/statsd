@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\value;
+namespace estvoyage\statsd\value;
 
 use
-	seshat\statsd\world\value
+	estvoyage\statsd\world\value
 ;
 
 class exception extends \invalidArgumentException implements value\exception

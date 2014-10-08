@@ -1,10 +1,10 @@
 <?php
 
-namespace seshat\statsd\value\timing;
+namespace estvoyage\statsd\value\timing;
 
 use
-	seshat\statsd\value,
-	seshat\statsd\world\value\timing
+	estvoyage\statsd\value,
+	estvoyage\statsd\world\value\timing
 ;
 
 class exception extends value\exception implements timing\exception

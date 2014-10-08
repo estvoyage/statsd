@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\connection\socket;
+namespace estvoyage\statsd\connection\socket;
 
 use
-	seshat\statsd\world as statsd
+	estvoyage\statsd\world as statsd
 ;
 
 class exception extends \runtimeException implements statsd\connection\socket\exception

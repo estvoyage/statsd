@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\value;
+namespace estvoyage\statsd\value;
 
 use
-	seshat\statsd
+	estvoyage\statsd
 ;
 
 class timing extends statsd\value

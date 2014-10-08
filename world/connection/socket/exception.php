@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\world\connection\socket;
+namespace estvoyage\statsd\world\connection\socket;
 
 use
-	seshat\statsd\world as statsd
+	estvoyage\statsd\world as statsd
 ;
 
 interface exception extends statsd\exception

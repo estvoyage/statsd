@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\world\connection;
+namespace estvoyage\statsd\world\connection;
 
 use
-	seshat\statsd\world\packet
+	estvoyage\statsd\world\packet
 ;
 
 interface socket

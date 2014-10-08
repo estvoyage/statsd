@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd\world\value;
+namespace estvoyage\statsd\world\value;
 
 use
-	seshat\statsd\world as statsd
+	estvoyage\statsd\world as statsd
 ;
 
 interface exception extends statsd\exception

@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd;
+namespace estvoyage\statsd;
 
 use
-	seshat\statsd\world as statsd
+	estvoyage\statsd\world as statsd
 ;
 
 class packet implements statsd\packet

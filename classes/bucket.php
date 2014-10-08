@@ -1,9 +1,9 @@
 <?php
 
-namespace seshat\statsd;
+namespace estvoyage\statsd;
 
 use
-	seshat\statsd\world
+	estvoyage\statsd\world
 ;
 
 class bucket implements world\bucket

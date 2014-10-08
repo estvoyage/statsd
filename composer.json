@@ -4,8 +4,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"seshat\\statsd\\world\\": "world",
-			"seshat\\statsd\\": "classes"
+			"estvoyage\\statsd\\world\\": "world",
+			"estvoyage\\statsd\\": "classes"
 		}
 	}
 }

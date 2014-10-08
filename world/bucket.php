@@ -1,6 +1,6 @@
 <?php
 
-namespace seshat\statsd\world;
+namespace estvoyage\statsd\world;
 
 interface bucket
 {
