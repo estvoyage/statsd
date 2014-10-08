@@ -17,6 +17,15 @@ class value extends \atoum
 		;
 	}
 
+	function test__construct()
+	{
+		$this
+			->exception(function() { $this->newTestedInstance(uniqid(), uniqid(), uniqid()); })
+				->isInstanceOf('seshat\statsd\value\exception')
+				->hasMessage('Sample rate must be a float greater than 0.0')
+		;
+	}
+
 	function testSend()
 	{
 		$this
@@ -25,14 +34,14 @@ class value extends \atoum
 				$connection = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampleRate = uniqid())
+				$this->newTestedInstance($value = uniqid(), $type = uniqid(), 1)
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments($value, $type, $sampleRate, $connection, null)->once
+				->mock($bucket)->call('send')->withArguments($value, $type, 1, $connection, null)->once
 
 				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments($value, $type, $sampleRate, $connection, $timeout)->once
+				->mock($bucket)->call('send')->withArguments($value, $type, 1, $connection, $timeout)->once
 		;
 	}
 }
