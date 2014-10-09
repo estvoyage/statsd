@@ -3,6 +3,7 @@
 namespace estvoyage\statsd;
 
 use
+	estvoyage\statsd\value,
 	estvoyage\statsd\world as statsd
 ;
 
@@ -11,24 +12,19 @@ class value implements statsd\value
 	private
 		$value,
 		$type,
-		$sampleRate
+		$sampling
 	;
 
-	function __construct($value, $type, $sampleRate = 1)
+	function __construct($value, $type, $samplingValue = 1)
 	{
-		if (filter_var($sampleRate, FILTER_VALIDATE_FLOAT) === false || $sampleRate <= 0)
-		{
-			throw new value\exception('Sample rate must be a float greater than 0.0');
-		}
-
+		$this->sampling = new value\sampling($samplingValue);
 		$this->value = $value;
 		$this->type = $type;
-		$this->sampleRate = $sampleRate;
 	}
 
 	function send(statsd\bucket $bucket, statsd\connection $connection, $timeout = null)
 	{
-		$bucket->send($this->value, $this->type, $this->sampleRate, $connection, $timeout);
+		$bucket->sendWithSampling($this->value, $this->type, $this->sampling, $connection, $timeout);
 
 		return $this;
 	}

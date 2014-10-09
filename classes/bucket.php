@@ -23,4 +23,11 @@ class bucket implements world\bucket
 
 		return $this;
 	}
+
+	function sendWithSampling($value, $type, world\value\sampling $sampling, world\connection $connection, $timeout = null)
+	{
+		$sampling->send($this, $value, $type, $connection, $timeout);
+
+		return $this;
+	}
 }

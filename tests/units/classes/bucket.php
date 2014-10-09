@@ -39,4 +39,27 @@ class bucket extends \atoum
 				->mock($connection)->call('send')->withArguments($bucket, $value, $type, $sampleRate, $timeout)->once
 		;
 	}
+
+	function testSendWithSampling()
+	{
+		$this
+			->given(
+				$connection = new statsd\connection,
+				$sampling = new statsd\value\sampling,
+				$value = uniqid(),
+				$type = uniqid(),
+				$timeout = uniqid(),
+				$bucket = uniqid()
+			)
+			->if(
+				$this->newTestedInstance($bucket)
+			)
+			->then
+				->object($this->testedInstance->sendWithSampling($value, $type, $sampling, $connection))->isTestedInstance
+				->mock($sampling)->call('send')->withArguments($this->testedInstance, $value, $type, $connection, null)->once
+
+				->object($this->testedInstance->sendWithSampling($value, $type, $sampling, $connection, $timeout))->isTestedInstance
+				->mock($sampling)->call('send')->withArguments($this->testedInstance, $value, $type, $connection, $timeout)->once
+		;
+	}
 }
