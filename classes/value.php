@@ -15,9 +15,9 @@ class value implements statsd\value
 		$sampling
 	;
 
-	function __construct($value, $type, $samplingValue = 1)
+	function __construct($value, $type, statsd\value\sampling $sampling = null)
 	{
-		$this->sampling = new value\sampling($samplingValue);
+		$this->sampling = $sampling ?: new value\sampling;
 		$this->value = $value;
 		$this->type = $type;
 	}

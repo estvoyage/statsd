@@ -47,25 +47,18 @@ class timing extends \atoum
 				$connection = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance(0, $sampling = rand(0, PHP_INT_MAX))
+				$this->newTestedInstance(0)
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments(0, 't', new value\sampling($sampling), $connection, null)->once
+				->mock($bucket)->call('sendWithSampling')->withArguments(0, 't', new value\sampling, $connection, null)->once
 
 			->if(
-				$this->newTestedInstance($value = rand(1, PHP_INT_MAX), $sampling)
+				$this->newTestedInstance($value = rand(1, PHP_INT_MAX), $sampling = new statsd\value\sampling)
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, 't', new value\sampling($sampling), $connection, null)->once
-
-			->if(
-				$this->newTestedInstance($value = rand(0, PHP_INT_MAX), $sampling)
-			)
-			->then
-				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, 't', new value\sampling($sampling), $connection, $timeout)->once
+				->mock($bucket)->call('sendWithSampling')->withIdenticalArguments($value, 't', $sampling, $connection, null)->once
 		;
 	}
 }

@@ -18,15 +18,6 @@ class value extends \atoum
 		;
 	}
 
-	function test__construct()
-	{
-		$this
-			->exception(function() { $this->newTestedInstance(uniqid(), uniqid(), 'foo'); })
-				->isInstanceOf('estvoyage\statsd\value\sampling\exception')
-				->hasMessage('Sampling must be a float greater than 0.0')
-		;
-	}
-
 	function testSend()
 	{
 		$this
@@ -35,24 +26,21 @@ class value extends \atoum
 				$connection = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid(), 1)
+				$this->newTestedInstance($value = uniqid(), $type = uniqid())
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
 				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, new sampling, $connection, null)->once
 
-				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, new sampling, $connection, $timeout)->once
-
 			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = rand(1, PHP_INT_MAX))
+				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = new statsd\value\sampling)
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, new sampling($sampling), $connection, null)->once
+				->mock($bucket)->call('sendWithSampling')->withIdenticalArguments($value, $type, $sampling, $connection, null)->once
 
 				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, new sampling($sampling), $connection, $timeout)->once
+				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, $sampling, $connection, $timeout)->once
 		;
 	}
 }
