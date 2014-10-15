@@ -18,8 +18,19 @@ class value extends \atoum
 		;
 	}
 
-	function testUseSampling()
+	function testApplySampling()
 	{
+		$this
+			->given(
+				$callback = function($value) use (& $clone) { $clone = $value; }
+			)
+			->if(
+				$this->newTestedInstance($value = uniqid(), $type = uniqid())
+			)
+			->then
+				->object($this->testedInstance->applySampling($samplingValue = rand(1, PHP_INT_MAX), $callback))->isTestedInstance
+				->object($clone)->isEqualTo($this->newTestedInstance($value, $type, new sampling($samplingValue)))
+		;
 	}
 
 	function testSend()
@@ -34,7 +45,7 @@ class value extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments($value, $type, 1, $connection, null)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type, $connection, null)->once
 
 			->if(
 				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = new statsd\value\sampling),
@@ -42,10 +53,10 @@ class value extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withIdenticalArguments($value, $type, $samplingValue, $connection, null)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type . '|@' . $samplingValue, $connection, null)->once
 
 				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments($value, $type, $samplingValue, $connection, $timeout)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type . '|@' . $samplingValue, $connection, $timeout)->once
 		;
 	}
 }

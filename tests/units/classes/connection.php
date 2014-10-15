@@ -5,8 +5,6 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd,
-	mock\estvoyage\statsd\world\packet,
 	mock\estvoyage\statsd\world\connection\socket
 ;
 
@@ -36,11 +34,11 @@ class connection extends \atoum
 				$this->newTestedInstance($host, $port, $socket)
 			)
 			->then
-				->object($this->testedInstance->send($bucket, $value, $type, $sampleRate))->isTestedInstance
-				->mock($socket)->call('sendPacketTo')->withArguments(new statsd\packet($bucket, $value, $type, $sampleRate), $host, $port, null)->once
+				->object($this->testedInstance->send($data = uniqid()))->isTestedInstance
+				->mock($socket)->call('send')->withArguments($data, $host, $port, null)->once
 
-				->object($this->testedInstance->send($bucket, $value, $type, $sampleRate, $timeout))->isTestedInstance
-				->mock($socket)->call('sendPacketTo')->withArguments(new statsd\packet($bucket, $value, $type, $sampleRate), $host, $port, $timeout)->once
+				->object($this->testedInstance->send($data = uniqid(), $timeout))->isTestedInstance
+				->mock($socket)->call('send')->withArguments($data, $host, $port, $timeout)->once
 		;
 	}
 }

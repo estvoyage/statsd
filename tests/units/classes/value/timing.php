@@ -51,7 +51,7 @@ class timing extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments(0, 't', 1, $connection, null)->once
+				->mock($bucket)->call('send')->withArguments('0|t', $connection, null)->once
 
 			->if(
 				$this->newTestedInstance($value = rand(1, PHP_INT_MAX), $sampling = new statsd\value\sampling),
@@ -59,7 +59,7 @@ class timing extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withIdenticalArguments($value, 't', $samplingValue, $connection, null)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|t|@' . $samplingValue, $connection, null)->once
 		;
 	}
 }

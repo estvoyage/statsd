@@ -28,11 +28,4 @@ class sampling implements statsd\value\sampling
 
 		return $this;
 	}
-
-	function send(statsd\bucket $bucket, $value, $type, statsd\connection $connection, $timeout = null)
-	{
-		$bucket->send($value, $type, $this->value, $connection, $timeout);
-
-		return $this;
-	}
 }

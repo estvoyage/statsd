@@ -17,9 +17,9 @@ class bucket implements world\bucket
 		$this->value = $value;
 	}
 
-	function send($value, $type, $sampleRate, world\connection $connection, $timeout = null)
+	function send($value, world\connection $connection, $timeout = null)
 	{
-		$connection->send($this->value, $value, $type, $sampleRate, $timeout);
+		$connection->send($this->value . ':' . $value, $timeout);
 
 		return $this;
 	}

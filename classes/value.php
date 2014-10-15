@@ -40,7 +40,14 @@ class value implements statsd\value
 
 	function send(statsd\bucket $bucket, statsd\connection $connection, $timeout = null)
 	{
-		$bucket->send($this->value, $this->type, $this->sampling, $connection, $timeout);
+		$data = $this->value . '|' . $this->type;
+
+		if ($this->sampling != 1)
+		{
+			$data .= '|@' . $this->sampling;
+		}
+
+		$bucket->send($data, $connection, $timeout);
 
 		return $this;
 	}
