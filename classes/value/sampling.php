@@ -22,6 +22,13 @@ class sampling implements statsd\value\sampling
 		$this->value = $value;
 	}
 
+	function applyTo(statsd\value $value, callable $callback)
+	{
+		$value->applySampling($this->value, $callback);
+
+		return $this;
+	}
+
 	function send(statsd\bucket $bucket, $value, $type, statsd\connection $connection, $timeout = null)
 	{
 		$bucket->send($value, $type, $this->value, $connection, $timeout);

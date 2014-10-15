@@ -51,14 +51,15 @@ class timing extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments(0, 't', new value\sampling, $connection, null)->once
+				->mock($bucket)->call('send')->withArguments(0, 't', 1, $connection, null)->once
 
 			->if(
-				$this->newTestedInstance($value = rand(1, PHP_INT_MAX), $sampling = new statsd\value\sampling)
+				$this->newTestedInstance($value = rand(1, PHP_INT_MAX), $sampling = new statsd\value\sampling),
+				$this->calling($sampling)->applyTo = function($value, $callback) use (& $samplingValue) { $this->testedInstance->applySampling($samplingValue = uniqid(), $callback); }
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withIdenticalArguments($value, 't', $sampling, $connection, null)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value, 't', $samplingValue, $connection, null)->once
 		;
 	}
 }

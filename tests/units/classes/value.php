@@ -18,6 +18,10 @@ class value extends \atoum
 		;
 	}
 
+	function testUseSampling()
+	{
+	}
+
 	function testSend()
 	{
 		$this
@@ -30,17 +34,18 @@ class value extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, new sampling, $connection, null)->once
+				->mock($bucket)->call('send')->withArguments($value, $type, 1, $connection, null)->once
 
 			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = new statsd\value\sampling)
+				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = new statsd\value\sampling),
+				$this->calling($sampling)->applyTo = function($value, $callback) use (& $samplingValue) { $this->testedInstance->applySampling($samplingValue = uniqid(), $callback); }
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withIdenticalArguments($value, $type, $sampling, $connection, null)->once
+				->mock($bucket)->call('send')->withIdenticalArguments($value, $type, $samplingValue, $connection, null)->once
 
 				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('sendWithSampling')->withArguments($value, $type, $sampling, $connection, $timeout)->once
+				->mock($bucket)->call('send')->withArguments($value, $type, $samplingValue, $connection, $timeout)->once
 		;
 	}
 }

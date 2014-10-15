@@ -8,5 +8,5 @@ use
 
 interface sampling
 {
-	function send(statsd\bucket $bucket, $value, $type, statsd\connection $connection, $timeout = null);
+	function applyTo(statsd\value $value, callable $callback);
 }

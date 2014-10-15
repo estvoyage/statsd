@@ -26,6 +26,29 @@ class sampling extends \atoum
 		;
 	}
 
+	function testApplyTo()
+	{
+		$this
+			->given(
+				$value = new statsd\value,
+				$callback = function() {}
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->applyTo($value, $callback))->isTestedInstance
+				->mock($value)->call('applySampling')->withIdenticalArguments(1, $callback)->once
+
+			->if(
+				$this->newTestedInstance($samplingValue = rand(0, PHP_INT_MAX))
+			)
+			->then
+				->object($this->testedInstance->applyTo($value, $callback))->isTestedInstance
+				->mock($value)->call('applySampling')->withIdenticalArguments($samplingValue, $callback)->once
+		;
+	}
+
 	function testSend()
 	{
 		$this
