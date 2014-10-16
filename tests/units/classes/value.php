@@ -18,26 +18,13 @@ class value extends \atoum
 		;
 	}
 
-	function testApplySampling()
-	{
-		$this
-			->given(
-				$callback = function($value) use (& $clone) { $clone = $value; }
-			)
-			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid())
-			)
-			->then
-				->object($this->testedInstance->applySampling($samplingValue = rand(1, PHP_INT_MAX), $callback))->isTestedInstance
-				->object($clone)->isEqualTo($this->newTestedInstance($value, $type, new sampling($samplingValue)))
-		;
-	}
-
 	function testSend()
 	{
 		$this
 			->given(
 				$bucket = new statsd\bucket,
+				$sampling = new statsd\value\sampling,
+				$timeout = new statsd\connection\socket\timeout,
 				$connection = new statsd\connection
 			)
 			->if(
@@ -45,18 +32,13 @@ class value extends \atoum
 			)
 			->then
 				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type, $connection, null)->once
+				->mock($bucket)->call('send')->withArguments($value . '|' . $type, $connection, new sampling, null)->once
 
-			->if(
-				$this->newTestedInstance($value = uniqid(), $type = uniqid(), $sampling = new statsd\value\sampling),
-				$this->calling($sampling)->applyTo = function($value, $callback) use (& $samplingValue) { $this->testedInstance->applySampling($samplingValue = uniqid(), $callback); }
-			)
-			->then
-				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type . '|@' . $samplingValue, $connection, null)->once
+				->object($this->testedInstance->send($bucket, $connection, $sampling))->isTestedInstance
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type, $connection, $sampling, null)->once
 
-				->object($this->testedInstance->send($bucket, $connection, $timeout = uniqid()))->isTestedInstance
-				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type . '|@' . $samplingValue, $connection, $timeout)->once
+				->object($this->testedInstance->send($bucket, $connection, $sampling, $timeout))->isTestedInstance
+				->mock($bucket)->call('send')->withIdenticalArguments($value . '|' . $type, $connection, $sampling, $timeout)->once
 		;
 	}
 }

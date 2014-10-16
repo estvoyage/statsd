@@ -11,43 +11,18 @@ class value implements statsd\value
 {
 	private
 		$value,
-		$type,
-		$sampling
+		$type
 	;
 
-	function __construct($value, $type, statsd\value\sampling $sampling = null)
+	function __construct($value, $type)
 	{
 		$this->value = $value;
 		$this->type = $type;
-
-		$sampling = $sampling ?: new value\sampling;
-
-		$sampling->applyTo($this, function($value) {
-				$this->sampling = $value->sampling;
-			}
-		);
 	}
 
-	function applySampling($sampling, callable $callback)
+	function send(statsd\bucket $bucket, statsd\connection $connection, statsd\value\sampling $sampling = null, statsd\connection\socket\timeout $timeout = null)
 	{
-		$value = clone $this;
-		$value->sampling = $sampling;
-
-		$callback($value);
-
-		return $this;
-	}
-
-	function send(statsd\bucket $bucket, statsd\connection $connection, $timeout = null)
-	{
-		$data = $this->value . '|' . $this->type;
-
-		if ($this->sampling != 1)
-		{
-			$data .= '|@' . $this->sampling;
-		}
-
-		$bucket->send($data, $connection, $timeout);
+		$bucket->send($data = $this->value . '|' . $this->type, $connection, $sampling ?: new value\sampling, $timeout);
 
 		return $this;
 	}

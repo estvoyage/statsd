@@ -23,17 +23,18 @@ class bucket extends \atoum
 			->given(
 				$connection = new statsd\connection,
 				$value = uniqid(),
-				$timeout = uniqid()
+				$sampling = new statsd\value\sampling,
+				$timeout = new statsd\connection\socket\timeout
 			)
 			->if(
 				$this->newTestedInstance($bucket = uniqid())
 			)
 			->then
-				->object($this->testedInstance->send($value, $connection))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($bucket . ':' . $value, null)->once
+				->object($this->testedInstance->send($value, $connection, $sampling))->isTestedInstance
+				->mock($sampling)->call('send')->withArguments($bucket . ':' . $value, $connection, null)->once
 
-				->object($this->testedInstance->send($value, $connection, $timeout))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($bucket . ':' . $value, $timeout)->once
+				->object($this->testedInstance->send($value, $connection, $sampling, $timeout))->isTestedInstance
+				->mock($sampling)->call('send')->withIdenticalArguments($bucket . ':' . $value, $connection, $timeout)->once
 		;
 	}
 }

@@ -3,7 +3,7 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world
+	estvoyage\statsd\world as statsd
 ;
 
 class bucket implements world\bucket
@@ -17,9 +17,9 @@ class bucket implements world\bucket
 		$this->value = $value;
 	}
 
-	function send($value, world\connection $connection, $timeout = null)
+	function send($value, world\connection $connection, statsd\value\sampling $sampling, statsd\connection\socket\timeout $timeout = null)
 	{
-		$connection->send($this->value . ':' . $value, $timeout);
+		$sampling->send($this->value . ':' . $value, $connection, $timeout);
 
 		return $this;
 	}

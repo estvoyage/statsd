@@ -17,9 +17,9 @@ class client
 		$this->connection = $connection;
 	}
 
-	function sendValue(statsd\value $value, statsd\bucket $bucket, $timeout = null)
+	function send(statsd\bucket $bucket, statsd\value $value, statsd\value\sampling $sampling = null, statsd\connection\socket\timeout $timeout = null)
 	{
-		$value->send($bucket, $this->connection, $timeout);
+		$value->send($bucket, $this->connection, $sampling, $timeout);
 
 		return $this;
 	}

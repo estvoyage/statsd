@@ -10,22 +10,27 @@ use
 
 class client extends \atoum
 {
-	function testSendValue()
+	function testSend()
 	{
 		$this
 			->given(
 				$this->newTestedInstance($connection = new statsd\connection)
 			)
 			->if(
+				$bucket = new statsd\bucket,
 				$value = new statsd\value,
-				$bucket = new statsd\bucket
+				$sampling = new statsd\value\sampling,
+				$timeout = new statsd\connection\socket\timeout
 			)
 			->then
-				->object($this->testedInstance->sendValue($value, $bucket))->isTestedInstance
-				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, null)->once
+				->object($this->testedInstance->send($bucket, $value))->isTestedInstance
+				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, null, null)->once
 
-				->object($this->testedInstance->sendValue($value, $bucket, $timeout = uniqid()))->isTestedInstance
-				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, $timeout)->once
+				->object($this->testedInstance->send($bucket, $value, $sampling))->isTestedInstance
+				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, $sampling, null)->once
+
+				->object($this->testedInstance->send($bucket, $value, $sampling, $timeout))->isTestedInstance
+				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, $sampling, $timeout)->once
 		;
 	}
 }

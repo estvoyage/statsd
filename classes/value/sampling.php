@@ -22,9 +22,14 @@ class sampling implements statsd\value\sampling
 		$this->value = $value;
 	}
 
-	function applyTo(statsd\value $value, callable $callback)
+	function send($value, statsd\connection $connection, statsd\connection\socket\timeout $timeout = null)
 	{
-		$value->applySampling($this->value, $callback);
+		if ($this->value != 1)
+		{
+			$value .= '|@' . $this->value;
+		}
+
+		$connection->send($value, $timeout);
 
 		return $this;
 	}

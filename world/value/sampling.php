@@ -8,5 +8,5 @@ use
 
 interface sampling
 {
-	function applyTo(statsd\value $value, callable $callback);
+	function send($value, statsd\connection $connection, statsd\connection\socket\timeout $timeout = null);
 }

@@ -26,26 +26,37 @@ class sampling extends \atoum
 		;
 	}
 
-	function testApplyTo()
+	function testSend()
 	{
 		$this
 			->given(
-				$value = new statsd\value,
-				$callback = function() {}
+				$connection = new statsd\connection,
+				$value = uniqid(),
+				$timeout = new statsd\connection\socket\timeout
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->applyTo($value, $callback))->isTestedInstance
-				->mock($value)->call('applySampling')->withIdenticalArguments(1, $callback)->once
+				->object($this->testedInstance->send($value, $connection))->isTestedInstance
+				->mock($connection)->call('send')->withArguments($value, null)->once
 
 			->if(
-				$this->newTestedInstance($samplingValue = rand(0, PHP_INT_MAX))
+				$this->newTestedInstance(1.1)
 			)
 			->then
-				->object($this->testedInstance->applyTo($value, $callback))->isTestedInstance
-				->mock($value)->call('applySampling')->withIdenticalArguments($samplingValue, $callback)->once
+				->object($this->testedInstance->send($value, $connection))->isTestedInstance
+				->mock($connection)->call('send')->withArguments($value . '|@1.1', null)->once
+
+			->if(
+				$this->newTestedInstance(0.9)
+			)
+			->then
+				->object($this->testedInstance->send($value, $connection))->isTestedInstance
+				->mock($connection)->call('send')->withArguments($value . '|@0.9', null)->once
+
+				->object($this->testedInstance->send($value, $connection, $timeout))->isTestedInstance
+				->mock($connection)->call('send')->withArguments($value . '|@0.9', $timeout)->once
 		;
 	}
 }
