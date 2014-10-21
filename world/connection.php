@@ -4,5 +4,9 @@ namespace estvoyage\statsd\world;
 
 interface connection
 {
-	function send($value, $timeout);
+	function open(callable $callback);
+	function startPacket(callable $callback);
+	function write($data, callable $callback);
+	function endPacket(callable $callback);
+	function close(callable $callback);
 }

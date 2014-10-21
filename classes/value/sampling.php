@@ -12,24 +12,22 @@ class sampling implements statsd\value\sampling
 		$value
 	;
 
-	function __construct($value = 1)
+	function __construct($value = null)
 	{
-		if (filter_var($value, FILTER_VALIDATE_FLOAT) === false || $value <= 0)
+		if ($value !== null && (filter_var($value, FILTER_VALIDATE_FLOAT) === false || $value <= 0))
 		{
 			throw new sampling\exception('Sampling must be a float greater than 0.0');
 		}
 
-		$this->value = $value;
+		$this->value = $value ?: 1;
 	}
 
-	function send($value, statsd\connection $connection, statsd\connection\socket\timeout $timeout = null)
+	function writeOn(statsd\connection $connection, callable $callback)
 	{
 		if ($this->value != 1)
 		{
-			$value .= '|@' . $this->value;
+			$connection->write('|@' . $this->value, $callback);
 		}
-
-		$connection->send($value, $timeout);
 
 		return $this;
 	}

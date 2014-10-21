@@ -17,9 +17,14 @@ class bucket implements world\bucket
 		$this->value = $value;
 	}
 
-	function send($value, world\connection $connection, statsd\value\sampling $sampling, statsd\connection\socket\timeout $timeout = null)
+	function writeOn(statsd\connection $connection, callable $callback)
 	{
-		$sampling->send($this->value . ':' . $value, $connection, $timeout);
+		$connection
+			->startPacket(function($connection) use ($callback) {
+					$connection->write($this->value . ':', $callback);
+				}
+			)
+		;
 
 		return $this;
 	}

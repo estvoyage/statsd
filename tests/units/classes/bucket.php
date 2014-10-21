@@ -17,24 +17,28 @@ class bucket extends \atoum
 		;
 	}
 
-	function testSend()
+	function testWriteOn()
 	{
 		$this
 			->given(
-				$connection = new statsd\connection,
-				$value = uniqid(),
-				$sampling = new statsd\value\sampling,
-				$timeout = new statsd\connection\socket\timeout
+				$bucket = uniqid(),
+				$callback = function($connection) use (& $connectionAfterWriteOn) { $connectionAfterWriteOn = $connection; },
+				$connection = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance($bucket = uniqid())
+				$this->calling($connection)->startPacket = function($callback) use (& $connectionAfterStartPacket) { $callback($connectionAfterStartPacket); },
+				$connectionAfterStartPacket = new statsd\connection,
+
+				$this->calling($connectionAfterStartPacket)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
+				$connectionWrited = new statsd\connection,
+
+				$this->newTestedInstance($bucket)
 			)
 			->then
-				->object($this->testedInstance->send($value, $connection, $sampling))->isTestedInstance
-				->mock($sampling)->call('send')->withArguments($bucket . ':' . $value, $connection, null)->once
-
-				->object($this->testedInstance->send($value, $connection, $sampling, $timeout))->isTestedInstance
-				->mock($sampling)->call('send')->withIdenticalArguments($bucket . ':' . $value, $connection, $timeout)->once
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('startPacket')->once
+				->mock($connectionAfterStartPacket)->call('write')->withIdenticalArguments($bucket . ':', $callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
 		;
 	}
 }

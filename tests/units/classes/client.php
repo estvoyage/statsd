@@ -14,23 +14,15 @@ class client extends \atoum
 	{
 		$this
 			->given(
-				$this->newTestedInstance($connection = new statsd\connection)
+				$connection = new statsd\connection,
+				$packet = new statsd\packet
 			)
 			->if(
-				$bucket = new statsd\bucket,
-				$value = new statsd\value,
-				$sampling = new statsd\value\sampling,
-				$timeout = new statsd\connection\socket\timeout
+				$this->newTestedInstance($connection)
 			)
 			->then
-				->object($this->testedInstance->send($bucket, $value))->isTestedInstance
-				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, null, null)->once
-
-				->object($this->testedInstance->send($bucket, $value, $sampling))->isTestedInstance
-				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, $sampling, null)->once
-
-				->object($this->testedInstance->send($bucket, $value, $sampling, $timeout))->isTestedInstance
-				->mock($value)->call('send')->withIdenticalArguments($bucket, $connection, $sampling, $timeout)->once
+				->object($this->testedInstance->send($packet))->isTestedInstance
+				->mock($packet)->call('writeOn')->withIdenticalArguments($connection)->once
 		;
 	}
 }

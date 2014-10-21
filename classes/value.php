@@ -20,9 +20,14 @@ class value implements statsd\value
 		$this->type = $type;
 	}
 
-	function send(statsd\bucket $bucket, statsd\connection $connection, statsd\value\sampling $sampling = null, statsd\connection\socket\timeout $timeout = null)
+	function writeOn(statsd\connection $connection, callable $callback)
 	{
-		$bucket->send($data = $this->value . '|' . $this->type, $connection, $sampling ?: new value\sampling, $timeout);
+		$connection
+			->write($this->value . '|' . $this->type, function($connection) use ($callback) {
+					$connection->endPacket($callback);
+				}
+			)
+		;
 
 		return $this;
 	}

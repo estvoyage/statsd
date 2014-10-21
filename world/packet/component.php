@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\world\value;
+namespace estvoyage\statsd\world\packet;
 
 use
 	estvoyage\statsd\world as statsd
 ;
 
-interface sampling extends statsd\packet\component
+interface component
 {
 	function writeOn(statsd\connection $connection, callable $callback);
 }

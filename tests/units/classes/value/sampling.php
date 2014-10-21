@@ -20,43 +20,45 @@ class sampling extends \atoum
 	function test__construct()
 	{
 		$this
-			->exception(function() { $this->newTestedInstance(uniqid()); })
+			->exception(function() { $this->newTestedInstance(-0.1); })
 				->isInstanceOf('estvoyage\statsd\value\sampling\exception')
 				->hasMessage('Sampling must be a float greater than 0.0')
 		;
 	}
 
-	function testSend()
+	function testWriteOn()
 	{
 		$this
 			->given(
+				$callback = function($connection) use (& $connectionAfterWriteOn) { $connectionAfterWriteOn = $connection; },
+
 				$connection = new statsd\connection,
-				$value = uniqid(),
-				$timeout = new statsd\connection\socket\timeout
+				$this->calling($connection)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
+
+				$connectionWrited = new statsd\connection
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->send($value, $connection))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($value, null)->once
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('write')->never
 
 			->if(
 				$this->newTestedInstance(1.1)
 			)
 			->then
-				->object($this->testedInstance->send($value, $connection))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($value . '|@1.1', null)->once
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('write')->withIdenticalArguments('|@1.1', $callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
 
 			->if(
 				$this->newTestedInstance(0.9)
 			)
 			->then
-				->object($this->testedInstance->send($value, $connection))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($value . '|@0.9', null)->once
-
-				->object($this->testedInstance->send($value, $connection, $timeout))->isTestedInstance
-				->mock($connection)->call('send')->withArguments($value . '|@0.9', $timeout)->once
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('write')->withIdenticalArguments('|@0.9', $callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
 		;
 	}
 }

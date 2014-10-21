@@ -14,7 +14,7 @@ class timing extends \atoum
 	function testClass()
 	{
 		$this->testedClass
-			->extends('estvoyage\statsd\value')
+			->implements('estvoyage\statsd\world\value')
 		;
 	}
 
@@ -39,27 +39,29 @@ class timing extends \atoum
 		;
 	}
 
-	function testSend()
+	function testWriteOn()
 	{
 		$this
 			->given(
-				$bucket = new statsd\bucket,
 				$connection = new statsd\connection,
-				$sampling = new statsd\value\sampling,
-				$timeout = new statsd\connection\socket\timeout
+				$callback = function($connection) use (& $connectionAfterWriteOn) { $connectionAfterWriteOn = $connection; },
+				$value = rand(0, PHP_INT_MAX)
 			)
 			->if(
-				$this->newTestedInstance(0)
+				$this->calling($connection)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
+				$connectionWrited = new statsd\connection,
+
+				$this->calling($connectionWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
+				$connectionAfterEndPacket = new statsd\connection,
+
+				$this->newTestedInstance($value)
 			)
 			->then
-				->object($this->testedInstance->send($bucket, $connection))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments('0|t', $connection, new value\sampling, null)->once
-
-				->object($this->testedInstance->send($bucket, $connection, $sampling))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments('0|t', $connection, $sampling, null)->once
-
-				->object($this->testedInstance->send($bucket, $connection, $sampling, $timeout))->isTestedInstance
-				->mock($bucket)->call('send')->withArguments('0|t', $connection, $sampling, $timeout)->once
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('write')->withArguments($value . '|t')->once
+				->mock($connectionWrited)->call('endPacket')->withIdenticalArguments($callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
 		;
+
 	}
 }
