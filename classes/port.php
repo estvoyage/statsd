@@ -14,6 +14,11 @@ class port implements statsd\port
 
 	function __construct($port)
 	{
+		if (! $port || $port < 0 || $port > 65535 || filter_var($port, FILTER_VALIDATE_INT) === false)
+		{
+			throw new port\exception('\'' . $port . '\' is not a valid port');
+		}
+
 		$this->port = $port;
 	}
 

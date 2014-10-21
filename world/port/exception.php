@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd\world\socket;
+namespace estvoyage\statsd\world\port;
 
 use
 	estvoyage\statsd\world as statsd
