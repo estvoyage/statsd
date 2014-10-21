@@ -15,7 +15,7 @@ class address implements statsd\address
 
 	function __construct(statsd\host $host = null, statsd\port $port = null)
 	{
-		$this->host = $host ?: new host('127.0.0.1');
+		$this->host = $host ?: new host\localhost;
 		$this->port = $port ?: new port\statsd;
 	}
 
