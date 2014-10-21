@@ -26,12 +26,20 @@ class address extends \atoum
 				$socket = new statsd\socket,
 				$callback = function() {}
 			)
+
 			->if(
 				$this->newTestedInstance($host, $port)
 			)
 			->then
 				->object($this->testedInstance->openSocket($socket, $callback))->isTestedInstance
 				->mock($host)->call('openSocket')->withIdenticalArguments($socket, $port, $callback)->once
+
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->openSocket($socket, $callback))->isTestedInstance
+				->mock($socket)->call('open')->withIdenticalArguments('127.0.0.1', 8125, $callback)->once
 		;
 	}
 }

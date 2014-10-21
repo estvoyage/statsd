@@ -13,10 +13,10 @@ class address implements statsd\address
 		$port
 	;
 
-	function __construct(statsd\host $host, statsd\port $port)
+	function __construct(statsd\host $host = null, statsd\port $port = null)
 	{
-		$this->host = $host;
-		$this->port = $port;
+		$this->host = $host ?: new host('127.0.0.1');
+		$this->port = $port ?: new port(8125);
 	}
 
 	function openSocket(statsd\socket $socket, callable $callback)
