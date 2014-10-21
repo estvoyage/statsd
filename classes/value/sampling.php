@@ -24,10 +24,7 @@ class sampling implements statsd\value\sampling
 
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
-		if ($this->value != 1)
-		{
-			$connection->write('|@' . $this->value, $callback);
-		}
+		$connection->write($this->value == 1 ? '' : '|@' . $this->value, $callback);
 
 		return $this;
 	}

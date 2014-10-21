@@ -25,13 +25,17 @@ class value extends \atoum
 				$connection = new statsd\connection,
 				$callback = function($connection) use (& $connectionAfterWriteOn) { $connectionAfterWriteOn = $connection; },
 				$value = uniqid(),
-				$type = uniqid()
+				$type = uniqid(),
+				$sampling = new statsd\value\sampling
 			)
 			->if(
-				$this->calling($connection)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
-				$connectionWrited = new statsd\connection,
+				$this->calling($connection)->write = function($data, $callback) use (& $connectionWithValueWrited) { $callback($connectionWithValueWrited); },
+				$connectionWithValueWrited = new statsd\connection,
 
-				$this->calling($connectionWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
+				$this->calling($connectionWithValueWrited)->write = function($data, $callback) use (& $connectionWithSamplingWrited) { $callback($connectionWithSamplingWrited); },
+				$connectionWithSamplingWrited = new statsd\connection,
+
+				$this->calling($connectionWithSamplingWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
 				$connectionAfterEndPacket = new statsd\connection,
 
 				$this->newTestedInstance($value, $type)
@@ -39,7 +43,19 @@ class value extends \atoum
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('write')->withArguments($value . '|' . $type)->once
-				->mock($connectionWrited)->call('endPacket')->withIdenticalArguments($callback)->once
+				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('')->once
+				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
+
+			->if(
+				$this->calling($sampling)->writeOn = function($connection, $callback) use ($connectionWithSamplingWrited) { $connection->write('|@1.1', $callback); },
+				$this->newTestedInstance($value, $type, $sampling)
+			)
+			->then
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('write')->withArguments($value . '|' . $type)->twice
+				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('|@1.1')->once
+				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->twice
 				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
 		;
 	}

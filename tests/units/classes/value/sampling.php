@@ -42,7 +42,7 @@ class sampling extends \atoum
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->never
+				->mock($connection)->call('write')->withIdenticalArguments('', $callback)->once
 
 			->if(
 				$this->newTestedInstance(1.1)

@@ -11,20 +11,27 @@ class value implements statsd\value
 {
 	private
 		$value,
-		$type
+		$type,
+		$sampling
 	;
 
-	function __construct($value, $type)
+	function __construct($value, $type, statsd\value\sampling $sampling = null)
 	{
 		$this->value = $value;
 		$this->type = $type;
+		$this->sampling = $sampling ?: new value\sampling;
 	}
 
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
 		$connection
 			->write($this->value . '|' . $this->type, function($connection) use ($callback) {
-					$connection->endPacket($callback);
+					$this->sampling
+						->writeOn($connection, function($connection) use ($callback) {
+								$connection->endPacket($callback);
+							}
+						)
+					;
 				}
 			)
 		;
