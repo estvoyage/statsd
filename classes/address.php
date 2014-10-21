@@ -16,7 +16,7 @@ class address implements statsd\address
 	function __construct(statsd\host $host = null, statsd\port $port = null)
 	{
 		$this->host = $host ?: new host('127.0.0.1');
-		$this->port = $port ?: new port(8125);
+		$this->port = $port ?: new port\statsd;
 	}
 
 	function openSocket(statsd\socket $socket, callable $callback)
