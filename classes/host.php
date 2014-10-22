@@ -15,6 +15,11 @@ class host implements statsd\host
 
 	function __construct($host)
 	{
+		if (! preg_match('/^[0-9a-z][0-9a-z-]{0,62}(?:\.[0-9a-z-]{1,63}){0,3}$/i', $host))
+		{
+			throw new host\exception('\'' . $host . '\' is not a valid host');
+		}
+
 		$this->host = $host;
 	}
 

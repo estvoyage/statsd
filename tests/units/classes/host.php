@@ -17,6 +17,35 @@ class host extends \atoum
 		;
 	}
 
+	function test__construct()
+	{
+		$this
+			->exception(function() { $this->newTestedInstance(''); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'\' is not a valid host')
+
+			->exception(function() { $this->newTestedInstance('-'); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'-\' is not a valid host')
+
+			->exception(function() { $this->newTestedInstance('a b'); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'a b\' is not a valid host')
+
+			->exception(function() { $this->newTestedInstance('a,b'); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'a,b\' is not a valid host')
+
+			->exception(function() use (& $host) { $this->newTestedInstance($host = str_repeat('a', 64)); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'' . $host . '\' is not a valid host')
+
+			->exception(function() use (& $host) { $this->newTestedInstance($host = str_repeat('a', 63) . '.' . str_repeat('b', 63) . '.' . str_repeat('c', 63) . '.' . str_repeat('d', 64)); })
+				->isInstanceOf('estvoyage\statsd\host\exception')
+				->hasMessage('\'' . $host . '\' is not a valid host')
+		;
+	}
+
 	function testOpenSocket()
 	{
 		$this
@@ -26,11 +55,11 @@ class host extends \atoum
 				$callback = function() {}
 			)
 			->if(
-				$this->newTestedInstance('http://foo.bar')
+				$this->newTestedInstance('foo.bar')
 			)
 			->then
 				->object($this->testedInstance->openSocket($socket, $port, $callback))->isTestedInstance
-				->mock($port)->call('openSocket')->withIdenticalArguments($socket, 'http://foo.bar', $callback)->once
+				->mock($port)->call('openSocket')->withIdenticalArguments($socket, 'foo.bar', $callback)->once
 		;
 	}
 }
