@@ -10,23 +10,27 @@ class connection implements statsd\connection
 {
 	private
 		$buffer,
-		$socket,
-		$address
+		$socket
 	;
 
 	function __construct(statsd\address $address)
 	{
 		$this->buffer = '';
-		$this->socket = new socket;
-		$this->address = $address;
+
+		$address
+			->openSocket(new socket, function($socket) {
+					$this->socket = $socket;
+				}
+			)
+		;
 	}
 
-	function open(callable $callback)
+	function open(statsd\address $address, callable $callback)
 	{
 		$connection = clone $this;
 
-		$connection->address
-			->openSocket($connection->socket, function($socket) use ($connection) {
+		$address
+			->openSocket(new socket, function($socket) use ($connection) {
 					$connection->socket = $socket;
 				}
 			)
@@ -59,20 +63,12 @@ class connection implements statsd\connection
 
 	function endPacket(callable $callback)
 	{
-		$this
-			->open(function($connection) use ($callback) {
-					$connection
-						->socket
-							->write($connection->buffer)
-					;
+		$this->socket->write($this->buffer);
 
-					$connection = clone $connection;
-					$connection->buffer = '';
+		$connection = clone $this;
+		$connection->buffer = '';
 
-					$callback($connection);
-				}
-			)
-		;
+		$callback($connection);
 
 		return $this;
 	}

@@ -22,16 +22,18 @@ class connection extends \atoum
 	{
 		$this
 			->given(
-				$address = new statsd\address
+				$address = new statsd\address,
+				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); },
+				$this->newTestedInstance($address),
+				$callback = function($connection) use (& $openedConnection) { $openedConnection = $connection; }
 			)
 			->if(
-				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); },
-				$callback = function($connection) use (& $openedConnection) { $openedConnection = $connection; },
-				$this->newTestedInstance($address)
+				$otherAddress = new statsd\address,
+				$this->calling($otherAddress)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); }
 			)
 			->then
-				->object($this->testedInstance->open($callback))->isTestedInstance
-				->mock($address)->call('openSocket')->withArguments(new socket)->once
+				->object($this->testedInstance->open($otherAddress, $callback))->isTestedInstance
+				->mock($otherAddress)->call('openSocket')->withArguments(new socket)->once
 				->object($openedConnection)
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
@@ -63,8 +65,7 @@ class connection extends \atoum
 				$address = new statsd\address
 			)
 			->if(
-				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket); },
-				$openedSocket = new statsd\socket,
+				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); },
 				$this->newTestedInstance($address)
 			)
 			->then
