@@ -96,4 +96,26 @@ class connection extends \atoum
 				->mock($openedSocket)->call('write')->withArguments('')->thrice
 		;
 	}
+
+	function testClose()
+	{
+		$this
+			->given(
+				$callback = function($connection) use (& $connectionAfterClose) { $connectionAfterClose = $connection; },
+				$address = new statsd\address,
+				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket); },
+				$openedSocket = new statsd\socket,
+				$this->newTestedInstance($address)
+			)
+			->if(
+				$this->calling($openedSocket)->close = function($callback) { $callback(new statsd\socket); }
+			)
+			->then
+				->object($this->testedInstance->close($callback))->isTestedInstance
+				->object($connectionAfterClose)
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
+				->mock($openedSocket)->call('close')->once
+		;
+	}
 }
