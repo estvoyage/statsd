@@ -18,6 +18,21 @@ class connection extends \atoum
 		;
 	}
 
+	function test__construct()
+	{
+		$this
+			->given(
+				$address = new statsd\address,
+				$this->calling($address)->openSocket = function($socket, $callback) { $callback(new statsd\socket); }
+			)
+			->if(
+				$this->newTestedInstance($address)
+			)
+			->then
+				->mock($address)->call('openSocket')->withArguments(new socket)->once
+		;
+	}
+
 	function testOpen()
 	{
 		$this
