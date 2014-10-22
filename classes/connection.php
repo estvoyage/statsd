@@ -15,28 +15,14 @@ class connection implements statsd\connection
 
 	function __construct(statsd\address $address)
 	{
-		$this->buffer = '';
-
-		$address
-			->openSocket(new socket, function($socket) {
-					$this->socket = $socket;
-				}
-			)
-		;
+		$this->openSocket($address)->buffer = '';
 	}
 
 	function open(statsd\address $address, callable $callback)
 	{
 		$connection = clone $this;
 
-		$address
-			->openSocket(new socket, function($socket) use ($connection) {
-					$connection->socket = $socket;
-				}
-			)
-		;
-
-		$callback($connection);
+		$callback($connection->openSocket($address));
 
 		return $this;
 	}
@@ -85,6 +71,25 @@ class connection implements statsd\connection
 		;
 
 		$callback($connection);
+
+		return $this;
+	}
+
+	private function openSocket(statsd\address $address)
+	{
+		try
+		{
+			$address
+				->openSocket(new socket, function($socket) {
+						$this->socket = $socket;
+					}
+				)
+			;
+		}
+		catch (\exception $exception)
+		{
+			throw new connection\exception('Unable to open connection');
+		}
 
 		return $this;
 	}

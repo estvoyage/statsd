@@ -30,6 +30,14 @@ class connection extends \atoum
 			)
 			->then
 				->mock($address)->call('openSocket')->withArguments(new socket)->once
+
+			->if(
+				$this->calling($address)->openSocket->throw = new \exception(uniqid())
+			)
+			->then
+				->exception(function() use ($address) { $this->newTestedInstance($address); })
+					->isInstanceOf('estvoyage\statsd\connection\exception')
+					->hasMessage('Unable to open connection')
 		;
 	}
 
@@ -52,6 +60,14 @@ class connection extends \atoum
 				->object($openedConnection)
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
+
+			->if(
+				$this->calling($otherAddress)->openSocket->throw = new \exception(uniqid())
+			)
+			->then
+				->exception(function() use ($otherAddress) { $this->testedInstance->open($otherAddress, function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\exception')
+					->hasMessage('Unable to open connection')
 		;
 	}
 
