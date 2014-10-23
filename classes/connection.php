@@ -14,9 +14,9 @@ class connection implements statsd\connection
 		$socket
 	;
 
-	function __construct(statsd\address $address)
+	function __construct(statsd\address $address, statsd\connection\mtu $mtu = null)
 	{
-		$this->openSocket($address)->mtu = new connection\mtu(512);
+		$this->openSocket($address)->mtu = $mtu ?: new connection\mtu(512);
 	}
 
 	function open(statsd\address $address, callable $callback)
@@ -45,15 +45,22 @@ class connection implements statsd\connection
 
 	function write($data, callable $callback)
 	{
-		$this->mtu
-			->add($data, function($mtu) use ($callback) {
-					$connection = clone $this;
-					$connection->mtu = $mtu;
+		try
+		{
+			$this->mtu
+				->add($data, function($mtu) use ($callback) {
+						$connection = clone $this;
+						$connection->mtu = $mtu;
 
-					$callback($connection);
-				}
-			)
-		;
+						$callback($connection);
+					}
+				)
+			;
+		}
+		catch (\exception $exception)
+		{
+			throw new connection\exception('MTU size exceeded');
+		}
 
 		return $this;
 	}
