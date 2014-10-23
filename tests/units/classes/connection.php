@@ -116,6 +116,9 @@ class connection extends \atoum
 				->object($connectionAfterWrite)
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
+				->exception(function() { $this->testedInstance->write(str_repeat('a', 513), function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\exception')
+					->hasMessage('MTU size exceeded')
 
 			->given(
 				$mtu = new statsd\connection\mtu,
