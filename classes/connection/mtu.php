@@ -23,6 +23,16 @@ class mtu implements statsd\connection\mtu
 		$this->size = $size;
 	}
 
+	function reset(callable $callable)
+	{
+		$mtu = clone $this;
+		$mtu->buffer = '';
+
+		$callable($mtu);
+
+		return $this;
+	}
+
 	function add($data, callable $callback)
 	{
 		if (strlen($this->buffer . $data) > $this->size)

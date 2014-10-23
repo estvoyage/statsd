@@ -50,6 +50,31 @@ class mtu extends \atoum
 		;
 	}
 
+	function testReset()
+	{
+		$this
+			->given(
+				$callback = function($mtu) use (& $mtuAfterReset) { $mtuAfterReset = $mtu; }
+			)
+			->if(
+				$this->newTestedInstance(rand(1, PHP_INT_MAX))
+			)
+			->then
+				->object($this->testedInstance->reset($callback))->isTestedInstance
+				->object($mtuAfterReset)
+					->isNotTestedInstance
+
+			->if(
+				$this->newTestedInstance(rand(1, PHP_INT_MAX))->add('a', function($mtu) use (& $mtuAfterAdd) { $mtuAfterAdd = $mtu; })
+			)
+			->then
+				->object($mtuAfterAdd->reset(function($mtu) use (& $socket, & $mtuAfterReset) { $mtu = $mtuAfterReset; $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isIdenticalTo($mtuAfterAdd)
+				->object($mtuAfterReset)
+					->isNotTestedInstance
+				->mock($socket)->call('write')->withIdenticalArguments('')->once
+		;
+	}
+
 	function testWriteOn()
 	{
 		$this

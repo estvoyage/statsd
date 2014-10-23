@@ -3,19 +3,20 @@
 namespace estvoyage\statsd;
 
 use
+	estvoyage\statsd\connection,
 	estvoyage\statsd\world as statsd
 ;
 
 class connection implements statsd\connection
 {
 	private
-		$buffer,
+		$mtu,
 		$socket
 	;
 
 	function __construct(statsd\address $address)
 	{
-		$this->openSocket($address)->buffer = '';
+		$this->openSocket($address)->mtu = new connection\mtu(512);
 	}
 
 	function open(statsd\address $address, callable $callback)
@@ -29,48 +30,60 @@ class connection implements statsd\connection
 
 	function startPacket(callable $callback)
 	{
-		$connection = clone $this;
-		$connection->buffer = '';
+		$this->mtu
+			->reset(function($mtu) use ($callback) {
+					$connection = clone $this;
+					$connection->mtu = $mtu;
 
-		$callback($connection);
+					$callback($connection);
+				}
+			)
+		;
 
 		return $this;
 	}
 
 	function write($data, callable $callback)
 	{
-		$connection = clone $this;
-		$connection->buffer .= $data;
+		$this->mtu
+			->add($data, function($mtu) use ($callback) {
+					$connection = clone $this;
+					$connection->mtu = $mtu;
 
-		$callback($connection);
+					$callback($connection);
+				}
+			)
+		;
 
 		return $this;
 	}
 
 	function endPacket(callable $callback)
 	{
-		$this->socket->write($this->buffer);
+		$this->mtu
+			->writeOn($this->socket, function($mtu) use ($callback) {
+					$connection = clone $this;
+					$connection->mtu = $mtu;
 
-		$connection = clone $this;
-		$connection->buffer = '';
-
-		$callback($connection);
+					$callback($connection);
+				}
+			)
+		;
 
 		return $this;
 	}
 
 	function close(callable $callback)
 	{
-		$connection = clone $this;
-
-		$connection->socket
-			->close(function($socket) use ($connection) {
+		$this->socket
+			->close(function($socket) use ($callback) {
+					$connection = clone $this;
 					$connection->socket = $socket;
+
+					$callback($connection);
 				}
 			)
 		;
-
-		$callback($connection);
 
 		return $this;
 	}
