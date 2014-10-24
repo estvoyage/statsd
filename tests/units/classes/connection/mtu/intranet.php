@@ -8,7 +8,7 @@ use
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class internet extends \atoum
+class intranet extends \atoum
 {
 	function testClass()
 	{
@@ -34,7 +34,7 @@ class internet extends \atoum
 				->object($mtuAfterAdd)
 					->isNotTestedInstance
 
-				->exception(function() use (& $data) { $this->testedInstance->add($data = str_repeat('a', 513), function() {}); })
+				->exception(function() use (& $data) { $this->testedInstance->add($data = str_repeat('a', 1433), function() {}); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
 					->hasMessage('\'' . $data . '\' exceed MTU size')
 		;
