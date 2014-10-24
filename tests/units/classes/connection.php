@@ -26,7 +26,7 @@ class connection extends \atoum
 				$this->calling($address)->openSocket = function($socket, $callback) { $callback(new statsd\socket); }
 			)
 			->if(
-				$this->newTestedInstance($address)
+				$this->newTestedInstance($address, new statsd\connection\mtu)
 			)
 			->then
 				->mock($address)->call('openSocket')->withArguments(new socket)->once
@@ -35,7 +35,7 @@ class connection extends \atoum
 				$this->calling($address)->openSocket->throw = new \exception(uniqid())
 			)
 			->then
-				->exception(function() use ($address) { $this->newTestedInstance($address); })
+				->exception(function() use ($address) { $this->newTestedInstance($address, new statsd\connection\mtu); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
 					->hasMessage('Unable to open connection')
 		;
@@ -47,7 +47,7 @@ class connection extends \atoum
 			->given(
 				$address = new statsd\address,
 				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); },
-				$this->newTestedInstance($address),
+				$this->newTestedInstance($address, new statsd\connection\mtu),
 				$callback = function($connection) use (& $openedConnection) { $openedConnection = $connection; }
 			)
 			->if(
@@ -75,18 +75,7 @@ class connection extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterStartPacket) { $connectionAfterStartPacket = $connection; }
-			)
-			->if(
-				$this->newTestedInstance(new statsd\address)
-			)
-			->then
-				->object($this->testedInstance->startPacket($callback))->isTestedInstance
-				->object($connectionAfterStartPacket)
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-
-			->given(
+				$callback = function($connection) use (& $connectionAfterStartPacket) { $connectionAfterStartPacket = $connection; },
 				$mtu = new statsd\connection\mtu,
 				$this->calling($mtu)->reset = function($callback) use (& $mtuAfterReset) { $callback($mtuAfterReset); }
 			)
@@ -106,36 +95,23 @@ class connection extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterWrite) { $connectionAfterWrite = $connection; }
-			)
-			->if(
-				$this->newTestedInstance(new statsd\address)
-			)
-			->then
-				->object($this->testedInstance->write(uniqid(), $callback))->isTestedInstance
-				->object($connectionAfterWrite)
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->exception(function() { $this->testedInstance->write(str_repeat('a', 513), function() {}); })
-					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('MTU size exceeded')
-
-			->given(
+				$callback = function($connection) use (& $connectionAfterWrite) { $connectionAfterWrite = $connection; },
 				$mtu = new statsd\connection\mtu,
-				$this->calling($mtu)->reset = function($callback) use (& $mtuAfterReset) { $callback($mtuAfterReset); },
 				$data = uniqid()
 			)
 			->if(
-				$this->newTestedInstance(new statsd\address, $mtu)
+				$this->newTestedInstance(new statsd\address, $mtu),
+				$this->calling($mtu)->add = function($data, $callback) use (& $mtuAfterAdd) { $callback($mtuAfterAdd = new statsd\connection\mtu); }
 			)
 			->then
 				->object($this->testedInstance->write($data, $callback))->isTestedInstance
 				->mock($mtu)->call('add')->withIdenticalArguments($data)->once
 				->object($connectionAfterWrite)
 					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
+					->isEqualTo($this->newTestedInstance(new statsd\address, $mtuAfterAdd))
 
 			->if(
+				$this->newTestedInstance(new statsd\address, $mtu),
 				$this->calling($mtu)->add->throw = new \exception
 			)
 			->then
@@ -150,44 +126,16 @@ class connection extends \atoum
 		$this
 			->given(
 				$callback = function($connection) use (& $connectionAfterEndPacket) { $connectionAfterEndPacket = $connection; },
-				$address = new statsd\address
+				$address = new statsd\address,
+				$mtu = new statsd\connection\mtu
 			)
 			->if(
-				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket = new statsd\socket); },
-				$this->newTestedInstance($address)
-			)
-			->then
-				->object($this->testedInstance->endPacket($callback))->isTestedInstance
-				->object($connectionAfterEndPacket)
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->mock($openedSocket)->call('write')->withArguments('')->once
+				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket); },
+				$openedSocket = new statsd\socket,
 
-			->given(
-				$component = new statsd\packet\component,
-				$this->calling($component)->writeOn = function($connection, $callback) { $connection->write('foo', $callback); }
-			)
-			->if(
-				$component->writeOn($this->testedInstance, function($connection) use (& $connectionWrited) { $connectionWrited = $connection; })
-			)
-			->then
-				->object($this->testedInstance->endPacket($callback))->isTestedInstance
-				->mock($openedSocket)->call('write')->withArguments('')->twice
+				$this->calling($mtu)->writeOn = function($socket, $callback) use (& $mtuAfterWriteOn) { $callback($mtuAfterWriteOn); },
+				$mtuAfterWriteOn = new statsd\connection\mtu,
 
-				->object($connectionWrited->endPacket($callback))->isIdenticalTo($connectionWrited)
-				->object($connectionAfterEndPacket)
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->mock($openedSocket)->call('write')->withArguments('foo')->once
-
-				->object($connectionAfterEndPacket->endPacket(function() {}))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($openedSocket)->call('write')->withArguments('')->thrice
-
-			->given(
-				$mtu = new statsd\connection\mtu,
-				$this->calling($mtu)->writeOn = function($socket, $callback) use (& $mtuAfterReset) { $callback($mtuAfterReset); }
-			)
-			->if(
 				$this->newTestedInstance($address, $mtu)
 			)
 			->then
@@ -195,7 +143,7 @@ class connection extends \atoum
 				->mock($mtu)->call('writeOn')->withIdenticalArguments($openedSocket)->once
 				->object($connectionAfterEndPacket)
 					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
+					->isEqualTo($this->newTestedInstance($address, $mtuAfterWriteOn))
 		;
 	}
 
@@ -207,7 +155,7 @@ class connection extends \atoum
 				$address = new statsd\address,
 				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket); },
 				$openedSocket = new statsd\socket,
-				$this->newTestedInstance($address)
+				$this->newTestedInstance($address, new statsd\connection\mtu)
 			)
 			->if(
 				$this->calling($openedSocket)->close = function($callback) { $callback(new statsd\socket); }

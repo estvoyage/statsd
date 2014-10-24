@@ -14,9 +14,9 @@ class connection implements statsd\connection
 		$socket
 	;
 
-	function __construct(statsd\address $address, statsd\connection\mtu $mtu = null)
+	function __construct(statsd\address $address, statsd\connection\mtu $mtu)
 	{
-		$this->openSocket($address)->mtu = $mtu ?: new connection\mtu(512);
+		$this->openSocket($address)->mtu = $mtu;
 	}
 
 	function open(statsd\address $address, callable $callback)
