@@ -11,6 +11,6 @@ class internet extends statsd\connection
 {
 	function __construct(address $address)
 	{
-		parent::__construct($address, new statsd\connection\mtu(512));
+		parent::__construct($address, new statsd\connection\mtu\internet);
 	}
 }
