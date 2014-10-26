@@ -29,6 +29,8 @@ class client
 
 	function sendTiming($bucket, $timing, $sampling = null)
 	{
-		return $this->send(new packet(new bucket($bucket), new value\timing($timing, new value\sampling($sampling))));
+		$this->connection->writePacket(new packet\timing($bucket, $timing, $sampling), function() {});
+
+		return $this;
 	}
 }

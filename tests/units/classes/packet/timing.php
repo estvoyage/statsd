@@ -1,21 +1,31 @@
 <?php
 
-namespace estvoyage\statsd\tests\units;
+namespace estvoyage\statsd\tests\units\packet;
 
-require __DIR__ . '/../runner.php';
+require __DIR__ . '/../../runner.php';
 
 use
+	estvoyage\statsd\bucket,
+	estvoyage\statsd\value,
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class packet extends \atoum
+class timing extends \atoum
 {
+	function testClass()
+	{
+		$this->testedClass
+			->implements('estvoyage\statsd\world\packet')
+			->extends('estvoyage\statsd\packet')
+		;
+	}
+
 	function testWriteOn()
 	{
 		$this
 			->given(
-				$bucket = new statsd\bucket,
-				$value = new statsd\value,
+				$bucket = uniqid(),
+				$value = rand(0, PHP_INT_MAX),
 				$connection = new statsd\connection,
 				$callback = function($connection) use (& $connectionAfterPacketWrited) { $connectionAfterPacketWrited = $connection; }
 			)
@@ -30,8 +40,8 @@ class packet extends \atoum
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('writePacketComponent')->withIdenticalArguments($bucket)->once
-				->mock($connectionAfterBucketWrited)->call('writePacketComponent')->withIdenticalArguments($value)->once
+				->mock($connection)->call('writePacketComponent')->withArguments(new bucket($bucket))->once
+				->mock($connectionAfterBucketWrited)->call('writePacketComponent')->withArguments(new value\timing($value))->once
 				->object($connectionAfterPacketWrited)->isIdenticalTo($connectionAfterValueWrited)
 		;
 	}

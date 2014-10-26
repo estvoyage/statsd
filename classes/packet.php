@@ -21,10 +21,10 @@ class packet implements statsd\packet
 
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
-		$this->bucket
-			->writeOn($connection, function($connection) use ($callback) {
-					$this->value
-						->writeOn($connection, function($connection) use ($callback) {
+		$connection
+			->writePacketComponent($this->bucket, function($connection) use ($callback) {
+					$connection
+						->writePacketComponent($this->value, function($connection) use ($callback) {
 								$callback($connection);
 							}
 						)

@@ -65,6 +65,20 @@ class connection implements statsd\connection
 		return $this;
 	}
 
+	function writePacket(statsd\packet $packet, callable $callback)
+	{
+		$packet->writeOn($this, $callback);
+
+		return $this;
+	}
+
+	function writePacketComponent(statsd\packet\component $component, callable $callback)
+	{
+		$component->writeOn($this, $callback);
+
+		return $this;
+	}
+
 	function endPacket(callable $callback)
 	{
 		$this->mtu

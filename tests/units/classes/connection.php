@@ -121,6 +121,38 @@ class connection extends \atoum
 		;
 	}
 
+	function testWritePacket()
+	{
+		$this
+			->given(
+				$packet = new statsd\packet,
+				$callback = function() {}
+			)
+			->if(
+				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
+			)
+			->then
+				->object($this->testedInstance->writePacket($packet, $callback))->isTestedInstance
+				->mock($packet)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
+		;
+	}
+
+	function testWritePacketComponent()
+	{
+		$this
+			->given(
+				$component = new statsd\packet\component,
+				$callback = function() {}
+			)
+			->if(
+				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
+			)
+			->then
+				->object($this->testedInstance->writePacketComponent($component, $callback))->isTestedInstance
+				->mock($component)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
+		;
+	}
+
 	function testEndPacket()
 	{
 		$this
