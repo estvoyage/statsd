@@ -48,6 +48,11 @@ class mtu implements statsd\connection\mtu
 		return $this;
 	}
 
+	function addIfNotEmpty($data, callable $callback)
+	{
+		return $this->add($this->buffer == '' ? '' : $data, $callback);
+	}
+
 	function writeOn(statsd\socket $socket, callable $callback)
 	{
 		$socket->write($this->buffer);

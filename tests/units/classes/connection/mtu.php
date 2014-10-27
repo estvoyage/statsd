@@ -50,6 +50,26 @@ class mtu extends \atoum
 		;
 	}
 
+	function testAddIfNotEmpty()
+	{
+		$this
+			->given(
+				$callback = function($mtu) use (& $mtuAfterAddIfNotEmpty) { $mtuAfterAddIfNotEmpty = $mtu; }
+			)
+			->if(
+				$this->newTestedInstance(2)
+			)
+			->then
+				->object($this->testedInstance->addIfNotEmpty('a', $callback))->isTestedInstance
+				->object($mtuAfterAddIfNotEmpty)
+					->isNotTestedInstance
+
+				->exception(function() use ($mtuAfterAddIfNotEmpty) { $mtuAfterAddIfNotEmpty->add('aaa', function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
+					->hasMessage('\'aaa\' exceed MTU size')
+		;
+	}
+
 	function testReset()
 	{
 		$this

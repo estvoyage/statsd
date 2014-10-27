@@ -11,7 +11,8 @@ class connection implements statsd\connection
 {
 	private
 		$mtu,
-		$socket
+		$socket,
+		$metrics
 	;
 
 	function __construct(statsd\address $address, statsd\connection\mtu $mtu)
@@ -28,10 +29,25 @@ class connection implements statsd\connection
 		return $this;
 	}
 
-	function startMetric(callable $callback)
+	function startPacket(callable $callback)
 	{
 		$this->mtu
 			->reset(function($mtu) use ($callback) {
+					$connection = clone $this;
+					$connection->mtu = $mtu;
+
+					$callback($connection);
+				}
+			)
+		;
+
+		return $this;
+	}
+
+	function startMetric(callable $callback)
+	{
+		$this->mtu
+			->addIfNotEmpty("\n", function($mtu) use ($callback) {
 					$connection = clone $this;
 					$connection->mtu = $mtu;
 
@@ -65,21 +81,14 @@ class connection implements statsd\connection
 		return $this;
 	}
 
-	function writeMetric(statsd\metric $metric, callable $callback)
-	{
-		$metric->writeOn($this, $callback);
-
-		return $this;
-	}
-
-	function writeMetricComponent(statsd\metric\component $component, callable $callback)
-	{
-		$component->writeOn($this, $callback);
-
-		return $this;
-	}
-
 	function endMetric(callable $callback)
+	{
+		$callback($this);
+
+		return $this;
+	}
+
+	function endPacket(callable $callback)
 	{
 		$this->mtu
 			->writeOn($this->socket, function($mtu) use ($callback) {
@@ -90,6 +99,27 @@ class connection implements statsd\connection
 				}
 			)
 		;
+
+		return $this;
+	}
+
+	function writePacket(statsd\packet $packet, callable $callback)
+	{
+		$packet->writeOn($this, $callback);
+
+		return $this;
+	}
+
+	function writeMetric(statsd\metric $metric, callable $callback)
+	{
+		$metric->writeOn($this, $callback);
+
+		return $this;
+	}
+
+	function writeMetricComponent(statsd\metric\component $component, callable $callback)
+	{
+		$component->writeOn($this, $callback);
 
 		return $this;
 	}
