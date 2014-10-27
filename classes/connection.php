@@ -28,7 +28,7 @@ class connection implements statsd\connection
 		return $this;
 	}
 
-	function startPacket(callable $callback)
+	function startMetric(callable $callback)
 	{
 		$this->mtu
 			->reset(function($mtu) use ($callback) {
@@ -65,21 +65,21 @@ class connection implements statsd\connection
 		return $this;
 	}
 
-	function writePacket(statsd\packet $packet, callable $callback)
+	function writeMetric(statsd\metric $metric, callable $callback)
 	{
-		$packet->writeOn($this, $callback);
+		$metric->writeOn($this, $callback);
 
 		return $this;
 	}
 
-	function writePacketComponent(statsd\packet\component $component, callable $callback)
+	function writeMetricComponent(statsd\metric\component $component, callable $callback)
 	{
 		$component->writeOn($this, $callback);
 
 		return $this;
 	}
 
-	function endPacket(callable $callback)
+	function endMetric(callable $callback)
 	{
 		$this->mtu
 			->writeOn($this->socket, function($mtu) use ($callback) {

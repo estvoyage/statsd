@@ -2,6 +2,6 @@
 
 namespace estvoyage\statsd\world;
 
-interface value extends packet\component
+interface value extends metric\component
 {
 }

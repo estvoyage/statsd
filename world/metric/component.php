@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd\world\packet;
+namespace estvoyage\statsd\world\metric;
 
 use
 	estvoyage\statsd\world as statsd

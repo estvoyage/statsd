@@ -26,18 +26,18 @@ class bucket extends \atoum
 				$connection = new statsd\connection
 			)
 			->if(
-				$this->calling($connection)->startPacket = function($callback) use (& $connectionAfterStartPacket) { $callback($connectionAfterStartPacket); },
-				$connectionAfterStartPacket = new statsd\connection,
+				$this->calling($connection)->startMetric = function($callback) use (& $connectionAfterStartMetric) { $callback($connectionAfterStartMetric); },
+				$connectionAfterStartMetric = new statsd\connection,
 
-				$this->calling($connectionAfterStartPacket)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
+				$this->calling($connectionAfterStartMetric)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
 				$connectionWrited = new statsd\connection,
 
 				$this->newTestedInstance($bucket)
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('startPacket')->once
-				->mock($connectionAfterStartPacket)->call('write')->withIdenticalArguments($bucket . ':', $callback)->once
+				->mock($connection)->call('startMetric')->once
+				->mock($connectionAfterStartMetric)->call('write')->withIdenticalArguments($bucket . ':', $callback)->once
 				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
 		;
 	}

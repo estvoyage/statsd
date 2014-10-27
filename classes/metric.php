@@ -6,7 +6,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-class packet implements statsd\packet
+class metric implements statsd\metric
 {
 	private
 		$bucket,
@@ -22,9 +22,9 @@ class packet implements statsd\packet
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
 		$connection
-			->writePacketComponent($this->bucket, function($connection) use ($callback) {
+			->writeMetricComponent($this->bucket, function($connection) use ($callback) {
 					$connection
-						->writePacketComponent($this->value, function($connection) use ($callback) {
+						->writeMetricComponent($this->value, function($connection) use ($callback) {
 								$callback($connection);
 							}
 						)

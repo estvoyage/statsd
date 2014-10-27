@@ -20,7 +20,7 @@ class bucket implements world\bucket
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
 		$connection
-			->startPacket(function($connection) use ($callback) {
+			->startMetric(function($connection) use ($callback) {
 					$connection->write($this->value . ':', $callback);
 				}
 			)

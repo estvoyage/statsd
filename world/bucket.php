@@ -2,6 +2,6 @@
 
 namespace estvoyage\statsd\world;
 
-interface bucket extends packet\component
+interface bucket extends metric\component
 {
 }

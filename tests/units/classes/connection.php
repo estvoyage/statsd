@@ -71,11 +71,11 @@ class connection extends \atoum
 		;
 	}
 
-	function testStartPacket()
+	function testStartMetric()
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterStartPacket) { $connectionAfterStartPacket = $connection; },
+				$callback = function($connection) use (& $connectionAfterStartMetric) { $connectionAfterStartMetric = $connection; },
 				$mtu = new statsd\connection\mtu,
 				$this->calling($mtu)->reset = function($callback) use (& $mtuAfterReset) { $callback($mtuAfterReset); }
 			)
@@ -83,9 +83,9 @@ class connection extends \atoum
 				$this->newTestedInstance(new statsd\address, $mtu)
 			)
 			->then
-				->object($this->testedInstance->startPacket($callback))->isTestedInstance
+				->object($this->testedInstance->startMetric($callback))->isTestedInstance
 				->mock($mtu)->call('reset')->once
-				->object($connectionAfterStartPacket)
+				->object($connectionAfterStartMetric)
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
 		;
@@ -121,43 +121,43 @@ class connection extends \atoum
 		;
 	}
 
-	function testWritePacket()
+	function testWriteMetric()
 	{
 		$this
 			->given(
-				$packet = new statsd\packet,
+				$metric = new statsd\metric,
 				$callback = function() {}
 			)
 			->if(
 				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
 			)
 			->then
-				->object($this->testedInstance->writePacket($packet, $callback))->isTestedInstance
-				->mock($packet)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
+				->object($this->testedInstance->writeMetric($metric, $callback))->isTestedInstance
+				->mock($metric)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
 		;
 	}
 
-	function testWritePacketComponent()
+	function testWriteMetricComponent()
 	{
 		$this
 			->given(
-				$component = new statsd\packet\component,
+				$component = new statsd\metric\component,
 				$callback = function() {}
 			)
 			->if(
 				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
 			)
 			->then
-				->object($this->testedInstance->writePacketComponent($component, $callback))->isTestedInstance
+				->object($this->testedInstance->writeMetricComponent($component, $callback))->isTestedInstance
 				->mock($component)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
 		;
 	}
 
-	function testEndPacket()
+	function testEndMetric()
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterEndPacket) { $connectionAfterEndPacket = $connection; },
+				$callback = function($connection) use (& $connectionAfterEndMetric) { $connectionAfterEndMetric = $connection; },
 				$address = new statsd\address,
 				$mtu = new statsd\connection\mtu
 			)
@@ -171,9 +171,9 @@ class connection extends \atoum
 				$this->newTestedInstance($address, $mtu)
 			)
 			->then
-				->object($this->testedInstance->endPacket($callback))->isTestedInstance
+				->object($this->testedInstance->endMetric($callback))->isTestedInstance
 				->mock($mtu)->call('writeOn')->withIdenticalArguments($openedSocket)->once
-				->object($connectionAfterEndPacket)
+				->object($connectionAfterEndMetric)
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance($address, $mtuAfterWriteOn))
 		;

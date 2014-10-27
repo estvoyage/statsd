@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\packet;
+namespace estvoyage\statsd\metric;
 
 use
 	estvoyage\statsd
 ;
 
-class gauge extends statsd\packet
+class gauge extends statsd\metric
 {
 	function __construct($bucket, $value, $sampling = null)
 	{

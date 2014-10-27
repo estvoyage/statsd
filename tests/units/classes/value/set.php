@@ -43,8 +43,8 @@ class set extends \atoum
 				$this->calling($connectionWithValueWrited)->write = function($data, $callback) use (& $connectionWithSamplingWrited) { $callback($connectionWithSamplingWrited); },
 				$connectionWithSamplingWrited = new statsd\connection,
 
-				$this->calling($connectionWithSamplingWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
-				$connectionAfterEndPacket = new statsd\connection,
+				$this->calling($connectionWithSamplingWrited)->endMetric = function($callback) use (& $connectionAfterEndMetric) { $callback($connectionAfterEndMetric); },
+				$connectionAfterEndMetric = new statsd\connection,
 
 				$this->newTestedInstance($value)
 			)
@@ -52,8 +52,8 @@ class set extends \atoum
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('write')->withArguments($value . '|s')->once
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('')->once
-				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->once
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
+				->mock($connectionWithSamplingWrited)->call('endMetric')->withIdenticalArguments($callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndMetric)
 
 			->if(
 				$this->calling($sampling)->writeOn = function($connection, $callback) use ($connectionWithSamplingWrited) { $connection->write('|@1.1', $callback); },
@@ -63,8 +63,8 @@ class set extends \atoum
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('write')->withArguments($value . '|s')->twice
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('|@1.1')->once
-				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->twice
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
+				->mock($connectionWithSamplingWrited)->call('endMetric')->withIdenticalArguments($callback)->twice
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndMetric)
 		;
 	}
 }
