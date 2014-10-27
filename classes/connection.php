@@ -133,15 +133,22 @@ class connection implements statsd\connection
 
 	function close(callable $callback)
 	{
-		$this->socket
-			->close(function($socket) use ($callback) {
-					$connection = clone $this;
-					$connection->socket = $socket;
+		try
+		{
+			$this->socket
+				->close(function($socket) use ($callback) {
+						$connection = clone $this;
+						$connection->socket = $socket;
 
-					$callback($connection);
-				}
-			)
-		;
+						$callback($connection);
+					}
+				)
+			;
+		}
+		catch (\exception $exception)
+		{
+			throw new connection\exception('Unable to close connection');
+		}
 
 		return $this;
 	}

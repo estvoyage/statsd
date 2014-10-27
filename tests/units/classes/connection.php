@@ -210,6 +210,14 @@ class connection extends \atoum
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
 				->mock($openedSocket)->call('close')->once
+
+			->if(
+				$this->calling($openedSocket)->close->throw = new \exception
+			)
+			->then
+				->exception(function() { $this->testedInstance->close(function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\exception')
+					->hasMessage('Unable to close connection')
 		;
 	}
 
