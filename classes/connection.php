@@ -90,15 +90,22 @@ class connection implements statsd\connection
 
 	function endPacket(callable $callback)
 	{
-		$this->mtu
-			->writeOn($this->socket, function($mtu) use ($callback) {
-					$connection = clone $this;
-					$connection->mtu = $mtu;
+		try
+		{
+			$this->mtu
+				->writeOn($this->socket, function($mtu) use ($callback) {
+						$connection = clone $this;
+						$connection->mtu = $mtu;
 
-					$callback($connection);
-				}
-			)
-		;
+						$callback($connection);
+					}
+				)
+			;
+		}
+		catch (\exception $exception)
+		{
+			throw new connection\exception('Unable to end packet');
+		}
 
 		return $this;
 	}

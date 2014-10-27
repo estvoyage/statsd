@@ -179,6 +179,15 @@ class connection extends \atoum
 				->object($connectionAfterEndPacket)
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance($address, $mtuAfterWriteOn))
+
+			->if(
+				$this->calling($mtu)->writeOn->throw = new \exception,
+				$this->newTestedInstance($address, $mtu)
+			)
+			->then
+				->exception(function() { $this->testedInstance->endPacket(function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\exception')
+					->hasMessage('Unable to end packet')
 		;
 	}
 
