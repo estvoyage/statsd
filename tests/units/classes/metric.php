@@ -33,6 +33,10 @@ class metric extends \atoum
 				->mock($connection)->call('writeMetricComponent')->withIdenticalArguments($bucket)->once
 				->mock($connectionAfterBucketWrited)->call('writeMetricComponent')->withIdenticalArguments($value)->once
 				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
+
+				->object($this->testedInstance->writeOn($connection))->isTestedInstance
+				->mock($connection)->call('writeMetricComponent')->withIdenticalArguments($bucket)->twice
+				->mock($connectionAfterBucketWrited)->call('writeMetricComponent')->withIdenticalArguments($value)->twice
 		;
 	}
 }
