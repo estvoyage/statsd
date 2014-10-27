@@ -122,6 +122,14 @@ class mtu extends \atoum
 				->mock($socket)->call('write')->withIdenticalArguments('a')->once
 				->object($mtuAfterWriteOn->writeOn($socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
 				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
+
+			->if(
+				$this->calling($socket)->write->throw = new \exception()
+			)
+			->then
+				->exception(function() use ($socket) { $this->testedInstance->writeOn($socket, function() {}); })
+					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
+					->hasMessage('Unable to write on socket')
 		;
 	}
 }

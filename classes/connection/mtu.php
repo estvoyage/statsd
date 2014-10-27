@@ -55,7 +55,14 @@ class mtu implements statsd\connection\mtu
 
 	function writeOn(statsd\socket $socket, callable $callback)
 	{
-		$socket->write($this->buffer);
+		try
+		{
+			$socket->write($this->buffer);
+		}
+		catch (\exception $exception)
+		{
+			throw new mtu\exception('Unable to write on socket');
+		}
 
 		$mtu = clone $this;
 		$mtu->buffer = '';
