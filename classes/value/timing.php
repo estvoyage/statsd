@@ -16,6 +16,6 @@ class timing extends statsd\value
 			throw new timing\exception('Timing must be an integer greater than or equal to 0');
 		}
 
-		parent::__construct($value, 't', $sampling);
+		parent::__construct($value, 'ms', $sampling);
 	}
 }

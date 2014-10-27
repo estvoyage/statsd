@@ -62,7 +62,7 @@ class timing extends \atoum
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->withArguments($value . '|t')->once
+				->mock($connection)->call('write')->withArguments($value . '|ms')->once
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('')->once
 				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->once
 				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
@@ -73,7 +73,7 @@ class timing extends \atoum
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->withArguments($value . '|t')->twice
+				->mock($connection)->call('write')->withArguments($value . '|ms')->twice
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('|@1.1')->once
 				->mock($connectionWithSamplingWrited)->call('endPacket')->withIdenticalArguments($callback)->twice
 				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
