@@ -112,18 +112,16 @@ class mtu extends \atoum
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
 
-				->if(
-					$this->testedInstance->add('a', function($mtu) use (& $mtuWrited) { $mtuWrited = $mtu; })
-				)
-				->then
-					->object($this->testedInstance->writeOn($socket, $callback))->isTestedInstance
-					->mock($socket)->call('write')->withIdenticalArguments('')->twice
-					->object($mtuWrited->writeOn($socket, $callback))->isIdenticalTo($mtuWrited)
-					->mock($socket)->call('write')->withIdenticalArguments('a')->once
-					->object($mtuAfterWriteOn->writeOn($socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
-					->mock($socket)->call('write')->withIdenticalArguments('')->thrice
-
-
+			->if(
+				$this->testedInstance->add('a', function($mtu) use (& $mtuWrited) { $mtuWrited = $mtu; })
+			)
+			->then
+				->object($this->testedInstance->writeOn($socket, $callback))->isTestedInstance
+				->mock($socket)->call('write')->withIdenticalArguments('')->twice
+				->object($mtuWrited->writeOn($socket, $callback))->isIdenticalTo($mtuWrited)
+				->mock($socket)->call('write')->withIdenticalArguments('a')->once
+				->object($mtuAfterWriteOn->writeOn($socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
+				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
 		;
 	}
 }
