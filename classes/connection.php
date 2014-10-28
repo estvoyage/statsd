@@ -12,7 +12,7 @@ class connection implements statsd\connection
 	private
 		$mtu,
 		$socket,
-		$metrics
+		$packets
 	;
 
 	function __construct(statsd\address $address, statsd\connection\mtu $mtu)
@@ -32,9 +32,10 @@ class connection implements statsd\connection
 	function startPacket(callable $callback)
 	{
 		$this->mtu
-			->reset(function($mtu) use ($callback) {
+			->resetIfTrue(! $this->packets, function($mtu) use ($callback) {
 					$connection = clone $this;
 					$connection->mtu = $mtu;
+					$connection->packets++;
 
 					$callback($connection);
 				}
@@ -93,9 +94,10 @@ class connection implements statsd\connection
 		try
 		{
 			$this->mtu
-				->writeOn($this->socket, function($mtu) use ($callback) {
+				->writeIfTrueOn($this->packets == 1, $this->socket, function($mtu) use ($callback) {
 						$connection = clone $this;
 						$connection->mtu = $mtu;
+						$connection->packets--;
 
 						$callback($connection);
 					}

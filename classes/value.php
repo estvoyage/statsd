@@ -28,7 +28,12 @@ class value implements statsd\value
 			->write($this->value . '|' . $this->type, function($connection) use ($callback) {
 					$this->sampling
 						->writeOn($connection, function($connection) use ($callback) {
-								$connection->endMetric($callback);
+								$connection
+									->endMetric(function($connection) use ($callback) {
+											$connection->endPacket($callback);
+										}
+									)
+								;
 							}
 						)
 					;

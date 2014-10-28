@@ -23,12 +23,26 @@ class mtu implements statsd\connection\mtu
 		$this->size = $size;
 	}
 
-	function reset(callable $callable)
+	function reset(callable $callback)
 	{
 		$mtu = clone $this;
 		$mtu->buffer = '';
 
-		$callable($mtu);
+		$callback($mtu);
+
+		return $this;
+	}
+
+	function resetIfTrue($boolean, callable $callback)
+	{
+		$mtu = clone $this;
+
+		if ($boolean)
+		{
+			$mtu->buffer = '';
+		}
+
+		$callback($mtu);
 
 		return $this;
 	}
@@ -66,6 +80,29 @@ class mtu implements statsd\connection\mtu
 
 		$mtu = clone $this;
 		$mtu->buffer = '';
+
+		$callback($mtu);
+
+		return $this;
+	}
+
+	function writeIfTrueOn($boolean, statsd\socket $socket, callable $callback)
+	{
+		$mtu = clone $this;
+
+		if ($boolean)
+		{
+			try
+			{
+				$socket->write($mtu->buffer);
+			}
+			catch (\exception $exception)
+			{
+				throw new mtu\exception('Unable to write on socket');
+			}
+
+			$mtu->buffer = '';
+		}
 
 		$callback($mtu);
 

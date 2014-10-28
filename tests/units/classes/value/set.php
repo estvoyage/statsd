@@ -46,14 +46,18 @@ class set extends \atoum
 				$this->calling($connectionWithSamplingWrited)->endMetric = function($callback) use (& $connectionAfterEndMetric) { $callback($connectionAfterEndMetric); },
 				$connectionAfterEndMetric = new statsd\connection,
 
+				$this->calling($connectionAfterEndMetric)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
+				$connectionAfterEndPacket = new statsd\connection,
+
 				$this->newTestedInstance($value)
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('write')->withArguments($value . '|s')->once
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('')->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->withIdenticalArguments($callback)->once
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndMetric)
+				->mock($connectionWithSamplingWrited)->call('endMetric')->once
+				->mock($connectionAfterEndMetric)->call('endPacket')->withIdenticalArguments($callback)->once
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
 
 			->if(
 				$this->calling($sampling)->writeOn = function($connection, $callback) use ($connectionWithSamplingWrited) { $connection->write('|@1.1', $callback); },
@@ -63,8 +67,9 @@ class set extends \atoum
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('write')->withArguments($value . '|s')->twice
 				->mock($connectionWithValueWrited)->call('write')->withIdenticalArguments('|@1.1')->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->withIdenticalArguments($callback)->twice
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndMetric)
+				->mock($connectionWithSamplingWrited)->call('endMetric')->twice
+				->mock($connectionAfterEndMetric)->call('endPacket')->withIdenticalArguments($callback)->twice
+				->object($connectionAfterWriteOn)->isIdenticalTo($connectionAfterEndPacket)
 		;
 	}
 }

@@ -77,17 +77,18 @@ class connection extends \atoum
 			->given(
 				$callback = function($connection) use (& $connectionAfterStartPacket) { $connectionAfterStartPacket = $connection; },
 				$mtu = new statsd\connection\mtu,
-				$this->calling($mtu)->reset = function($callback) use (& $mtuAfterReset) { $callback($mtuAfterReset); }
+				$this->calling($mtu)->resetIfTrue = function($boolean, $callback) use (& $mtuAfterResetIfTrue) { $callback($mtuAfterResetIfTrue); },
+				$mtuAfterResetIfTrue = new statsd\connection\mtu
 			)
 			->if(
 				$this->newTestedInstance(new statsd\address, $mtu)
 			)
 			->then
 				->object($this->testedInstance->startPacket($callback))->isTestedInstance
-				->mock($mtu)->call('reset')->once
-				->object($connectionAfterStartPacket)
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
+				->mock($mtu)->call('resetIfTrue')->withIdenticalArguments(true)->once
+
+				->object($connectionAfterStartPacket->startPacket(function() {}))->isIdenticalTo($connectionAfterStartPacket)
+				->mock($mtuAfterResetIfTrue)->call('resetIfTrue')->withIdenticalArguments(false)->once
 		;
 	}
 
@@ -168,20 +169,33 @@ class connection extends \atoum
 				$this->calling($address)->openSocket = function($socket, $callback) use (& $openedSocket) { $callback($openedSocket); },
 				$openedSocket = new statsd\socket,
 
-				$this->calling($mtu)->writeOn = function($socket, $callback) use (& $mtuAfterWriteOn) { $callback($mtuAfterWriteOn); },
+				$this->calling($mtu)->writeIfTrueOn = function($boolean, $socket, $callback) use (& $mtuAfterWriteOn) { $callback($mtuAfterWriteOn); },
 				$mtuAfterWriteOn = new statsd\connection\mtu,
 
 				$this->newTestedInstance($address, $mtu)
 			)
 			->then
 				->object($this->testedInstance->endPacket($callback))->isTestedInstance
-				->mock($mtu)->call('writeOn')->withIdenticalArguments($openedSocket)->once
+				->mock($mtu)->call('writeIfTrueOn')->withIdenticalArguments(false, $openedSocket)->once
 				->object($connectionAfterEndPacket)
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance($address, $mtuAfterWriteOn))
 
 			->if(
-				$this->calling($mtu)->writeOn->throw = new \exception,
+				$this->calling($mtu)->resetIfTrue = function($boolean, $callback) use (& $mtuAfterResetIfTrue) { $callback($mtuAfterResetIfTrue); },
+				$mtuAfterResetIfTrue = new statsd\connection\mtu,
+
+				$this->newTestedInstance($address, $mtu)->startPacket(function($connection) use (& $connectionAfterStartPacket) { $connectionAfterStartPacket = $connection; })
+			)
+			->then
+				->object($connectionAfterStartPacket->endPacket($callback))->isIdenticalTo($connectionAfterStartPacket)
+				->mock($mtuAfterResetIfTrue)->call('writeIfTrueOn')->withIdenticalArguments(true, $openedSocket)->once
+				->object($connectionAfterEndPacket)
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance($address, $mtuAfterWriteOn))
+
+			->if(
+				$this->calling($mtu)->writeIfTrueOn->throw = new \exception,
 				$this->newTestedInstance($address, $mtu)
 			)
 			->then
