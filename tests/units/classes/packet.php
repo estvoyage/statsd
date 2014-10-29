@@ -49,7 +49,7 @@ class packet extends \atoum
 				$this->testedInstance->add($metric, function($packet) use (& $packetWithMetric) { $packetWithMetric = $packet; })
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->object($packetWithMetric->writeOn($connection, $callback))->isIdenticalTo($packetWithMetric)
 				->mock($connection)->call('startPacket')->twice
 				->mock($connectionAfterStartPacket)->call('writeData')->withIdenticalArguments($metric)->once
 				->mock($connectionAfterMetricWrited)->call('endPacket')->once
