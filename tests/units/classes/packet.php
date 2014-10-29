@@ -14,6 +14,7 @@ class packet extends \atoum
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\packet')
+			->implements('estvoyage\statsd\world\connection\data')
 		;
 	}
 
@@ -26,7 +27,7 @@ class packet extends \atoum
 				$this->calling($connection)->startPacket = function($callback) use (& $connectionAfterStartPacket) { $callback($connectionAfterStartPacket); },
 				$connectionAfterStartPacket = new statsd\connection,
 
-				$this->calling($connectionAfterStartPacket)->writeMetric = function($metric, $callback) use (& $connectionAfterMetricWrited) { $callback($connectionAfterMetricWrited); },
+				$this->calling($connectionAfterStartPacket)->writeData = function($data, $callback) use (& $connectionAfterMetricWrited) { $callback($connectionAfterMetricWrited); },
 				$connectionAfterMetricWrited = new statsd\connection,
 
 				$this->calling($connectionAfterMetricWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
@@ -50,11 +51,7 @@ class packet extends \atoum
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('startPacket')->twice
-				->mock($connectionAfterStartPacket)->call('endPacket')->twice
-
-				->object($packetWithMetric->writeOn($connection, $callback))->isIdenticalTo($packetWithMetric)
-				->mock($connection)->call('startPacket')->thrice
-				->mock($connectionAfterStartPacket)->call('writeMetric')->withIdenticalArguments($metric)->once
+				->mock($connectionAfterStartPacket)->call('writeData')->withIdenticalArguments($metric)->once
 				->mock($connectionAfterMetricWrited)->call('endPacket')->once
 				->object($connectionWrited)->isIdenticalTo($connectionAfterEndPacket)
 		;

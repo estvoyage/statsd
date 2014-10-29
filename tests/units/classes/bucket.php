@@ -14,6 +14,8 @@ class bucket extends \atoum
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\bucket')
+			->implements('estvoyage\statsd\world\metric\component')
+			->implements('estvoyage\statsd\world\connection\data')
 		;
 	}
 

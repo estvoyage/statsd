@@ -15,6 +15,8 @@ class value extends \atoum
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\value')
+			->implements('estvoyage\statsd\world\metric\component')
+			->implements('estvoyage\statsd\world\connection\data')
 		;
 	}
 

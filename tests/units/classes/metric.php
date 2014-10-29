@@ -10,6 +10,13 @@ use
 
 class metric extends \atoum
 {
+	function testClass()
+	{
+		$this->testedClass
+			->implements('estvoyage\statsd\world\connection\data')
+		;
+	}
+
 	function testWriteOn()
 	{
 		$this
@@ -22,21 +29,21 @@ class metric extends \atoum
 			->if(
 				$this->newTestedInstance($bucket, $value),
 
-				$this->calling($connection)->writeMetricComponent = function($component, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
+				$this->calling($connection)->writeData = function($data, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
 				$connectionAfterBucketWrited = new statsd\connection,
 
-				$this->calling($connectionAfterBucketWrited)->writeMetricComponent = function($component, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
+				$this->calling($connectionAfterBucketWrited)->writeData = function($data, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
 				$connectionAfterValueWrited = new statsd\connection
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('writeMetricComponent')->withIdenticalArguments($bucket)->once
-				->mock($connectionAfterBucketWrited)->call('writeMetricComponent')->withIdenticalArguments($value)->once
+				->mock($connection)->call('writeData')->withIdenticalArguments($bucket)->once
+				->mock($connectionAfterBucketWrited)->call('writeData')->withIdenticalArguments($value)->once
 				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
 
 				->object($this->testedInstance->writeOn($connection))->isTestedInstance
-				->mock($connection)->call('writeMetricComponent')->withIdenticalArguments($bucket)->twice
-				->mock($connectionAfterBucketWrited)->call('writeMetricComponent')->withIdenticalArguments($value)->twice
+				->mock($connection)->call('writeData')->withIdenticalArguments($bucket)->twice
+				->mock($connectionAfterBucketWrited)->call('writeData')->withIdenticalArguments($value)->twice
 		;
 	}
 }

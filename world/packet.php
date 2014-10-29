@@ -2,7 +2,7 @@
 
 namespace estvoyage\statsd\world;
 
-interface packet
+interface packet extends connection\data
 {
-	function writeOn(connection $connection, callable $callback);
+	function add(metric $metric);
 }

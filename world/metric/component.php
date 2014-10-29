@@ -6,7 +6,6 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-interface component
+interface component extends statsd\connection\data
 {
-	function writeOn(statsd\connection $connection, callable $callback);
 }

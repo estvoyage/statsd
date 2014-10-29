@@ -112,23 +112,9 @@ class connection implements statsd\connection
 		return $this;
 	}
 
-	function writePacket(statsd\packet $packet, callable $callback)
+	function writeData(statsd\connection\data $data, callable $callback)
 	{
-		$packet->writeOn($this, $callback);
-
-		return $this;
-	}
-
-	function writeMetric(statsd\metric $metric, callable $callback)
-	{
-		$metric->writeOn($this, $callback);
-
-		return $this;
-	}
-
-	function writeMetricComponent(statsd\metric\component $component, callable $callback)
-	{
-		$component->writeOn($this, $callback);
+		$data->writeOn($this, $callback);
 
 		return $this;
 	}

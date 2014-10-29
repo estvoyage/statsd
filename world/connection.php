@@ -12,7 +12,5 @@ interface connection
 	function endPacket(callable $callback);
 	function close(callable $callback);
 
-	function writePacket(packet $packet, callable $callback);
-	function writeMetric(metric $metric, callable $callback);
-	function writeMetricComponent(metric\component $component, callable $callback);
+	function writeData(connection\data $data, callable $callback);
 }

@@ -28,7 +28,7 @@ class packet implements statsd\packet
 		while ($metric)
 		{
 			$callback = function($connection) use ($metric, $callback) {
-				$connection->writeMetric($metric, $callback);
+				$connection->writeData($metric, $callback);
 			};
 
 			$metric = prev($this->metrics);

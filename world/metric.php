@@ -2,7 +2,6 @@
 
 namespace estvoyage\statsd\world;
 
-interface metric
+interface metric extends connection\data
 {
-	function writeOn(connection $connection, callable $callback);
 }

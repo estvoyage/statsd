@@ -32,16 +32,16 @@ class gauge extends \atoum
 			->if(
 				$this->newTestedInstance($bucket, $value),
 
-				$this->calling($connection)->writeMetricComponent = function($component, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
+				$this->calling($connection)->writeData = function($data, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
 				$connectionAfterBucketWrited = new statsd\connection,
 
-				$this->calling($connectionAfterBucketWrited)->writeMetricComponent = function($component, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
+				$this->calling($connectionAfterBucketWrited)->writeData = function($data, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
 				$connectionAfterValueWrited = new statsd\connection
 			)
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('writeMetricComponent')->withArguments(new bucket($bucket))->once
-				->mock($connectionAfterBucketWrited)->call('writeMetricComponent')->withArguments(new value\gauge($value))->once
+				->mock($connection)->call('writeData')->withArguments(new bucket($bucket))->once
+				->mock($connectionAfterBucketWrited)->call('writeData')->withArguments(new value\gauge($value))->once
 				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
 		;
 	}

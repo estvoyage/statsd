@@ -235,51 +235,19 @@ class connection extends \atoum
 		;
 	}
 
-	function testWritePacket()
+	function testWriteData()
 	{
 		$this
 			->given(
-				$packet = new statsd\packet,
+				$data = new statsd\connection\data,
 				$callback = function() {}
 			)
 			->if(
 				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
 			)
 			->then
-				->object($this->testedInstance->writePacket($packet, $callback))->isTestedInstance
-				->mock($packet)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
-		;
-	}
-
-	function testWriteMetric()
-	{
-		$this
-			->given(
-				$metric = new statsd\metric,
-				$callback = function() {}
-			)
-			->if(
-				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
-			)
-			->then
-				->object($this->testedInstance->writeMetric($metric, $callback))->isTestedInstance
-				->mock($metric)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
-		;
-	}
-
-	function testWriteMetricComponent()
-	{
-		$this
-			->given(
-				$component = new statsd\metric\component,
-				$callback = function() {}
-			)
-			->if(
-				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
-			)
-			->then
-				->object($this->testedInstance->writeMetricComponent($component, $callback))->isTestedInstance
-				->mock($component)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
+				->object($this->testedInstance->writeData($data, $callback))->isTestedInstance
+				->mock($data)->call('writeOn')->withIdenticalArguments($this->testedInstance, $callback)->once
 		;
 	}
 }

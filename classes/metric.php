@@ -22,9 +22,9 @@ class metric implements statsd\metric
 	function writeOn(statsd\connection $connection, callable $callback = null)
 	{
 		$connection
-			->writeMetricComponent($this->bucket, function($connection) use ($callback) {
+			->writeData($this->bucket, function($connection) use ($callback) {
 					$connection
-						->writeMetricComponent($this->value, function($connection) use ($callback) {
+						->writeData($this->value, function($connection) use ($callback) {
 								if ($callback)
 								{
 									$callback($connection);
