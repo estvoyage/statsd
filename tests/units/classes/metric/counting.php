@@ -10,7 +10,7 @@ use
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class gauge extends \atoum
+class counting extends \atoum
 {
 	function testClass()
 	{
@@ -26,7 +26,7 @@ class gauge extends \atoum
 		$this
 			->given(
 				$bucket = uniqid(),
-				$value = rand(-PHP_INT_MAX, PHP_INT_MAX),
+				$value = rand(0, PHP_INT_MAX),
 				$connection = new statsd\connection,
 				$callback = function($connection) use (& $connectionAfterMetricWrited) { $connectionAfterMetricWrited = $connection; }
 			)
@@ -42,7 +42,7 @@ class gauge extends \atoum
 			->then
 				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
 				->mock($connection)->call('writeData')->withArguments(new bucket($bucket))->once
-				->mock($connectionAfterBucketWrited)->call('writeData')->withArguments(new value\gauge($value))->once
+				->mock($connectionAfterBucketWrited)->call('writeData')->withArguments(new value\counting($value))->once
 				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
 		;
 	}

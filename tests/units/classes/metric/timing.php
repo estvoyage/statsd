@@ -16,6 +16,7 @@ class timing extends \atoum
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\metric')
+			->implements('estvoyage\statsd\world\connection\data')
 			->extends('estvoyage\statsd\metric')
 		;
 	}
