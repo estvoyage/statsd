@@ -22,16 +22,9 @@ class packet extends \atoum
 	{
 		$this
 			->given(
-				$connection = new statsd\connection,
-
-				$this->calling($connection)->startPacket = function($callback) use (& $connectionAfterStartPacket) { $callback($connectionAfterStartPacket); },
-				$connectionAfterStartPacket = new statsd\connection,
-
-				$this->calling($connectionAfterStartPacket)->writeData = function($data, $callback) use (& $connectionAfterMetricWrited) { $callback($connectionAfterMetricWrited); },
-				$connectionAfterMetricWrited = new statsd\connection,
-
-				$this->calling($connectionAfterMetricWrited)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket); },
-				$connectionAfterEndPacket = new statsd\connection,
+				$this->calling($connection = new statsd\connection)->startPacket = function($callback) use (& $connectionAfterStartPacket) { $callback($connectionAfterStartPacket); },
+				$this->calling($connectionAfterStartPacket = new statsd\connection)->writeData = function($data, $callback) use (& $connectionAfterWriteData) { $callback($connectionAfterWriteData); },
+				$this->calling($connectionAfterWriteData = new statsd\connection)->endPacket = function($callback) use (& $connectionAfterEndPacket) { $callback($connectionAfterEndPacket = new statsd\connection); },
 
 				$metric = new statsd\metric,
 
@@ -52,7 +45,7 @@ class packet extends \atoum
 				->object($packetWithMetric->writeOn($connection, $callback))->isIdenticalTo($packetWithMetric)
 				->mock($connection)->call('startPacket')->twice
 				->mock($connectionAfterStartPacket)->call('writeData')->withIdenticalArguments($metric)->once
-				->mock($connectionAfterMetricWrited)->call('endPacket')->once
+				->mock($connectionAfterWriteData)->call('endPacket')->once
 				->object($connectionWrited)->isIdenticalTo($connectionAfterEndPacket)
 		;
 	}
@@ -62,14 +55,14 @@ class packet extends \atoum
 		$this
 			->given(
 				$metric = new statsd\metric,
-				$callback = function($packet) use (& $packetWithMetric) { $packetWithMetric = $packet; }
+				$callback = function($packet) use (& $packetAfterAdd) { $packetAfterAdd = $packet; }
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
 				->object($this->testedInstance->add($metric, $callback))->isTestedInstance
-				->object($packetWithMetric)
+				->object($packetAfterAdd)
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
 		;
