@@ -19,17 +19,13 @@ class packet implements statsd\packet
 
 	function writeOn(statsd\connection $connection, callable $callback)
 	{
-		$callback = function($connection) use ($callback) {
-			$connection->endPacket($callback);
-		};
-
-		$callback = array_reduce($this->metrics, function($callback, $metric) { return function($connection) use ($metric, $callback) { $connection->writeData($metric, $callback); }; }, $callback);
-
-		$callback = function($connection) use ($callback) {
-			$connection->startPacket($callback);
-		};
-
-		$callback($connection);
+		$connection->startPacket(
+			array_reduce(
+				$this->metrics,
+				function($callback, $metric) { return function($connection) use ($metric, $callback) { $connection->writeData($metric, $callback); }; },
+				function($connection) use ($callback) { $connection->endPacket($callback); }
+			)
+		);
 
 		return $this;
 	}
@@ -37,7 +33,6 @@ class packet implements statsd\packet
 	function add(statsd\metric $metric, callable $callback)
 	{
 		$packet = clone $this;
-
 		array_unshift($packet->metrics, $metric);
 
 		$callback($packet);
