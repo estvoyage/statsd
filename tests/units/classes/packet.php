@@ -47,6 +47,16 @@ class packet extends \atoum
 				->mock($connectionAfterStartPacket)->call('writeData')->withIdenticalArguments($metric)->once
 				->mock($connectionAfterWriteData)->call('endPacket')->once
 				->object($connectionWrited)->isIdenticalTo($connectionAfterEndPacket)
+
+			->if(
+				$this->newTestedInstance([ $metric ])
+			)
+			->then
+				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->mock($connection)->call('startPacket')->thrice
+				->mock($connectionAfterStartPacket)->call('writeData')->withIdenticalArguments($metric)->twice
+				->mock($connectionAfterWriteData)->call('endPacket')->twice
+				->object($connectionWrited)->isIdenticalTo($connectionAfterEndPacket)
 		;
 	}
 

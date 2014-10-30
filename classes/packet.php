@@ -14,10 +14,10 @@ class packet implements statsd\packet
 
 	function __construct(array $metrics = [])
 	{
-		$this->adds($metrics, function($packet) {
-				$this->metrics = $packet->metrics;
-			}
-		);
+		foreach ($metrics as $metric)
+		{
+			$this->addMetric($metric);
+		}
 	}
 
 	function writeOn(statsd\connection $connection, callable $callback)
@@ -36,23 +36,29 @@ class packet implements statsd\packet
 	function add(statsd\metric $metric, callable $callback)
 	{
 		$packet = clone $this;
-		array_unshift($packet->metrics, $metric);
 
-		$callback($packet);
+		$callback($packet->addMetric($metric));
 
 		return $this;
 	}
 
 	function adds(array $metrics, callable $callback)
 	{
-		call_user_func(
-			array_reduce(
-				array_reverse($metrics),
-				function($callback, $metric) { return function($packet) use ($metric, $callback) { $packet->add($metric, $callback); }; },
-				$callback
-			),
-			$this
-		);
+		$packet = clone $this;
+
+		foreach ($metrics as $metric)
+		{
+			$packet->addMetric($metric);
+		}
+
+		$callback($packet);
+
+		return $this;
+	}
+
+	protected function addMetric(statsd\metric $metric)
+	{
+		array_unshift($this->metrics, $metric);
 
 		return $this;
 	}
