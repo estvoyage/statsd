@@ -64,7 +64,26 @@ class packet extends \atoum
 				->object($this->testedInstance->add($metric, $callback))->isTestedInstance
 				->object($packetAfterAdd)
 					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
+					->isEqualTo($this->newTestedInstance([ $metric ]))
+		;
+	}
+
+	function testAdds()
+	{
+		$this
+			->given(
+				$metric1 = new statsd\metric,
+				$metric2 = new statsd\metric,
+				$callback = function($packet) use (& $packetAfterAdds) { $packetAfterAdds = $packet; }
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->adds([ $metric1, $metric2 ], $callback))->isTestedInstance
+				->object($packetAfterAdds)
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance([ $metric1, $metric2 ]))
 		;
 	}
 }
