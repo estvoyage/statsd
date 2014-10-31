@@ -17,20 +17,12 @@ class bucket implements world\bucket
 		$this->value = $value;
 	}
 
-	function writeOn(statsd\connection $connection, callable $callback)
+	function writeOn(statsd\connection $connection)
 	{
-		$connection
-			->startPacket(function($connection) use ($callback) {
-					$connection
-						->startMetric(function($connection) use ($callback) {
-								$connection->write($this->value . ':', $callback);
-							}
-						)
-					;
-				}
-			)
+		return $connection
+			->startPacket()
+				->startMetric()
+					->write($this->value . ':')
 		;
-
-		return $this;
 	}
 }

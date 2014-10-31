@@ -8,5 +8,5 @@ use
 
 interface sampling extends statsd\metric\component
 {
-	function writeOn(statsd\connection $connection, callable $callback);
+	function writeOn(statsd\connection $connection);
 }

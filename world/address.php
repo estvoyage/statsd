@@ -8,5 +8,5 @@ use
 
 interface address
 {
-	function openSocket(statsd\socket $socket, callable $callback);
+	function openSocket(statsd\socket $socket);
 }

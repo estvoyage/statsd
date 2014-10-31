@@ -30,35 +30,28 @@ class sampling extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterWriteOn) { $connectionAfterWriteOn = $connection; },
-
-				$connection = new statsd\connection,
-				$this->calling($connection)->write = function($data, $callback) use (& $connectionWrited) { $callback($connectionWrited); },
-
-				$connectionWrited = new statsd\connection
+				$this->calling($connection = new statsd\connection)->write = $connectionWrited = new statsd\connection
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->withIdenticalArguments('', $callback)->once
+				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
+				->mock($connection)->call('write')->withIdenticalArguments('')->once
 
 			->if(
 				$this->newTestedInstance(1.1)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->withIdenticalArguments('|@1.1', $callback)->once
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
+				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
+				->mock($connection)->call('write')->withIdenticalArguments('|@1.1')->once
 
 			->if(
 				$this->newTestedInstance(0.9)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
-				->mock($connection)->call('write')->withIdenticalArguments('|@0.9', $callback)->once
-				->object($connectionAfterWriteOn)->isIdenticalTo($connectionWrited)
+				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
+				->mock($connection)->call('write')->withIdenticalArguments('|@0.9')->once
 		;
 	}
 }

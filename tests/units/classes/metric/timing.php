@@ -27,23 +27,17 @@ class timing extends \atoum
 			->given(
 				$bucket = uniqid(),
 				$value = rand(0, PHP_INT_MAX),
-				$connection = new statsd\connection,
-				$callback = function($connection) use (& $connectionAfterMetricWrited) { $connectionAfterMetricWrited = $connection; }
+
+				$this->calling($connection = new statsd\connection)->writeData = $connectionAfterBucketWrited = new statsd\connection,
+				$this->calling($connectionAfterBucketWrited)->writeData = $connectionAfterValueWrited = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance($bucket, $value),
-
-				$this->calling($connection)->writeData = function($data, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
-				$connectionAfterBucketWrited = new statsd\connection,
-
-				$this->calling($connectionAfterBucketWrited)->writeData = function($data, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
-				$connectionAfterValueWrited = new statsd\connection
+				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterValueWrited)
 				->mock($connection)->call('writeData')->withArguments(new bucket($bucket))->once
 				->mock($connectionAfterBucketWrited)->call('writeData')->withArguments(new value\timing($value))->once
-				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
 		;
 	}
 }

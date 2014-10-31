@@ -23,27 +23,17 @@ class metric extends \atoum
 			->given(
 				$bucket = new statsd\bucket,
 				$value = new statsd\value,
-				$connection = new statsd\connection,
-				$callback = function($connection) use (& $connectionAfterMetricWrited) { $connectionAfterMetricWrited = $connection; }
+
+				$this->calling($connection = new statsd\connection)->writeData = $connectionAfterBucketWrited = new statsd\connection,
+				$this->calling($connectionAfterBucketWrited)->writeData = $connectionAfterValueWrited = new statsd\connection
 			)
 			->if(
-				$this->newTestedInstance($bucket, $value),
-
-				$this->calling($connection)->writeData = function($data, $callback) use (& $connectionAfterBucketWrited) { $callback($connectionAfterBucketWrited); },
-				$connectionAfterBucketWrited = new statsd\connection,
-
-				$this->calling($connectionAfterBucketWrited)->writeData = function($data, $callback) use (& $connectionAfterValueWrited) { $callback($connectionAfterValueWrited); },
-				$connectionAfterValueWrited = new statsd\connection
+				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection, $callback))->isTestedInstance
+				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterValueWrited)
 				->mock($connection)->call('writeData')->withIdenticalArguments($bucket)->once
 				->mock($connectionAfterBucketWrited)->call('writeData')->withIdenticalArguments($value)->once
-				->object($connectionAfterMetricWrited)->isIdenticalTo($connectionAfterValueWrited)
-
-				->object($this->testedInstance->writeOn($connection))->isTestedInstance
-				->mock($connection)->call('writeData')->withIdenticalArguments($bucket)->twice
-				->mock($connectionAfterBucketWrited)->call('writeData')->withIdenticalArguments($value)->twice
 		;
 	}
 }

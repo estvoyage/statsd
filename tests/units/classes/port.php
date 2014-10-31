@@ -43,15 +43,15 @@ class port extends \atoum
 		$this
 			->given(
 				$socket = new statsd\socket,
-				$host = uniqid(),
-				$callback = function() {}
+				$host = uniqid()
 			)
 			->if(
+				$this->calling($socket)->open = $openedSocket = new statsd\socket,
 				$this->newTestedInstance($port = rand(0, 65535))
 			)
 			->then
-				->object($this->testedInstance->openSocket($socket, $host, $callback))->isTestedInstance
-				->mock($socket)->call('open')->withIdenticalArguments($host, $port, $callback)->once
+				->object($this->testedInstance->openSocket($socket, $host))->isIdenticalTo($openedSocket)
+				->mock($socket)->call('open')->withIdenticalArguments($host, $port)->once
 		;
 	}
 }

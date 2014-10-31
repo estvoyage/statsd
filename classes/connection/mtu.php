@@ -23,17 +23,15 @@ class mtu implements statsd\connection\mtu
 		$this->size = $size;
 	}
 
-	function reset(callable $callback)
+	function reset()
 	{
 		$mtu = clone $this;
 		$mtu->buffer = '';
 
-		$callback($mtu);
-
-		return $this;
+		return $mtu;
 	}
 
-	function resetIfTrue($boolean, callable $callback)
+	function resetIfTrue($boolean)
 	{
 		$mtu = clone $this;
 
@@ -42,12 +40,10 @@ class mtu implements statsd\connection\mtu
 			$mtu->buffer = '';
 		}
 
-		$callback($mtu);
-
-		return $this;
+		return $mtu;
 	}
 
-	function add($data, callable $callback)
+	function add($data)
 	{
 		if (strlen($this->buffer . $data) > $this->size)
 		{
@@ -57,17 +53,15 @@ class mtu implements statsd\connection\mtu
 		$mtu = clone $this;
 		$mtu->buffer .= $data;
 
-		$callback($mtu);
-
-		return $this;
+		return $mtu;
 	}
 
-	function addIfNotEmpty($data, callable $callback)
+	function addIfNotEmpty($data)
 	{
-		return $this->add($this->buffer == '' ? '' : $data, $callback);
+		return $this->add($this->buffer == '' ? '' : $data);
 	}
 
-	function writeOn(statsd\socket $socket, callable $callback)
+	function writeOn(statsd\socket $socket)
 	{
 		try
 		{
@@ -81,12 +75,10 @@ class mtu implements statsd\connection\mtu
 		$mtu = clone $this;
 		$mtu->buffer = '';
 
-		$callback($mtu);
-
-		return $this;
+		return $mtu;
 	}
 
-	function writeIfTrueOn($boolean, statsd\socket $socket, callable $callback)
+	function writeIfTrueOn($boolean, statsd\socket $socket)
 	{
 		$mtu = clone $this;
 
@@ -104,8 +96,6 @@ class mtu implements statsd\connection\mtu
 			$mtu->buffer = '';
 		}
 
-		$callback($mtu);
-
-		return $this;
+		return $mtu;
 	}
 }

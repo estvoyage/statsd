@@ -19,23 +19,11 @@ class metric implements statsd\metric
 		$this->value = $value;
 	}
 
-	function writeOn(statsd\connection $connection, callable $callback = null)
+	function writeOn(statsd\connection $connection)
 	{
-		$connection
-			->writeData($this->bucket, function($connection) use ($callback) {
-					$connection
-						->writeData($this->value, function($connection) use ($callback) {
-								if ($callback)
-								{
-									$callback($connection);
-								}
-							}
-						)
-					;
-				}
-			)
+		return $connection
+			->writeData($this->bucket)
+				->writeData($this->value)
 		;
-
-		return $this;
 	}
 }

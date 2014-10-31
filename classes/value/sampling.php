@@ -22,10 +22,8 @@ class sampling implements statsd\value\sampling
 		$this->value = $value ?: 1;
 	}
 
-	function writeOn(statsd\connection $connection, callable $callback)
+	function writeOn(statsd\connection $connection)
 	{
-		$connection->write($this->value == 1 ? '' : '|@' . $this->value, $callback);
-
-		return $this;
+		return $connection->write($this->value == 1 ? '' : '|@' . $this->value);
 	}
 }

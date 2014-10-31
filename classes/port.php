@@ -26,10 +26,8 @@ class port implements statsd\port
 		$this->port = $port;
 	}
 
-	function openSocket(statsd\socket $socket, $host, callable $callback)
+	function openSocket(statsd\socket $socket, $host)
 	{
-		$socket->open($host, $this->port, $callback);
-
-		return $this;
+		return $socket->open($host, $this->port);
 	}
 }

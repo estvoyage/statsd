@@ -22,25 +22,13 @@ class value implements statsd\value
 		$this->sampling = $sampling ?: new value\sampling;
 	}
 
-	function writeOn(statsd\connection $connection, callable $callback)
+	function writeOn(statsd\connection $connection)
 	{
-		$connection
-			->write($this->value . '|' . $this->type, function($connection) use ($callback) {
-					$this->sampling
-						->writeOn($connection, function($connection) use ($callback) {
-								$connection
-									->endMetric(function($connection) use ($callback) {
-											$connection->endPacket($callback);
-										}
-									)
-								;
-							}
-						)
-					;
-				}
-			)
+		return $connection
+			->write($this->value . '|' . $this->type)
+				->writeData($this->sampling)
+					->endMetric()
+						->endPacket()
 		;
-
-		return $this;
 	}
 }

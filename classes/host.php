@@ -23,10 +23,8 @@ class host implements statsd\host
 		$this->host = $host;
 	}
 
-	function openSocket(statsd\socket $socket, statsd\port $port, callable $callback)
+	function openSocket(statsd\socket $socket, statsd\port $port)
 	{
-		$port->openSocket($socket, $this->host, $callback);
-
-		return $this;
+		return $port->openSocket($socket, $this->host);
 	}
 }

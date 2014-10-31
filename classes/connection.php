@@ -20,137 +20,94 @@ class connection implements statsd\connection
 		$this->openSocket($address)->mtu = $mtu;
 	}
 
-	function open(statsd\address $address, callable $callback)
+	function open(statsd\address $address)
 	{
 		$connection = clone $this;
 
-		$callback($connection->openSocket($address));
-
-		return $this;
+		return $connection->openSocket($address);
 	}
 
-	function startPacket(callable $callback)
+	function startPacket()
 	{
-		$this->mtu
-			->resetIfTrue(! $this->packets, function($mtu) use ($callback) {
-					$connection = clone $this;
-					$connection->mtu = $mtu;
-					$connection->packets++;
+		$connection = clone $this;
+		$connection->mtu = $connection->mtu->resetIfTrue(! $this->packets);
+		$connection->packets++;
 
-					$callback($connection);
-				}
-			)
-		;
-
-		return $this;
+		return $connection;
 	}
 
-	function startMetric(callable $callback)
+	function startMetric()
 	{
-		$this->mtu
-			->addIfNotEmpty("\n", function($mtu) use ($callback) {
-					$connection = clone $this;
-					$connection->mtu = $mtu;
+		$connection = clone $this;
+		$connection->mtu = $connection->mtu->addIfNotEmpty("\n");
 
-					$callback($connection);
-				}
-			)
-		;
-
-		return $this;
+		return $connection;
 	}
 
-	function write($data, callable $callback)
+	function write($data)
 	{
+		$connection = clone $this;
+
 		try
 		{
-			$this->mtu
-				->add($data, function($mtu) use ($callback) {
-						$connection = clone $this;
-						$connection->mtu = $mtu;
-
-						$callback($connection);
-					}
-				)
-			;
+			$connection->mtu = $connection->mtu->add($data);
 		}
 		catch (\exception $exception)
 		{
 			throw new connection\exception('MTU size exceeded');
 		}
 
+		return $connection;
+	}
+
+	function endMetric()
+	{
 		return $this;
 	}
 
-	function endMetric(callable $callback)
+	function endPacket()
 	{
-		$callback($this);
+		$connection = clone $this;
+		$connection->packets--;
 
-		return $this;
-	}
-
-	function endPacket(callable $callback)
-	{
 		try
 		{
-			$this->mtu
-				->writeIfTrueOn($this->packets == 1, $this->socket, function($mtu) use ($callback) {
-						$connection = clone $this;
-						$connection->mtu = $mtu;
-						$connection->packets--;
-
-						$callback($connection);
-					}
-				)
-			;
+			$connection->mtu = $connection->mtu->writeIfTrueOn($this->packets == 1, $this->socket);
 		}
 		catch (\exception $exception)
 		{
 			throw new connection\exception('Unable to end packet');
 		}
 
-		return $this;
+		return $connection;
 	}
 
-	function writeData(statsd\connection\data $data, callable $callback)
+	function close()
 	{
-		$data->writeOn($this, $callback);
+		$connection = clone $this;
 
-		return $this;
-	}
-
-	function close(callable $callback)
-	{
 		try
 		{
-			$this->socket
-				->close(function($socket) use ($callback) {
-						$connection = clone $this;
-						$connection->socket = $socket;
-
-						$callback($connection);
-					}
-				)
-			;
+			$connection->socket = $connection->socket->close();
 		}
 		catch (\exception $exception)
 		{
 			throw new connection\exception('Unable to close connection');
 		}
 
-		return $this;
+		return $connection;
+	}
+
+	function writeData(statsd\connection\data $data)
+	{
+		return $data->writeOn($this);
 	}
 
 	private function openSocket(statsd\address $address)
 	{
 		try
 		{
-			$address
-				->openSocket(new socket, function($socket) {
-						$this->socket = $socket;
-					}
-				)
-			;
+			$this->socket = $address->openSocket($this->socket ?: new socket);
 		}
 		catch (\exception $exception)
 		{

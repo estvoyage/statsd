@@ -22,16 +22,15 @@ class statsd extends \atoum
 	{
 		$this
 			->given(
-				$socket = new socket,
-				$host = uniqid(),
-				$callback = function() {}
+				$this->calling($socket = new socket)->open = $openedSocket = new socket,
+				$host = uniqid()
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->openSocket($socket, $host, $callback))->isTestedInstance
-				->mock($socket)->call('open')->withIdenticalArguments($host, 8125, $callback)->once
+				->object($this->testedInstance->openSocket($socket, $host))->isIdenticalTo($openedSocket)
+				->mock($socket)->call('open')->withIdenticalArguments($host, 8125)->once
 		;
 	}
 }

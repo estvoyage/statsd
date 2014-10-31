@@ -12,7 +12,7 @@ class socket implements statsd\socket
 		$resource
 	;
 
-	function open($host, $port, callable $callback)
+	function open($host, $port)
 	{
 		$socket = clone $this;
 
@@ -23,9 +23,7 @@ class socket implements statsd\socket
 			throw new socket\exception('Unable to connect on host \'' . $host . '\' on port \'' . $port . '\': ' . $error);
 		}
 
-		$callback($socket);
-
-		return $this;
+		return $socket;
 	}
 
 	function write($data)
@@ -50,7 +48,7 @@ class socket implements statsd\socket
 		return $this;
 	}
 
-	function close(callable $callback)
+	function close()
 	{
 		$socket = $this;
 
@@ -66,8 +64,6 @@ class socket implements statsd\socket
 			$socket->resource = null;
 		}
 
-		$callback($socket);
-
-		return $this;
+		return $socket;
 	}
 }

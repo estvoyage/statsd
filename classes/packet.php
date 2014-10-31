@@ -20,29 +20,19 @@ class packet implements statsd\packet
 		}
 	}
 
-	function writeOn(statsd\connection $connection, callable $callback)
+	function writeOn(statsd\connection $connection)
 	{
-		$connection->startPacket(
-			array_reduce(
-				$this->metrics,
-				function($callback, $metric) { return function($connection) use ($metric, $callback) { $connection->writeData($metric, $callback); }; },
-				function($connection) use ($callback) { $connection->endPacket($callback); }
-			)
-		);
-
-		return $this;
+		return array_reduce($this->metrics, function($connection, $metric) { return $connection->writeData($metric); }, $connection->startPacket())->endPacket();
 	}
 
-	function add(statsd\metric $metric, callable $callback)
+	function add(statsd\metric $metric)
 	{
 		$packet = clone $this;
 
-		$callback($packet->addMetric($metric));
-
-		return $this;
+		return $packet->addMetric($metric);
 	}
 
-	function adds(array $metrics, callable $callback)
+	function adds(array $metrics)
 	{
 		$packet = clone $this;
 
@@ -51,14 +41,12 @@ class packet implements statsd\packet
 			$packet->addMetric($metric);
 		}
 
-		$callback($packet);
-
-		return $this;
+		return $packet;
 	}
 
 	protected function addMetric(statsd\metric $metric)
 	{
-		array_unshift($this->metrics, $metric);
+		$this->metrics[] = $metric;
 
 		return $this;
 	}

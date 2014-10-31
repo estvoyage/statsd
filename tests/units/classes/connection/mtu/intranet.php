@@ -24,19 +24,20 @@ class intranet extends \atoum
 
 		$this
 			->given(
-				$callback = function($mtu) use (& $mtuAfterAdd) { $mtuAfterAdd = $mtu; }
+				$dataLessThanMtu = uniqid(),
+				$dataGreaterThanMtu = str_repeat('a', 1433)
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->add('a', $callback))->isTestedInstance
-				->object($mtuAfterAdd)
+				->object($this->testedInstance->add($dataLessThanMtu))
 					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 
-				->exception(function() use (& $data) { $this->testedInstance->add($data = str_repeat('a', 1433), function() {}); })
+				->exception(function() use ($dataGreaterThanMtu) { $this->testedInstance->add($dataGreaterThanMtu); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
-					->hasMessage('\'' . $data . '\' exceed MTU size')
+					->hasMessage('\'' . $dataGreaterThanMtu . '\' exceed MTU size')
 		;
 	}
 }

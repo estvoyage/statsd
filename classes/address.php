@@ -19,10 +19,8 @@ class address implements statsd\address
 		$this->port = $port ?: new port\statsd;
 	}
 
-	function openSocket(statsd\socket $socket, callable $callback)
+	function openSocket(statsd\socket $socket)
 	{
-		$this->host->openSocket($socket, $this->port, $callback);
-
-		return $this;
+		return $this->host->openSocket($socket, $this->port);
 	}
 }

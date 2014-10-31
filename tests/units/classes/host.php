@@ -51,15 +51,15 @@ class host extends \atoum
 		$this
 			->given(
 				$socket = new statsd\socket,
-				$port = new statsd\port,
-				$callback = function() {}
+				$port = new statsd\port
 			)
 			->if(
+				$this->calling($port)->openSocket = $openedSocket = new statsd\socket,
 				$this->newTestedInstance('foo.bar')
 			)
 			->then
-				->object($this->testedInstance->openSocket($socket, $port, $callback))->isTestedInstance
-				->mock($port)->call('openSocket')->withIdenticalArguments($socket, 'foo.bar', $callback)->once
+				->object($this->testedInstance->openSocket($socket, $port))->isIdenticalTo($openedSocket)
+				->mock($port)->call('openSocket')->withIdenticalArguments($socket, 'foo.bar')->once
 		;
 	}
 }

@@ -23,15 +23,14 @@ class localhost extends \atoum
 		$this
 			->given(
 				$socket = new statsd\socket,
-				$port = new statsd\port,
-				$callback = function() {}
+				$this->calling($port = new statsd\port)->openSocket = $openedSocket = new statsd\Socket
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->openSocket($socket, $port, $callback))->isTestedInstance
-				->mock($port)->call('openSocket')->withIdenticalArguments($socket, '127.0.0.1', $callback)->once
+				->object($this->testedInstance->openSocket($socket, $port))->isIdenticalTo($openedSocket)
+				->mock($port)->call('openSocket')->withIdenticalArguments($socket, '127.0.0.1')->once
 		;
 	}
 }

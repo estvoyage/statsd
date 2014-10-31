@@ -8,7 +8,7 @@ use
 
 interface socket
 {
-	function open($host, $port, callable $callback);
+	function open($host, $port);
 	function write($data);
-	function close(callable $callback);
+	function close();
 }

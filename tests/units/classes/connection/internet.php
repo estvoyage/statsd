@@ -22,18 +22,18 @@ class internet extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($connection) use (& $connectionAfterWrite) { $connectionAfterWrite = $connection; }
+				$dataLessThanMtu = uniqid(),
+				$dataGreaterThanMtu = str_repeat('a', 513)
 			)
 			->if(
 				$this->newTestedInstance(new statsd\address)
 			)
 			->then
-				->object($this->testedInstance->write(uniqid(), $callback))->isTestedInstance
-				->object($connectionAfterWrite)
+				->object($this->testedInstance->write($dataLessThanMtu))
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
 
-				->exception(function() { $this->testedInstance->write(str_repeat('a', 513), function() {}); })
+				->exception(function() use ($dataGreaterThanMtu) { $this->testedInstance->write($dataGreaterThanMtu); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
 					->hasMessage('MTU size exceeded')
 		;

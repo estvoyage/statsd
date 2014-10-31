@@ -34,17 +34,17 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($mtu) use (& $mtuAfterAdd) { $mtuAfterAdd = $mtu; }
+				$mtu = 2
 			)
 			->if(
-				$this->newTestedInstance(2)
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->add('a', $callback))->isTestedInstance
-				->object($mtuAfterAdd)
+				->object($this->testedInstance->add('a'))
 					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 
-				->exception(function() { $this->testedInstance->add('aaa', function() {}); })
+				->exception(function() { $this->testedInstance->add('aaa'); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
 					->hasMessage('\'aaa\' exceed MTU size')
 		;
@@ -54,17 +54,17 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($mtu) use (& $mtuAfterAddIfNotEmpty) { $mtuAfterAddIfNotEmpty = $mtu; }
+				$mtu = 2
 			)
 			->if(
-				$this->newTestedInstance(2)
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->addIfNotEmpty('a', $callback))->isTestedInstance
-				->object($mtuAfterAddIfNotEmpty)
+				->object($this->testedInstance->addIfNotEmpty('a'))
 					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 
-				->exception(function() use ($mtuAfterAddIfNotEmpty) { $mtuAfterAddIfNotEmpty->add('aaa', function() {}); })
+				->exception(function() { $this->testedInstance->add('aaa'); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
 					->hasMessage('\'aaa\' exceed MTU size')
 		;
@@ -74,16 +74,21 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($mtu) use (& $mtuAfterReset) { $mtuAfterReset = $mtu; }
+				$mtu = rand(1, PHP_INT_MAX),
+				$socket = new statsd\socket
 			)
 			->if(
-				$this->newTestedInstance(rand(1, PHP_INT_MAX))->add('a', function($mtu) use (& $mtuAfterAdd) { $mtuAfterAdd = $mtu; })
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->reset(function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
+				->object($this->testedInstance->reset())
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 
-				->object($mtuAfterAdd->reset(function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isIdenticalTo($mtuAfterAdd)
+			->if(
+				$this->testedInstance->add('a')->reset()->writeOn($socket)
+			)
+			->then
 				->mock($socket)->call('write')->withIdenticalArguments('')->once
 		;
 	}
@@ -92,22 +97,31 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$callback = function($mtu) use (& $mtuAfterResetIfTrue) { $mtuAfterResetIfTrue = $mtu; }
+				$mtu = rand(1, PHP_INT_MAX),
+				$socket = new statsd\socket
 			)
 			->if(
-				$this->newTestedInstance(rand(1, PHP_INT_MAX))->add('a', function($mtu) use (& $mtuAfterAdd) { $mtuAfterAdd = $mtu; })
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->resetIfTrue(true, function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isTestedInstance
+				->object($this->testedInstance->resetIfTrue(true))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
+
+				->object($this->testedInstance->resetIfTrue(false))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
+
+			->if(
+				$this->testedInstance->add('a')->resetIfTrue(true)->writeOn($socket)
+			)
+			->then
 				->mock($socket)->call('write')->withIdenticalArguments('')->once
 
-				->object($this->testedInstance->resetIfTrue(false, function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
-
-				->object($mtuAfterAdd->resetIfTrue(true, function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isIdenticalTo($mtuAfterAdd)
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
-
-				->object($mtuAfterAdd->resetIfTrue(false, function($mtu) use (& $socket) { $mtu->writeOn($socket = new statsd\socket, function() {}); }))->isIdenticalTo($mtuAfterAdd)
+			->if(
+				$this->testedInstance->add('a')->resetIfTrue(false)->writeOn($socket)
+			)
+			->then
 				->mock($socket)->call('write')->withIdenticalArguments('a')->once
 		;
 	}
@@ -116,37 +130,29 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$socket = new statsd\socket,
-				$callback = function($mtu) use (& $mtuAfterWriteOn) { $mtuAfterWriteOn = $mtu; }
+				$mtu = 2,
+				$socket = new statsd\socket
 			)
 			->if(
-				$this->newTestedInstance(2)
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
-				->object($mtuAfterWriteOn)
+				->object($this->testedInstance->writeOn($socket))
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
+				->mock($socket)->call('write')->withIdenticalArguments('')->once
 
 			->if(
-				$this->testedInstance->add('a', function($mtu) use (& $mtuWrited) { $mtuWrited = $mtu; })
+				$this->testedInstance->add('a')->writeOn($socket)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->twice
-
-				->object($mtuWrited->writeOn($socket, $callback))->isIdenticalTo($mtuWrited)
 				->mock($socket)->call('write')->withIdenticalArguments('a')->once
-
-				->object($mtuAfterWriteOn->writeOn($socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
-				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
 
 			->if(
 				$this->calling($socket)->write->throw = new \exception()
 			)
 			->then
-				->exception(function() use ($socket) { $this->testedInstance->writeOn($socket, function() {}); })
+				->exception(function() use ($socket) { $this->testedInstance->writeOn($socket); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
 					->hasMessage('Unable to write on socket')
 		;
@@ -156,56 +162,42 @@ class mtu extends \atoum
 	{
 		$this
 			->given(
-				$socket = new statsd\socket,
-				$callback = function($mtu) use (& $mtuAfterWriteOn) { $mtuAfterWriteOn = $mtu; }
+				$mtu = rand(1, PHP_INT_MAX),
+				$socket = new statsd\socket
 			)
 			->if(
-				$this->newTestedInstance(2)
+				$this->newTestedInstance($mtu)
 			)
 			->then
-				->object($this->testedInstance->writeIfTrueOn(true, $socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
-				->object($mtuAfterWriteOn)
+				->object($this->testedInstance->writeIfTrueOn(true, $socket))
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
+				->mock($socket)->call('write')->withIdenticalArguments('')->once
 
-				->object($this->testedInstance->writeIfTrueOn(false, $socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->once
-				->object($mtuAfterWriteOn)
+				->object($this->testedInstance->writeIfTrueOn(false, $socket))
 					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
+				->mock($socket)->call('write')->withIdenticalArguments('')->once
 
 			->if(
-				$this->testedInstance->add('a', function($mtu) use (& $mtuWrited) { $mtuWrited = $mtu; })
+				$this->testedInstance->add('a')->writeIfTrueOn(true, $socket)
 			)
 			->then
-				->object($this->testedInstance->writeIfTrueOn(true, $socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->twice
-
-				->object($mtuWrited->writeIfTrueOn(true, $socket, $callback))->isIdenticalTo($mtuWrited)
 				->mock($socket)->call('write')->withIdenticalArguments('a')->once
 
-				->object($mtuAfterWriteOn->writeIfTrueOn(true, $socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
-				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
-
-				->object($this->testedInstance->writeIfTrueOn(false, $socket, $callback))->isTestedInstance
-				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
-
-				->object($mtuWrited->writeIfTrueOn(false, $socket, $callback))->isIdenticalTo($mtuWrited)
+			->if(
+				$this->testedInstance->add('a')->writeIfTrueOn(false, $socket)
+			)
+			->then
 				->mock($socket)->call('write')->withIdenticalArguments('a')->once
-
-				->object($mtuAfterWriteOn->writeIfTrueOn(false, $socket, function() {}))->isIdenticalTo($mtuAfterWriteOn)
-				->mock($socket)->call('write')->withIdenticalArguments('')->thrice
 
 			->if(
 				$this->calling($socket)->write->throw = new \exception()
 			)
 			->then
-				->exception(function() use ($socket) { $this->testedInstance->writeIfTrueOn(true, $socket, function() {}); })
+				->exception(function() use ($socket) { $this->testedInstance->writeIfTrueOn(true, $socket); })
 					->isInstanceOf('estvoyage\statsd\connection\mtu\exception')
 					->hasMessage('Unable to write on socket')
-
-				->object($this->testedInstance->writeIfTrueOn(false, $socket, function() {}))->isTestedInstance
 		;
 	}
 }
