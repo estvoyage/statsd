@@ -3,7 +3,7 @@
 ## An east-oriented StatsD client written in PHP!
 
 Just like [statsd-php](https://github.com/domnikl/statsd-php), *estvoyage\statsd*  is a [StatsD](https://github.com/etsy/statsd/wiki) client written in PHP.  
-However, it was designed using the east compass, so all public method in all classes return `$this` or a new instance of the class.  
+However, it was designed using the east compass, so all public method in all classes return `$this`, a new instance of the class or any value which is not a property of the class.  
 Why? Because the rigorous application of this unique rule decreases coupling and the amount of code that needs to be written, while increasing the clarity, cohesion, flexibility, reuse and testability of that code.  
 In fact, using east-oriented principle force using abstraction via interface and the lack of getter force using the *tell, don't ask* principle.  
 
