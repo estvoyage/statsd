@@ -5,7 +5,8 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	mock\estvoyage\statsd\world as statsd
+	mock\estvoyage\statsd\world as statsd,
+	estvoyage\statsd\metric
 ;
 
 class packet extends \atoum
@@ -86,6 +87,23 @@ class packet extends \atoum
 				->object($this->testedInstance->adds([ $metric1, $metric2 ]))
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance([ $metric1, $metric2 ]))
+		;
+	}
+
+	function testAddTiming()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(0, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->addTiming($bucket, $value))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance([ new metric\timing($bucket, $value) ]))
 		;
 	}
 }

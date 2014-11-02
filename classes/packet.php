@@ -3,7 +3,8 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world as statsd
+	estvoyage\statsd\world as statsd,
+	estvoyage\statsd\metric
 ;
 
 class packet implements statsd\packet
@@ -30,6 +31,11 @@ class packet implements statsd\packet
 		$packet = clone $this;
 
 		return $packet->addMetric($metric);
+	}
+
+	function addTiming($bucket, $value)
+	{
+		return $this->add(new metric\timing($bucket, $value));
 	}
 
 	function adds(array $metrics)
