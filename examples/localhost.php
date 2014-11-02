@@ -17,6 +17,11 @@ use
 ;
 
 (new statsd\packet)
-	->adds([ new metric\timing('speed1', 1), new metric\gauge('gauge1', 5), new metric\timing('speed2', 3) ])
+	->addCounting('counting1', 1)
+	->addGauge('gauge1', 100)
+	->addTiming('timing1', 1)
+	->adds([ new metric\gauge('gauge2', 5), new metric\gauge('gauge3', 10) ])
+	->addTiming('timing1', 2)
+	->addGauge('gauge4', 100)
 	->writeOn(new connection\internet(new statsd\address))
 ;
