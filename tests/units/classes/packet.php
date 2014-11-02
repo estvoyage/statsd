@@ -8,7 +8,8 @@ use
 	mock\estvoyage\statsd\world as statsd,
 	estvoyage\statsd\metric\gauge,
 	estvoyage\statsd\metric\timing,
-	estvoyage\statsd\metric\counting
+	estvoyage\statsd\metric\counting,
+	estvoyage\statsd\metric\set
 ;
 
 class packet extends \atoum
@@ -140,6 +141,23 @@ class packet extends \atoum
 				->object($this->testedInstance->addCounting($bucket, $value))
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance([ new counting($bucket, $value) ]))
+		;
+	}
+
+	function testAddSet()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(- PHP_INT_MAX, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->addSet($bucket, $value))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance([ new set($bucket, $value) ]))
 		;
 	}
 }

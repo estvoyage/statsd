@@ -48,6 +48,11 @@ class packet implements statsd\packet
 		return $this->add(new metric\counting($bucket, $value));
 	}
 
+	function addSet($bucket, $value)
+	{
+		return $this->add(new metric\set($bucket, $value));
+	}
+
 	function adds(array $metrics)
 	{
 		$packet = clone $this;
