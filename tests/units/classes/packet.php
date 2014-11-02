@@ -6,7 +6,9 @@ require __DIR__ . '/../runner.php';
 
 use
 	mock\estvoyage\statsd\world as statsd,
-	estvoyage\statsd\metric
+	estvoyage\statsd\metric\gauge,
+	estvoyage\statsd\metric\timing,
+	estvoyage\statsd\metric\counting
 ;
 
 class packet extends \atoum
@@ -103,7 +105,7 @@ class packet extends \atoum
 			->then
 				->object($this->testedInstance->addTiming($bucket, $value))
 					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance([ new metric\timing($bucket, $value) ]))
+					->isEqualTo($this->newTestedInstance([ new timing($bucket, $value) ]))
 		;
 	}
 
@@ -120,7 +122,7 @@ class packet extends \atoum
 			->then
 				->object($this->testedInstance->addGauge($bucket, $value))
 					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance([ new metric\gauge($bucket, $value) ]))
+					->isEqualTo($this->newTestedInstance([ new gauge($bucket, $value) ]))
 		;
 	}
 
@@ -137,7 +139,7 @@ class packet extends \atoum
 			->then
 				->object($this->testedInstance->addCounting($bucket, $value))
 					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance([ new metric\counting($bucket, $value) ]))
+					->isEqualTo($this->newTestedInstance([ new counting($bucket, $value) ]))
 		;
 	}
 }
