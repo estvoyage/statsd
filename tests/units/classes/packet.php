@@ -106,4 +106,38 @@ class packet extends \atoum
 					->isEqualTo($this->newTestedInstance([ new metric\timing($bucket, $value) ]))
 		;
 	}
+
+	function testAddGauge()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(- PHP_INT_MAX, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->addGauge($bucket, $value))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance([ new metric\gauge($bucket, $value) ]))
+		;
+	}
+
+	function testAddCounting()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(- PHP_INT_MAX, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->addCounting($bucket, $value))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance([ new metric\counting($bucket, $value) ]))
+		;
+	}
 }

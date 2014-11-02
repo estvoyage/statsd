@@ -38,6 +38,16 @@ class packet implements statsd\packet
 		return $this->add(new metric\timing($bucket, $value));
 	}
 
+	function addGauge($bucket, $value)
+	{
+		return $this->add(new metric\gauge($bucket, $value));
+	}
+
+	function addCounting($bucket, $value)
+	{
+		return $this->add(new metric\counting($bucket, $value));
+	}
+
 	function adds(array $metrics)
 	{
 		$packet = clone $this;
