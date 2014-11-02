@@ -1,5 +1,19 @@
 {
+	"name": "estvoyage/statsd",
+	"type": "library",
+	"description": "An east-oriented StatsD client",
+	"keywords": [ "StatsD", "Client", "East" ],
+	"homepage": "http://github.com/estvoyage/statsd",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Frédéric Hardy",
+			"email": "frederic.hardy@mageekbox.net",
+			"homepage": "http://blog.mageekbox.net"
+		}
+	],
 	"require-dev": {
+		"php": ">=5.5.0",
 		"atoum/atoum": "dev-master"
 	},
 	"autoload": {
