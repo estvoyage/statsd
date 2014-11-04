@@ -9,18 +9,38 @@ use
 class socket implements statsd\socket
 {
 	private
-		$resource
+		$resource,
+		$host,
+		$port
 	;
+
+	function __construct($host = '127.0.0.1', $port = 8125)
+	{
+		$this->createSocket();
+
+		$this->host = $host;
+		$this->port = $port;
+	}
+
+	function __destruct()
+	{
+		socket_close($this->resource);
+	}
+
+	function __clone()
+	{
+		$this->createSocket();
+	}
 
 	function open($host, $port)
 	{
-		$socket = clone $this;
+		$socket = $this;
 
-		$socket->resource = fsockopen('udp://' . $host, $port, $errno, $error) ?: null;
-
-		if (! $socket->resource)
+		if ($host != $this->host || $port != $this->port)
 		{
-			throw new socket\exception('Unable to connect on host \'' . $host . '\' on port \'' . $port . '\': ' . $error);
+			$socket = clone $this;
+			$socket->host = $host;
+			$socket->port = $port;
 		}
 
 		return $socket;
@@ -28,18 +48,13 @@ class socket implements statsd\socket
 
 	function write($data)
 	{
-		if (! $this->resource)
-		{
-			throw new socket\exception('Socket is not open');
-		}
-
 		while ($data)
 		{
-			$bytesWritten = fwrite($this->resource, $data, strlen($data));
+			$bytesWritten = socket_sendto($this->resource, $data, strlen($data), 0, $this->host, $this->port);
 
 			if ($bytesWritten === false)
 			{
-				throw new socket\exception('Unable to write \'' . $data . '\'');
+				throw new socket\exception(socket_strerror(socket_last_error($this->resource)));
 			}
 
 			$data = substr($data, $bytesWritten);
@@ -50,20 +65,20 @@ class socket implements statsd\socket
 
 	function close()
 	{
-		$socket = $this;
+		return $this;
+	}
 
-		if ($this->resource)
+	private function createSocket()
+	{
+		$resource = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+
+		if (! $resource)
 		{
-			$socket = clone $this;
-
-			if (! fclose($socket->resource))
-			{
-				throw new socket\exception('Unable to close');
-			}
-
-			$socket->resource = null;
+			throw new socket\exception(socket_strerror(socket_last_error()));
 		}
 
-		return $socket;
+		$this->resource = $resource;
+
+		return $this;
 	}
 }

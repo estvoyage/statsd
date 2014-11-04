@@ -10,13 +10,74 @@ use
 
 class socket extends \atoum
 {
+	function test__construct()
+	{
+		$this
+			->given(
+				$this->function->socket_create = uniqid(),
+				$this->function->socket_last_error = $errorCode = uniqid(),
+				$this->function->socket_strerror = $errorString = uniqid(),
+				$this->function->socket_close->doesNothing
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->function('socket_create')->wasCalledWithArguments(AF_INET, SOCK_DGRAM, SOL_UDP)->once
+
+			->if(
+				$this->function->socket_create = false
+			)
+			->then
+				->exception(function() { $this->newTestedInstance; })
+					->isInstanceOf('estvoyage\statsd\socket\exception')
+					->hasMessage($errorString)
+				->function('socket_last_error')->wasCalledWithArguments(null)->once
+				->function('socket_strerror')->wasCalledWithArguments($errorCode)->once
+		;
+	}
+
+	function test__destruct()
+	{
+		$this
+			->given(
+				$this->function->socket_create = $resource = uniqid(),
+				$this->function->socket_close->doesNothing
+			)
+			->if(
+				$this->newTestedInstance->__destruct()
+			)
+			->then
+				->function('socket_close')->wasCalledWithArguments($resource)->once
+		;
+	}
+
+	function test__clone()
+	{
+		$this
+			->given(
+				$this->function->socket_create[1] = $resource = uniqid(),
+				$this->function->socket_create[2] = $clone = uniqid(),
+				$this->function->socket_close->doesNothing
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->when(function() { $clone = clone $this->testedInstance; })
+			->then
+				->function('socket_close')->wasCalledWithArguments($resource)->never
+				->function('socket_close')->wasCalledWithArguments($clone)->once
+		;
+	}
+
 	function testOpen()
 	{
 		$this
 			->given(
 				$host = uniqid(),
 				$port = uniqid(),
-				$this->function->fsockopen = uniqid()
+				$this->function->socket_create = uniqid(),
+				$this->function->socket_close->doesNothing
 			)
 
 			->if(
@@ -24,18 +85,16 @@ class socket extends \atoum
 			)
 			->then
 				->object($this->testedInstance->open($host, $port))
-					->isNotTestedInstance
 					->isInstanceOf($this->testedInstance)
-				->function('fsockopen')->wasCalledWithArguments('udp://' . $host, $port, null, null, null)->once
+					->isNotTestedInstance
+				->function('socket_create')->wasCalledWithArguments(AF_INET, SOCK_DGRAM, SOL_UDP)->twice
 
 			->if(
-				$errorString = uniqid(),
-				$this->function->fsockopen = function($host, $port, & $errno, & $error) use ($errorString) { $error = $errorString; return false; }
+				$this->newTestedInstance($host, $port)
 			)
 			->then
-				->exception(function() use ($host, $port) { $this->testedInstance->open($host, $port); })
-					->isInstanceOf('estvoyage\statsd\socket\exception')
-					->hasMessage('Unable to connect on host \'' . $host . '\' on port \'' . $port . '\': ' . $errorString)
+				->object($this->testedInstance->open($host, $port))->isTestedInstance
+				->function('socket_create')->wasCalledWithArguments(AF_INET, SOCK_DGRAM, SOL_UDP)->thrice
 		;
 	}
 
@@ -43,70 +102,57 @@ class socket extends \atoum
 	{
 		$this
 			->given(
+				$host = uniqid(),
+				$port = uniqid(),
 				$data = uniqid(),
-				$this->function->fsockopen = $resource = uniqid(),
-				$this->function->fwrite = function($resource, $data) { return strlen($data); }
+				$this->function->socket_create = $resource = uniqid(),
+				$this->function->socket_sendto = function($resource, $data) { return strlen($data); },
+				$this->function->socket_close->doesNothing,
+				$this->function->socket_last_error = $errorCode = uniqid(),
+				$this->function->socket_strerror = $errorString = uniqid()
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() { $this->testedInstance->write(uniqid()); })
-					->isInstanceOf('estvoyage\statsd\socket\exception')
-					->hasMessage('Socket is not open')
-
-				->object($this->testedInstance->open(uniqid(), uniqid())->write($data))
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->function('fwrite')->wasCalledWithArguments($resource, $data, strlen($data))->once
+				->object($this->testedInstance->write($data))->isTestedInstance
+				->function('socket_sendto')->wasCalledWithArguments($resource, $data, strlen($data), 0, '127.0.0.1', 8125)->once
 
 			->if(
-				$this->function->fwrite[2] = 2
+				$this->function->socket_sendto[2] = 2
 			)
 			->then
-				->object($this->testedInstance->open(uniqid(), uniqid())->write($data))
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->function('fwrite')
-					->wasCalledWithArguments($resource, $data, strlen($data))->twice
-					->wasCalledWithArguments($resource, substr($data, 2), strlen($data) - 2)->once
+				->object($this->testedInstance->write($data))->isTestedInstance
+				->function('socket_sendto')
+					->wasCalledWithArguments($resource, $data, strlen($data), 0, '127.0.0.1', 8125)->twice
+					->wasCalledWithArguments($resource, substr($data, 2), strlen($data) - 2, 0, '127.0.0.1', 8125)->once
 
 			->if(
-				$this->function->fwrite = false
+				$this->testedInstance->open($host, $port)->write($data)
 			)
 			->then
-				->exception(function() use ($data) { $this->testedInstance->open(uniqid(), uniqid())->write($data); })
+				->function('socket_sendto')->wasCalledWithArguments($resource, $data, strlen($data), 0, $host, $port)->once
+
+			->if(
+				$this->function->socket_sendto = false
+			)
+			->then
+				->exception(function() use ($data) { $this->testedInstance->write($data); })
 					->isInstanceOf('estvoyage\statsd\socket\exception')
-					->hasMessage('Unable to write \'' . $data . '\'')
+					->hasMessage($errorString)
+				->function('socket_last_error')->wasCalledWithArguments($resource)->once
+				->function('socket_strerror')->wasCalledWithArguments($errorCode)->once
 		;
 	}
 
 	function testClose()
 	{
 		$this
-			->given(
-				$this->function->fsockopen = $resource = uniqid(),
-				$this->function->fclose = true
-			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
 				->object($this->testedInstance->close())->isTestedInstance
-
-				->object($this->testedInstance->open(uniqid(), uniqid())->close())
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->function('fclose')->wasCalledWithArguments($resource)->once
-
-			->if(
-				$this->function->fclose = false
-			)
-			->then
-				->exception(function() { $this->testedInstance->open(uniqid(), uniqid())->close(); })
-					->isInstanceOf('estvoyage\statsd\socket\exception')
-					->hasMessage('Unable to close')
-
 		;
 	}
 }

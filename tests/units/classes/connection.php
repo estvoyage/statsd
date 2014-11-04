@@ -28,7 +28,7 @@ class connection extends \atoum
 				$this->newTestedInstance($address, new statsd\connection\mtu)
 			)
 			->then
-				->mock($address)->call('openSocket')->withArguments(new socket)->once
+				->mock($address)->call('openSocket')->once
 
 			->if(
 				$this->calling($address)->openSocket->throw = new \exception(uniqid())
