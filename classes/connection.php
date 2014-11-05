@@ -38,10 +38,7 @@ class connection implements statsd\connection
 
 	function startMetric()
 	{
-		$connection = clone $this;
-		$connection->mtu = $connection->mtu->addIfNotEmpty("\n");
-
-		return $connection;
+		return $this;
 	}
 
 	function write($data)
@@ -54,7 +51,7 @@ class connection implements statsd\connection
 		}
 		catch (\exception $exception)
 		{
-			throw new connection\exception('MTU size exceeded');
+			throw new connection\exception($exception->getMessage());
 		}
 
 		return $connection;
@@ -62,7 +59,10 @@ class connection implements statsd\connection
 
 	function endMetric()
 	{
-		return $this;
+		$connection = clone $this;
+		$connection->mtu = $connection->mtu->addIfNotEmpty("\n");
+
+		return $connection;
 	}
 
 	function endPacket()
@@ -76,7 +76,7 @@ class connection implements statsd\connection
 		}
 		catch (\exception $exception)
 		{
-			throw new connection\exception('Unable to end packet');
+			throw new connection\exception($exception->getMessage());
 		}
 
 		return $connection;
@@ -92,7 +92,7 @@ class connection implements statsd\connection
 		}
 		catch (\exception $exception)
 		{
-			throw new connection\exception('Unable to close connection');
+			throw new connection\exception($exception->getMessage());
 		}
 
 		return $connection;
@@ -111,7 +111,7 @@ class connection implements statsd\connection
 		}
 		catch (\exception $exception)
 		{
-			throw new connection\exception('Unable to open connection');
+			throw new connection\exception($exception->getMessage());
 		}
 
 		return $this;

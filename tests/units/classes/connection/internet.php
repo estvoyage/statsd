@@ -35,7 +35,7 @@ class internet extends units\test
 
 				->exception(function() use ($dataGreaterThanMtu) { $this->testedInstance->write($dataGreaterThanMtu); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('MTU size exceeded')
+					->hasMessage('\'' . $dataGreaterThanMtu . '\' exceed MTU size')
 		;
 	}
 }

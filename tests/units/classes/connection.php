@@ -32,12 +32,12 @@ class connection extends units\test
 				->mock($address)->call('openSocket')->once
 
 			->if(
-				$this->calling($address)->openSocket->throw = new \exception(uniqid())
+				$this->calling($address)->openSocket->throw = new \exception($message = uniqid())
 			)
 			->then
 				->exception(function() use ($address) { $this->newTestedInstance($address, new statsd\connection\mtu); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('Unable to open connection')
+					->hasMessage($message)
 		;
 	}
 
@@ -59,12 +59,12 @@ class connection extends units\test
 				->mock($otherAddress)->call('openSocket')->withArguments($openedSocket)->once
 
 			->if(
-				$this->calling($otherAddress)->openSocket->throw = new \exception(uniqid())
+				$this->calling($otherAddress)->openSocket->throw = new \exception($message = uniqid())
 			)
 			->then
 				->exception(function() use ($otherAddress) { $this->testedInstance->open($otherAddress); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('Unable to open connection')
+					->hasMessage($message)
 		;
 	}
 
@@ -94,23 +94,11 @@ class connection extends units\test
 	function testStartMetric()
 	{
 		$this
-			->given(
-				$this->calling($mtu = new statsd\connection\mtu)->addIfNotEmpty = $mtuAfterAddIfNotEmpty = new statsd\connection\mtu
-			)
 			->if(
-				$this->newTestedInstance(new statsd\address, $mtu)
+				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
 			)
 			->then
-				->object($this->testedInstance->startMetric())
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->mock($mtu)->call('addIfNotEmpty')->withIdenticalArguments("\n")->once
-
-			->if(
-				$this->testedInstance->startMetric()->startMetric()
-			)
-			->then
-				->mock($mtuAfterAddIfNotEmpty)->call('addIfNotEmpty')->withIdenticalArguments("\n")->once
+				->object($this->testedInstance->startMetric())->isTestedInstance
 		;
 	}
 
@@ -137,23 +125,35 @@ class connection extends units\test
 				->mock($mtuAfterAdd)->call('add')->withIdenticalArguments($data)->once
 
 			->if(
-				$this->calling($mtu)->add->throw = new \exception
+				$this->calling($mtu)->add->throw = new \exception($message = uniqid())
 			)
 			->then
 				->exception(function() { $this->testedInstance->write(uniqid()); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('MTU size exceeded')
+					->hasMessage($message)
 		;
 	}
 
 	function testEndMetric()
 	{
 		$this
+			->given(
+				$this->calling($mtu = new statsd\connection\mtu)->addIfNotEmpty = $mtuAfterAddIfNotEmpty = new statsd\connection\mtu
+			)
 			->if(
-				$this->newTestedInstance(new statsd\address, new statsd\connection\mtu)
+				$this->newTestedInstance(new statsd\address, $mtu)
 			)
 			->then
-				->object($this->testedInstance->endMetric())->isTestedInstance
+				->object($this->testedInstance->endMetric())
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
+				->mock($mtu)->call('addIfNotEmpty')->withIdenticalArguments("\n")->once
+
+			->if(
+				$this->testedInstance->endMetric()->endMetric()
+			)
+			->then
+				->mock($mtuAfterAddIfNotEmpty)->call('addIfNotEmpty')->withIdenticalArguments("\n")->once
 		;
 	}
 
@@ -181,12 +181,12 @@ class connection extends units\test
 				->mock($mtuAfterResetIfTrue)->call('writeIfTrueOn')->withIdenticalArguments(true, $openedSocket)->once
 
 			->if(
-				$this->calling($mtu)->writeIfTrueOn->throw = new \exception
+				$this->calling($mtu)->writeIfTrueOn->throw = new \exception($message = uniqid())
 			)
 			->then
 				->exception(function() { $this->testedInstance->endPacket(); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('Unable to end packet')
+					->hasMessage($message)
 		;
 	}
 
@@ -207,12 +207,12 @@ class connection extends units\test
 				->mock($openedSocket)->call('close')->once
 
 			->if(
-				$this->calling($openedSocket)->close->throw = new \exception
+				$this->calling($openedSocket)->close->throw = new \exception($message = uniqid())
 			)
 			->then
 				->exception(function() { $this->testedInstance->close(); })
 					->isInstanceOf('estvoyage\statsd\connection\exception')
-					->hasMessage('Unable to close connection')
+					->hasMessage($message)
 		;
 	}
 
