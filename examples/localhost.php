@@ -11,17 +11,18 @@ This script send three different type of metric to a local statsd server which l
 require __DIR__ . '/../vendor/autoload.php';
 
 use
-	estvoyage\statsd,
+	estvoyage\statsd\client,
 	estvoyage\statsd\connection,
+	estvoyage\statsd\address,
+	estvoyage\statsd\packet,
 	estvoyage\statsd\metric
 ;
 
-(new statsd\packet)
-	->addCounting('counting1', 1)
-	->addGauge('gauge1', 100)
-	->addTiming('timing1', 1)
-	->adds([ new metric\gauge('gauge2', 5), new metric\gauge('gauge3', 10) ])
-	->addTiming('timing1', 2)
-	->addGauge('gauge4', 100)
-	->writeOn(new connection\internet(new statsd\address))
+(new client(new connection\intranet(new address)))
+	->send(new metric\counting('counting1', 1))
+	->send(new metric\gauge('gauge1', 100))
+	->send(new metric\timing('timing1', 1))
+	->send(new packet([ new metric\gauge('gauge2', 5), new metric\gauge('gauge3', 10) ]))
+	->send(new metric\timing('timing1', 2))
+	->send(new metric\gauge('gauge4', 100))
 ;
