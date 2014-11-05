@@ -70,16 +70,6 @@ class gauge extends units\test
 				->mock($connectionWithValueWrited)->call('writeData')->withArguments(new value\sampling)->thrice
 				->mock($connectionWithSamplingWrited)->call('endMetric')->thrice
 				->mock($connectionAfterEndMetric)->call('endPacket')->thrice
-
-			->if(
-				$this->newTestedInstance($value, $sampling)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|g')->twice
-				->mock($connectionWithValueWrited)->call('writeData')->withIdenticalArguments($sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->{4}
-				->mock($connectionAfterEndMetric)->call('endPacket')->{4}
 		;
 	}
 }

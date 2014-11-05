@@ -61,16 +61,6 @@ class timing extends units\test
 				->mock($connectionWithValueWrited)->call('writeData')->withArguments(new value\sampling)->once
 				->mock($connectionWithSamplingWrited)->call('endMetric')->once
 				->mock($connectionAfterEndMetric)->call('endPacket')->once
-
-			->if(
-				$this->newTestedInstance($value, $sampling)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|ms')->twice
-				->mock($connectionWithValueWrited)->call('writeData')->withIdenticalArguments($sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->twice
-				->mock($connectionAfterEndMetric)->call('endPacket')->twice
 		;
 	}
 }

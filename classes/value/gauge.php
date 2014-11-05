@@ -9,14 +9,14 @@ use
 
 class gauge extends statsd\value
 {
-	function __construct($value, value\sampling $sampling = null)
+	function __construct($value)
 	{
 		if (filter_var($value, FILTER_VALIDATE_FLOAT) === false)
 		{
 			throw new timing\exception('Gauge must be a number');
 		}
 
-		parent::__construct($value, 'g', $sampling);
+		parent::__construct($value, 'g');
 	}
 }
 

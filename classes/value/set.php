@@ -9,13 +9,13 @@ use
 
 class set extends statsd\value
 {
-	function __construct($value, value\sampling $sampling = null)
+	function __construct($value)
 	{
 		if (filter_var($value, FILTER_VALIDATE_INT) === false)
 		{
 			throw new timing\exception('Set must be a number');
 		}
 
-		parent::__construct($value, 's', $sampling);
+		parent::__construct($value, 's');
 	}
 }
