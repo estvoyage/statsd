@@ -5,16 +5,16 @@ namespace estvoyage\statsd\tests\units\port;
 require __DIR__ . '/../../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	mock\estvoyage\statsd\world\socket
 ;
 
-class statsd extends \atoum
+class statsd extends units\test
 {
 	function testClass()
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\port')
-			->extends('estvoyage\statsd\port')
 		;
 	}
 

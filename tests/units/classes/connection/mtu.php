@@ -5,10 +5,11 @@ namespace estvoyage\statsd\tests\units\connection;
 require __DIR__ . '/../../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class mtu extends \atoum
+class mtu extends units\test
 {
 	function testClass()
 	{

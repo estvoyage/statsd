@@ -1,6 +1,6 @@
 <?php
 
-namespace poc\tests\units;
+namespace estvoyage\statsd\tests\units;
 
 if (defined('atoum\scripts\runner') === false)
 {

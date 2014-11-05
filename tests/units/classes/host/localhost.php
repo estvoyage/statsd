@@ -5,16 +5,16 @@ namespace estvoyage\statsd\tests\units\host;
 require __DIR__ . '/../../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class localhost extends \atoum
+class localhost extends units\test
 {
 	function testClass()
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\host')
-			->extends('estvoyage\statsd\host')
 		;
 	}
 

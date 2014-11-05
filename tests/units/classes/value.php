@@ -5,11 +5,12 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	estvoyage\statsd\value\sampling,
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class value extends \atoum
+class value extends units\test
 {
 	function testClass()
 	{

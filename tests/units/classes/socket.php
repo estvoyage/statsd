@@ -5,10 +5,11 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	estvoyage\statsd\world as statsd
 ;
 
-class socket extends \atoum
+class socket extends units\test
 {
 	function test__construct()
 	{

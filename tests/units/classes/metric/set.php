@@ -5,19 +5,19 @@ namespace estvoyage\statsd\tests\units\metric;
 require __DIR__ . '/../../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	estvoyage\statsd\bucket,
 	estvoyage\statsd\value,
 	mock\estvoyage\statsd\world as statsd
 ;
 
-class set extends \atoum
+class set extends units\test
 {
 	function testClass()
 	{
 		$this->testedClass
 			->implements('estvoyage\statsd\world\metric')
 			->implements('estvoyage\statsd\world\connection\data')
-			->extends('estvoyage\statsd\metric')
 		;
 	}
 

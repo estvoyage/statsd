@@ -18,6 +18,7 @@
 	},
 	"autoload": {
 		"psr-4": {
+			"estvoyage\\statsd\\tests\\units\\": "tests/units",
 			"estvoyage\\statsd\\world\\": "world",
 			"estvoyage\\statsd\\": "classes"
 		}

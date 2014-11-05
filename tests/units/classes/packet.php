@@ -5,6 +5,7 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
+	estvoyage\statsd\tests\units,
 	mock\estvoyage\statsd\world as statsd,
 	estvoyage\statsd\metric\gauge,
 	estvoyage\statsd\metric\timing,
@@ -12,7 +13,7 @@ use
 	estvoyage\statsd\metric\set
 ;
 
-class packet extends \atoum
+class packet extends units\test
 {
 	function testClass()
 	{
