@@ -12,8 +12,11 @@
 			"homepage": "http://blog.mageekbox.net"
 		}
 	],
+	"require": {
+		"ext-sockets": "*",
+		"php": ">=5.5.0"
+	},
 	"require-dev": {
-		"php": ">=5.5.0",
 		"atoum/atoum": "dev-master"
 	},
 	"autoload": {
