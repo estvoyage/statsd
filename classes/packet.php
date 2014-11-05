@@ -65,7 +65,7 @@ class packet implements statsd\packet
 		return $packet;
 	}
 
-	protected function addMetric(statsd\metric $metric)
+	private function addMetric(statsd\metric $metric)
 	{
 		$this->metrics[] = $metric;
 
