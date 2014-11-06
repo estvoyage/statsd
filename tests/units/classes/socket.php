@@ -11,6 +11,11 @@ use
 
 class socket extends units\test
 {
+	function testClass()
+	{
+		$this->testedClass->implements('estvoyage\statsd\world\socket');
+	}
+
 	function test__construct()
 	{
 		$this
