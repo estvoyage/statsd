@@ -4,8 +4,60 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5465311a5deaf0df08d42e037dd2557a",
-    "packages": [],
+    "hash": "1ca9ad89857aa7f3c3c86a3ccaa41de9",
+    "packages": [
+        {
+            "name": "estvoyage/net",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/estvoyage/net.git",
+                "reference": "6e34d3330e9d8b36d181a4a50f7057a904976e58"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/6e34d3330e9d8b36d181a4a50f7057a904976e58",
+                "reference": "6e34d3330e9d8b36d181a4a50f7057a904976e58",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sockets": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\net\\tests\\units\\": "tests/units",
+                    "estvoyage\\net\\world\\": "world",
+                    "estvoyage\\net\\": "classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "An east-oriented network stack",
+            "homepage": "http://github.com/estvoyage/net",
+            "keywords": [
+                "East",
+                "Socket",
+                "network",
+                "tcp",
+                "udp"
+            ],
+            "time": "2014-11-09 15:53:59"
+        }
+    ],
     "packages-dev": [
         {
             "name": "atoum/atoum",
@@ -13,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "662e543db9302b92a9341180173890dfcdb8af34"
+                "reference": "2ecade7d2829d89fce1961a0f46cc38d4b8192e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/662e543db9302b92a9341180173890dfcdb8af34",
-                "reference": "662e543db9302b92a9341180173890dfcdb8af34",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/2ecade7d2829d89fce1961a0f46cc38d4b8192e2",
+                "reference": "2ecade7d2829d89fce1961a0f46cc38d4b8192e2",
                 "shasum": ""
             },
             "require": {
@@ -79,17 +131,18 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-10-07 11:28:16"
+            "time": "2014-11-09 10:10:43"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "estvoyage/net": 20,
         "atoum/atoum": 20
     },
     "prefer-stable": false,
-    "platform": [],
-    "platform-dev": {
+    "platform": {
         "php": ">=5.5.0"
-    }
+    },
+    "platform-dev": []
 }
