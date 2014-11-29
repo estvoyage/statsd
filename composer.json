@@ -1,4 +1,5 @@
 {
+	"minimum-stability": "dev",
 	"name": "estvoyage/statsd",
 	"type": "library",
 	"description": "An east-oriented StatsD client",

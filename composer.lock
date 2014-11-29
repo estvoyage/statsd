@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ca9ad89857aa7f3c3c86a3ccaa41de9",
+    "hash": "3f196f0c228f5c9fb9685ab74e1010e8",
     "packages": [
         {
             "name": "estvoyage/net",
@@ -12,15 +12,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "6e34d3330e9d8b36d181a4a50f7057a904976e58"
+                "reference": "eac0b83f0f92d2de6da6112eb00254432b0ba912"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/6e34d3330e9d8b36d181a4a50f7057a904976e58",
-                "reference": "6e34d3330e9d8b36d181a4a50f7057a904976e58",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/eac0b83f0f92d2de6da6112eb00254432b0ba912",
+                "reference": "eac0b83f0f92d2de6da6112eb00254432b0ba912",
                 "shasum": ""
             },
             "require": {
+                "estvoyage/value": "dev-master",
                 "ext-sockets": "*",
                 "php": ">=5.5.0"
             },
@@ -55,7 +56,55 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-11-09 15:53:59"
+            "time": "2014-11-21 20:41:21"
+        },
+        {
+            "name": "estvoyage/value",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/estvoyage/value.git",
+                "reference": "389e2aea6bc73feac2453bbcca66a2e137049d9d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/389e2aea6bc73feac2453bbcca66a2e137049d9d",
+                "reference": "389e2aea6bc73feac2453bbcca66a2e137049d9d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\value\\tests\\units\\": "tests/units",
+                    "estvoyage\\value\\": "classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "A set of whole value to avoid using native PHP type, see http://c2.com/cgi/wiki?ValueObject for more information",
+            "homepage": "http://github.com/estvoyage/value",
+            "keywords": [
+                "East",
+                "Value Object",
+                "Whole value",
+                "value"
+            ],
+            "time": "2014-11-28 20:18:41"
         }
     ],
     "packages-dev": [
@@ -65,12 +114,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "2ecade7d2829d89fce1961a0f46cc38d4b8192e2"
+                "reference": "9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/2ecade7d2829d89fce1961a0f46cc38d4b8192e2",
-                "reference": "2ecade7d2829d89fce1961a0f46cc38d4b8192e2",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba",
+                "reference": "9b87d03f0a8dbb7ee6bd434c06e3b9d8971ad1ba",
                 "shasum": ""
             },
             "require": {
@@ -131,11 +180,11 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-11-09 10:10:43"
+            "time": "2014-11-21 14:50:10"
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "estvoyage/net": 20,
         "atoum/atoum": 20
