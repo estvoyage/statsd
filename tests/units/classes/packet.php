@@ -5,12 +5,11 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd\tests\units,
 	estvoyage\statsd,
 	estvoyage\net\socket
 ;
 
-class packet extends units\test
+class packet extends test
 {
 	function testConstructor()
 	{

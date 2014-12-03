@@ -5,12 +5,11 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd\tests\units,
 	estvoyage\statsd,
 	estvoyage\statsd\value\type
 ;
 
-class value extends units\test
+class value extends test
 {
 	function testClass()
 	{

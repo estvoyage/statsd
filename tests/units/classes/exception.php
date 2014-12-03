@@ -4,11 +4,7 @@ namespace estvoyage\statsd\tests\units;
 
 require __DIR__ . '/../runner.php';
 
-use
-	estvoyage\statsd\tests\units
-;
-
-class exception extends units\test
+class exception extends test
 {
 	function testClass()
 	{

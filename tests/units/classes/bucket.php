@@ -5,11 +5,10 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd\tests\units,
 	estvoyage\statsd\bucket as testedClass
 ;
 
-class bucket extends units\test
+class bucket extends test
 {
 	function testClass()
 	{
