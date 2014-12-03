@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3f196f0c228f5c9fb9685ab74e1010e8",
+    "hash": "a90775a219c5c5071f0d49424b39326c",
     "packages": [
         {
             "name": "estvoyage/net",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "05c78c404ee7529c4062cb612be62445c92c1365"
+                "reference": "dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/05c78c404ee7529c4062cb612be62445c92c1365",
-                "reference": "05c78c404ee7529c4062cb612be62445c92c1365",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a",
+                "reference": "dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-11-30 20:01:11"
+            "time": "2014-12-03 17:28:50"
         },
         {
             "name": "estvoyage/value",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "66827cee33b9f3b0f7b803894a94872b284147d7"
+                "reference": "54906978d11d7a380b291a1651e8250e767994a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/66827cee33b9f3b0f7b803894a94872b284147d7",
-                "reference": "66827cee33b9f3b0f7b803894a94872b284147d7",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/54906978d11d7a380b291a1651e8250e767994a7",
+                "reference": "54906978d11d7a380b291a1651e8250e767994a7",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2014-12-01 13:00:59"
+            "time": "2014-12-03 12:27:51"
         }
     ],
     "packages-dev": [
@@ -115,12 +115,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "5e631553e983e98a3d67c9303d3dc8437ae04809"
+                "reference": "05aaf8be44321a8ee50687398ae3174f1aeb193e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/5e631553e983e98a3d67c9303d3dc8437ae04809",
-                "reference": "5e631553e983e98a3d67c9303d3dc8437ae04809",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/05aaf8be44321a8ee50687398ae3174f1aeb193e",
+                "reference": "05aaf8be44321a8ee50687398ae3174f1aeb193e",
                 "shasum": ""
             },
             "require": {
@@ -181,7 +181,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-12-02 12:37:51"
+            "time": "2014-12-03 13:39:41"
         }
     ],
     "aliases": [],
@@ -192,7 +192,7 @@
     },
     "prefer-stable": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }
