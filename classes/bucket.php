@@ -3,26 +3,37 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world as statsd
+	estvoyage\value
 ;
 
-class bucket implements world\bucket
+class bucket extends value\string
 {
-	private
-		$value
-	;
-
-	function __construct($value)
+	function __construct($string)
 	{
-		$this->value = $value;
+		$invalid = false;
+
+		try
+		{
+			parent::__construct($string);
+		}
+		catch (\exception $exception)
+		{
+			$invalid = true;
+		}
+
+		if ($invalid || ! self::isValidBucket($string))
+		{
+			throw new \domainException('Bucket should be a not empty string');
+		}
 	}
 
-	function writeOn(statsd\connection $connection)
+	static function validate($value)
 	{
-		return $connection
-			->startPacket()
-				->startMetric()
-					->write($this->value . ':')
-		;
+		return parent::validate($value) && self::isValidBucket($value);
+	}
+
+	private static function isValidBucket($string)
+	{
+		return $string !== '' && preg_match('/[\s@|]/', $string) === 0;
 	}
 }

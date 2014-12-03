@@ -3,27 +3,34 @@
 namespace estvoyage\statsd\value;
 
 use
-	estvoyage\statsd\world as statsd
+	estvoyage\value
 ;
 
-class sampling implements statsd\value\sampling
+class sampling extends value\float\unsigned
 {
-	private
-		$value
-	;
-
-	function __construct($value = null)
+	function __construct($value = 1.0)
 	{
-		if ($value !== null && (filter_var($value, FILTER_VALIDATE_FLOAT) === false || $value <= 0))
-		{
-			throw new sampling\exception('Sampling must be a float greater than 0.0');
-		}
+		$exception = null;
 
-		$this->value = $value ?: 1;
+		try
+		{
+			parent::__construct($value);
+		}
+		catch (\domainException $exception) {}
+
+		if ($exception || ! self::isGreaterThanZero($value))
+		{
+			throw new \domainException('Sampling should be a float greater than 0.');
+		}
 	}
 
-	function writeOn(statsd\connection $connection)
+	static function validate($value)
 	{
-		return $connection->write($this->value == 1 ? '' : '|@' . $this->value);
+		return parent::validate($value) && self::isGreaterThanZero($value);
+	}
+
+	private static function isGreaterThanZero($value)
+	{
+		return $value > 0.;
 	}
 }

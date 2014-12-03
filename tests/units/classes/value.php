@@ -6,8 +6,8 @@ require __DIR__ . '/../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\value\sampling,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd,
+	estvoyage\statsd\value\type
 ;
 
 class value extends units\test
@@ -15,44 +15,75 @@ class value extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\world\value')
-			->implements('estvoyage\statsd\world\metric\component')
-			->implements('estvoyage\statsd\world\connection\data')
+			->extends('estvoyage\value\integer')
 		;
 	}
 
-	function testWriteOn()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testContructorWithValidValue($value, $type)
 	{
 		$this
-			->given(
-				$value = uniqid(),
-				$type = uniqid(),
-				$sampling = new statsd\value\sampling,
-
-				$this->calling($connection = new statsd\connection)->write = $connectionWithValueWrited = new statsd\connection,
-				$this->calling($connectionWithValueWrited)->writeData = $connectionWithSamplingWrited = new statsd\connection,
-				$this->calling($connectionWithSamplingWrited)->endMetric = $connectionAfterEndMetric = new statsd\connection,
-				$this->calling($connectionAfterEndMetric)->endPacket = $connectionAfterEndPacket = new statsd\connection
-			)
-			->if(
-				$this->newTestedInstance($value, $type)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|' . $type)->once
-				->mock($connectionWithValueWrited)->call('writeData')->withArguments(new sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->once
-				->mock($connectionAfterEndMetric)->call('endPacket')->once
-
-			->if(
-				$this->newTestedInstance($value, $type, $sampling)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|' . $type)->twice
-				->mock($connectionWithValueWrited)->call('writeData')->withIdenticalArguments($sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->twice
-				->mock($connectionAfterEndMetric)->call('endPacket')->twice
+			->integer($this->newTestedInstance($value, $type)->asInteger)->isIdenticalTo($value)
 		;
+	}
+
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testCastToString($value, $type)
+	{
+		$this->castToString($this->newTestedInstance($value, $type))->isEqualTo($value . '|' . $type);
+	}
+
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testContructorWithInvalidValue($value)
+	{
+		$this->exception(function() use ($value) { $this->newTestedInstance($value, type\counting::build()); })
+			->isInstanceOf('domainException')
+			->hasMessage('Value should be an integer')
+		;
+	}
+
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testValidateWithValidValue($value, $type)
+	{
+		$this->boolean(statsd\value::validate($value))->isTrue;
+	}
+
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testValidateWithInvalidValue($value)
+	{
+		$this->boolean(statsd\value::validate($value))->isFalse;
+	}
+
+	protected function validValueProvider()
+	{
+		return [
+			[ - rand(1, PHP_INT_MAX), type\counting::build() ],
+			[ 0, type\counting::build() ],
+			[ rand(1, PHP_INT_MAX), type\counting::build() ]
+		];
+	}
+
+	protected function invalidValueProvider()
+	{
+		return [
+			null,
+			true,
+			false,
+			(float) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			[ [] ],
+			new \stdclass,
+			'',
+			uniqid()
+		];
 	}
 }

@@ -6,35 +6,39 @@ require __DIR__ . '/../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd,
+	estvoyage\net\socket
 ;
 
 class metric extends units\test
 {
-	function testClass()
-	{
-		$this->testedClass
-			->implements('estvoyage\statsd\world\connection\data')
-		;
-	}
-
-	function testWriteOn()
+	function testConstructor()
 	{
 		$this
 			->given(
-				$bucket = new statsd\bucket,
-				$value = new statsd\value,
-
-				$this->calling($connection = new statsd\connection)->writeData = $connectionAfterBucketWrited = new statsd\connection,
-				$this->calling($connectionAfterBucketWrited)->writeData = $connectionAfterValueWrited = new statsd\connection
+				$bucket = new statsd\bucket(uniqid()),
+				$value = new statsd\value\counting(rand(1, PHP_INT_MAX))
 			)
 			->if(
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterValueWrited)
-				->mock($connection)->call('writeData')->withIdenticalArguments($bucket)->once
-				->mock($connectionAfterBucketWrited)->call('writeData')->withIdenticalArguments($value)->once
+				->object($this->testedInstance->data)->isEqualTo(new socket\data($bucket . ':' . $value));
+		;
+	}
+
+	function testCastToString()
+	{
+		$this
+			->given(
+				$bucket = new statsd\bucket(uniqid()),
+				$value = new statsd\value\counting(rand(1, PHP_INT_MAX))
+			)
+			->if(
+				$this->newTestedInstance($bucket, $value)
+			)
+			->then
+				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value);
 		;
 	}
 }

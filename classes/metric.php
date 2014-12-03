@@ -3,27 +3,20 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world as statsd
+	estvoyage\net\socket
 ;
 
-class metric implements statsd\metric
+class metric
 {
-	private
-		$bucket,
-		$value
-	;
+	use \estvoyage\value\immutable;
 
-	function __construct(statsd\bucket $bucket, statsd\value $value)
+	function __construct(bucket $bucket, value $value)
 	{
-		$this->bucket = $bucket;
-		$this->value = $value;
+		$this->values['data'] = new socket\data($bucket . ':' . $value);
 	}
 
-	function writeOn(statsd\connection $connection)
+	function __toString()
 	{
-		return $connection
-			->writeData($this->bucket)
-				->writeData($this->value)
-		;
+		return (string) $this->data;
 	}
 }

@@ -3,32 +3,24 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\value,
-	estvoyage\statsd\world as statsd
+	estvoyage\value\integer
 ;
 
-class value implements statsd\value
+class value extends integer
 {
 	private
-		$value,
-		$type,
-		$sampling
+		$type
 	;
 
-	function __construct($value, $type, statsd\value\sampling $sampling = null)
+	function __construct($value, value\type $type)
 	{
-		$this->value = $value;
+		parent::__construct($value);
+
 		$this->type = $type;
-		$this->sampling = $sampling ?: new value\sampling;
 	}
 
-	function writeOn(statsd\connection $connection)
+	function __toString()
 	{
-		return $connection
-			->write($this->value . '|' . $this->type)
-				->writeData($this->sampling)
-					->endMetric()
-						->endPacket()
-		;
+		return parent::__toString() . '|' . $this->type;
 	}
 }

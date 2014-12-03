@@ -9,10 +9,10 @@ In fact, using east-oriented principle force using abstraction via interface and
 
 ## Prerequisites to use *estvoyage\statsd*
 
-*estvoyage\statsd* absolutely requires *PHP 5.5* or later to work.
+*estvoyage\statsd* absolutely requires *PHP 5.6* or later to work.
 On UNIX, in order to check whether you have the right PHP version, you just need to run the following command in your terminal :
 
-	# php -r 'echo (version_compare(PHP_VERSION, "5.5.0", ">=") ? "You can use estvoyage\statsd!" : "You can not use estvoyage\statsd, please upgrade PHP to its last version") . PHP_EOL;'
+	# php -r 'echo (version_compare(PHP_VERSION, "5.6.0", ">=") ? "You can use estvoyage\statsd!" : "You can not use estvoyage\statsd, please upgrade PHP to its last version") . PHP_EOL;'
 
 If `You can use estvoyage\statsd!` or equivalent gets displayed, then you have the right PHP version installed.
 If it's not the case, please upgrade your PHP version (see [PHP web site](http://www.php.net) for more information).

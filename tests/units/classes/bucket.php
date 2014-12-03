@@ -6,7 +6,7 @@ require __DIR__ . '/../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd\bucket as testedClass
 ;
 
 class bucket extends units\test
@@ -14,29 +14,70 @@ class bucket extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\world\bucket')
-			->implements('estvoyage\statsd\world\metric\component')
-			->implements('estvoyage\statsd\world\connection\data')
+			->extends('estvoyage\value\string')
 		;
 	}
 
-	function testWriteOn()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testContructorWithValidValue($value)
 	{
-		$this
-			->given(
-				$bucket = uniqid(),
-				$this->calling($connection = new statsd\connection)->startPacket = $connectionAfterStartPacket = new statsd\connection,
-				$this->calling($connectionAfterStartPacket)->startMetric = $connectionAfterStartMetric = new statsd\connection,
-				$this->calling($connectionAfterStartMetric)->write = $connectionAfterWrite = new statsd\connection
-			)
-			->if(
-				$this->newTestedInstance($bucket)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterWrite)
-				->mock($connection)->call('startPacket')->once
-				->mock($connectionAfterStartPacket)->call('startMetric')->once
-				->mock($connectionAfterStartMetric)->call('write')->withIdenticalArguments($bucket . ':')->once
+		$this->string($this->newTestedInstance($value)->asString)->isIdenticalTo($value);
+	}
+
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testContructorWithInvalidValue($value)
+	{
+		$this->exception(function() use ($value) { $this->newTestedInstance($value); })
+			->isInstanceOf('domainException')
+			->hasMessage('Bucket should be a not empty string')
 		;
+	}
+
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testValidateWithValidValue($value)
+	{
+		$this->boolean(testedClass::validate($value))->isTrue;
+	}
+
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testValidateWithInvalidValue($value)
+	{
+		$this->boolean(testedClass::validate($value))->isFalse;
+	}
+
+	protected function validValueProvider()
+	{
+		return [
+			(string) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			(string) (float) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			uniqid()
+		];
+	}
+
+	protected function invalidValueProvider()
+	{
+		return [
+			null,
+			true,
+			false,
+			rand(- PHP_INT_MAX, PHP_INT_MAX),
+			(float) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			[ [] ],
+			new \stdclass,
+			'',
+			"\n",
+			'|',
+			'@',
+			' ',
+			"\t"
+		];
 	}
 }

@@ -3,57 +3,32 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world as statsd,
-	estvoyage\statsd\metric
+	estvoyage\value,
+	estvoyage\net\socket
 ;
 
-class packet implements statsd\packet
+class packet
 {
-	private
-		$metrics = []
-	;
+	use value\immutable;
 
-	function __construct(array $metrics = [])
+	function __construct(metric ...$metrics)
 	{
-		foreach ($metrics as $metric)
+		$this->values['data'] = new socket\data((string) $metrics[0]);
+
+		$metrics = array_slice($metrics, 1);
+
+		if ($metrics)
 		{
-			$this->addMetric($metric);
+			$this->addMetric(...$metrics);
 		}
 	}
 
-	function writeOn(statsd\connection $connection)
+	function __toString()
 	{
-		return array_reduce($this->metrics, function($connection, $metric) { return $connection->writeData($metric); }, $connection->startPacket())->endPacket();
+		return (string) $this->data;
 	}
 
-	function add(statsd\metric $metric)
-	{
-		$packet = clone $this;
-
-		return $packet->addMetric($metric);
-	}
-
-	function addTiming($bucket, $value)
-	{
-		return $this->add(new metric\timing($bucket, $value));
-	}
-
-	function addGauge($bucket, $value)
-	{
-		return $this->add(new metric\gauge($bucket, $value));
-	}
-
-	function addCounting($bucket, $value)
-	{
-		return $this->add(new metric\counting($bucket, $value));
-	}
-
-	function addSet($bucket, $value)
-	{
-		return $this->add(new metric\set($bucket, $value));
-	}
-
-	function adds(array $metrics)
+	function add(metric ...$metrics)
 	{
 		$packet = clone $this;
 
@@ -65,9 +40,9 @@ class packet implements statsd\packet
 		return $packet;
 	}
 
-	private function addMetric(statsd\metric $metric)
+	private function addMetric(metric $metric)
 	{
-		$this->metrics[] = $metric;
+		$this->values['data'] = new socket\data($this. "\n" . $metric);
 
 		return $this;
 	}

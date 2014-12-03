@@ -6,8 +6,7 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\value,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd\value
 ;
 
 class set extends units\test
@@ -15,40 +14,46 @@ class set extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\world\value')
+			->extends('estvoyage\statsd\value')
 		;
 	}
 
-	function test__construct()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testContructorWithValidValue($value)
 	{
-		$this
-			->exception(function() { $this->newTestedInstance('x'); })
-				->isInstanceOf('estvoyage\statsd\value\timing\exception')
-				->hasMessage('Set must be a number')
-		;
+		$this->integer($this->newTestedInstance($value)->asInteger)->isIdenticalTo($value);
 	}
 
-	function testWriteOn()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testCastToString($value)
 	{
-		$this
-			->given(
-				$value = rand(- PHP_INT_MAX, PHP_INT_MAX),
-				$sampling = new statsd\value\sampling,
+		$this->castToString($this->newTestedInstance($value))->isEqualTo($value . '|s');
+	}
 
-				$this->calling($connection = new statsd\connection)->write = $connectionWithValueWrited = new statsd\connection,
-				$this->calling($connectionWithValueWrited)->writeData = $connectionWithSamplingWrited = new statsd\connection,
-				$this->calling($connectionWithSamplingWrited)->endMetric = $connectionAfterEndMetric = new statsd\connection,
-				$this->calling($connectionAfterEndMetric)->endPacket = $connectionAfterEndPacket = new statsd\connection
-			)
-			->if(
-				$this->newTestedInstance($value)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|s')->once
-				->mock($connectionWithValueWrited)->call('writeData')->withArguments(new value\sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->once
-				->mock($connectionAfterEndMetric)->call('endPacket')->once
-		;
+	protected function validValueProvider()
+	{
+		return [
+			- rand(1, PHP_INT_MAX),
+			0,
+			rand(1, PHP_INT_MAX)
+		];
+	}
+
+	protected function invalidValueProvider()
+	{
+		return [
+			null,
+			true,
+			false,
+			(float) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			[ [] ],
+			new \stdclass,
+			'',
+			uniqid()
+		];
 	}
 }

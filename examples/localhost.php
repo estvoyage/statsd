@@ -9,20 +9,3 @@ This script send three different type of metric to a local statsd server which l
 */
 
 require __DIR__ . '/../vendor/autoload.php';
-
-use
-	estvoyage\statsd\client,
-	estvoyage\statsd\connection,
-	estvoyage\statsd\address,
-	estvoyage\statsd\packet,
-	estvoyage\statsd\metric
-;
-
-(new client(new connection\intranet(new address)))
-	->send(new metric\counting('counting1', 1))
-	->send(new metric\gauge('gauge1', 100))
-	->send(new metric\timing('timing1', 1))
-	->send(new packet([ new metric\gauge('gauge2', 5), new metric\gauge('gauge3', 10) ]))
-	->send(new metric\timing('timing1', 2))
-	->send(new metric\gauge('gauge4', 100))
-;

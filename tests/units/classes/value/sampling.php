@@ -6,7 +6,7 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd\value
 ;
 
 class sampling extends units\test
@@ -14,45 +14,99 @@ class sampling extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\world\value\sampling')
+			->extends('estvoyage\value\float\unsigned')
 		;
 	}
 
-	function test__construct()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testContructorWithValidValue($value)
 	{
-		$this
-			->exception(function() { $this->newTestedInstance(-0.1); })
-				->isInstanceOf('estvoyage\statsd\value\sampling\exception')
-				->hasMessage('Sampling must be a float greater than 0.0')
+		$this->float($this->newTestedInstance($value)->asFloat)->isEqualTo($value);
+	}
+
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testValidateWithValidValue($value)
+	{
+		$this->boolean(value\sampling::validate($value))->isTrue;
+	}
+
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testContructorWithInvalidValue($value)
+	{
+		$this->exception(function() use ($value) { $this->newTestedInstance($value); })
+			->isInstanceOf('domainException')
+			->hasMessage('Sampling should be a float greater than 0.')
 		;
 	}
 
-	function testWriteOn()
+	/**
+	 * @dataProvider invalidValueProvider
+	 */
+	function testValidateWithInvalidValue($value)
+	{
+		$this->boolean(value\sampling::validate($value))->isFalse;
+	}
+
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testCastToString($value)
+	{
+		$this->castToString($this->newTestedInstance($value))->isEqualTo((string) (float) $value);
+	}
+
+	function testImmutability()
 	{
 		$this
-			->given(
-				$this->calling($connection = new statsd\connection)->write = $connectionWrited = new statsd\connection
-			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
-				->mock($connection)->call('write')->withIdenticalArguments('')->once
+				->exception(function() { $this->testedInstance->asFloat = uniqid(); })
+					->isInstanceOf('logicException')
+					->hasMessage(get_class($this->testedInstance) . ' is immutable')
 
-			->if(
-				$this->newTestedInstance(1.1)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
-				->mock($connection)->call('write')->withIdenticalArguments('|@1.1')->once
+				->exception(function() { $this->testedInstance->{uniqid()} = uniqid(); })
+					->isInstanceOf('logicException')
+					->hasMessage(get_class($this->testedInstance) . ' is immutable')
 
-			->if(
-				$this->newTestedInstance(0.9)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionWrited)
-				->mock($connection)->call('write')->withIdenticalArguments('|@0.9')->once
+				->exception(function() { unset($this->testedInstance->asFloat); })
+					->isInstanceOf('logicException')
+					->hasMessage(get_class($this->testedInstance) . ' is immutable')
+
+				->exception(function() { unset($this->testedInstance->{uniqid()}); })
+					->isInstanceOf('logicException')
+					->hasMessage(get_class($this->testedInstance) . ' is immutable')
 		;
+	}
+
+	protected function validValueProvider()
+	{
+		return [
+			rand(1, PHP_INT_MAX),
+			(float) rand(1, PHP_INT_MAX)
+		];
+	}
+
+	protected function invalidValueProvider()
+	{
+		return [
+			null,
+			true,
+			false,
+			0,
+			- rand(1, PHP_INT_MAX),
+			- (float) rand(1, PHP_INT_MAX),
+			0.,
+			[ [] ],
+			new \stdclass,
+			''
+		];
 	}
 }

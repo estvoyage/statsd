@@ -6,8 +6,7 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\value\sampling,
-	mock\estvoyage\statsd\world as statsd
+	estvoyage\statsd\value
 ;
 
 class counting extends units\test
@@ -15,50 +14,57 @@ class counting extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\world\value')
+			->extends('estvoyage\statsd\value')
 		;
 	}
 
-	function test__construct()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testContructorWithValidValue($value)
 	{
 		$this
-			->exception(function() { $this->newTestedInstance('x'); })
-				->isInstanceOf('estvoyage\statsd\value\timing\exception')
-				->hasMessage('Counting must be an integer')
+			->integer($this->newTestedInstance($value)->asInteger)->isIdenticalTo($value)
+			->integer($this->newTestedInstance($value, new value\sampling)->asInteger)->isIdenticalTo($value)
 		;
 	}
 
-	function testWriteOn()
+	/**
+	 * @dataProvider validValueProvider
+	 */
+	function testCastToString($value)
 	{
 		$this
-			->given(
-				$value = rand(0, PHP_INT_MAX),
-				$sampling = new statsd\value\sampling,
-
-				$this->calling($connection = new statsd\connection)->write = $connectionWithValueWrited = new statsd\connection,
-				$this->calling($connectionWithValueWrited)->writeData = $connectionWithSamplingWrited = new statsd\connection,
-				$this->calling($connectionWithSamplingWrited)->endMetric = $connectionAfterEndMetric = new statsd\connection,
-				$this->calling($connectionAfterEndMetric)->endPacket = $connectionAfterEndPacket = new statsd\connection
-			)
 			->if(
-				$this->newTestedInstance($value)
+				$sampling = new value\sampling(rand(1, 10) / 100)
 			)
 			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|c')->once
-				->mock($connectionWithValueWrited)->call('writeData')->withArguments(new sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->once
-				->mock($connectionAfterEndMetric)->call('endPacket')->once
-
-			->if(
-				$this->newTestedInstance($value, $sampling)
-			)
-			->then
-				->object($this->testedInstance->writeOn($connection))->isIdenticalTo($connectionAfterEndPacket)
-				->mock($connection)->call('write')->withArguments($value . '|c')->twice
-				->mock($connectionWithValueWrited)->call('writeData')->withIdenticalArguments($sampling)->once
-				->mock($connectionWithSamplingWrited)->call('endMetric')->twice
-				->mock($connectionAfterEndMetric)->call('endPacket')->twice
+				->castToString($this->newTestedInstance($value))->isEqualTo($value . '|c')
+				->castToString($this->newTestedInstance($value, new value\sampling))->isEqualTo($value . '|c')
+				->castToString($this->newTestedInstance($value, $sampling))->isEqualTo($value . '|c|@' . $sampling)
 		;
+	}
+
+	protected function validValueProvider()
+	{
+		return [
+			- rand(1, PHP_INT_MAX),
+			0,
+			rand(1, PHP_INT_MAX)
+		];
+	}
+
+	protected function invalidValueProvider()
+	{
+		return [
+			null,
+			true,
+			false,
+			(float) rand(- PHP_INT_MAX, PHP_INT_MAX),
+			[ [] ],
+			new \stdclass,
+			'',
+			uniqid()
+		];
 	}
 }
