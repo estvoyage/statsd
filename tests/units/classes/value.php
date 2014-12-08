@@ -66,23 +66,22 @@ class value extends test
 	protected function validValueProvider()
 	{
 		return [
-			[ - rand(1, PHP_INT_MAX), type\counting::build() ],
-			[ 0, type\counting::build() ],
-			[ rand(1, PHP_INT_MAX), type\counting::build() ]
+			'negative integer' => [ - rand(1, PHP_INT_MAX), type\counting::build() ],
+			'zero as integer' => [ 0, type\counting::build() ],
+			'positive integer' => [ rand(1, PHP_INT_MAX), type\counting::build() ]
 		];
 	}
 
 	protected function invalidValueProvider()
 	{
 		return [
-			null,
-			true,
-			false,
-			(float) rand(- PHP_INT_MAX, PHP_INT_MAX),
-			[ [] ],
-			new \stdclass,
-			'',
-			uniqid()
+			'null' => null,
+			'true' => true,
+			'false' => false,
+			'array' => [ [] ],
+			'object' => new \stdclass,
+			'empty string' => '',
+			'any string' => uniqid() . ' ' . uniqid()
 		];
 	}
 }

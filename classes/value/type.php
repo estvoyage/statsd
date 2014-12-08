@@ -3,34 +3,26 @@
 namespace estvoyage\statsd\value;
 
 use
-	estvoyage\value
+	estvoyage\value\world as value
 ;
 
 abstract class type
 {
-	use value\immutable;
+	use value\string {
+		__construct as private;
+	}
 
 	protected static
-		$instance
+		$instances
 	;
 
-	function __toString()
+	protected static function buildType($value)
 	{
-		return $this->asString;
-	}
-
-	protected static function buildWith($value)
-	{
-		if (! static::$instance)
+		if (! isset(self::$instances[$value]))
 		{
-			static::$instance = new static($value);
+			self::$instances[$value] = new static($value);
 		}
 
-		return static::$instance;
-	}
-
-	private function __construct($value)
-	{
-		$this->values['asString'] = $value;
+		return self::$instances[$value];
 	}
 }

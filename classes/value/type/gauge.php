@@ -10,6 +10,6 @@ class gauge extends value\type
 {
 	static function build()
 	{
-		return parent::buildWith('g');
+		return parent::buildType('g');
 	}
 }

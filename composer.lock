@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a90775a219c5c5071f0d49424b39326c",
+    "hash": "b64cf49232463dae34a2d65154c3cb84",
     "packages": [
         {
             "name": "estvoyage/net",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a"
+                "reference": "881f8d18937f21141f70574209c65a2f8c164f6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a",
-                "reference": "dd4fdd286ae3a42fe9dc7274770b6d7316cbaa5a",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/881f8d18937f21141f70574209c65a2f8c164f6e",
+                "reference": "881f8d18937f21141f70574209c65a2f8c164f6e",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-12-03 17:28:50"
+            "time": "2014-12-08 12:46:52"
         },
         {
             "name": "estvoyage/value",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "54906978d11d7a380b291a1651e8250e767994a7"
+                "reference": "9dd0cf6a149c77456ab51d71a618e21622af72ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/54906978d11d7a380b291a1651e8250e767994a7",
-                "reference": "54906978d11d7a380b291a1651e8250e767994a7",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/9dd0cf6a149c77456ab51d71a618e21622af72ae",
+                "reference": "9dd0cf6a149c77456ab51d71a618e21622af72ae",
                 "shasum": ""
             },
             "require": {
@@ -83,6 +83,7 @@
             "autoload": {
                 "psr-4": {
                     "estvoyage\\value\\tests\\units\\": "tests/units",
+                    "estvoyage\\value\\world\\": "world",
                     "estvoyage\\value\\": "classes"
                 }
             },
@@ -105,7 +106,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2014-12-03 12:27:51"
+            "time": "2014-12-08 12:18:46"
         }
     ],
     "packages-dev": [
@@ -115,12 +116,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "05aaf8be44321a8ee50687398ae3174f1aeb193e"
+                "reference": "1a38d209f1f2222e31fc49ea9b93679d2852960d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/05aaf8be44321a8ee50687398ae3174f1aeb193e",
-                "reference": "05aaf8be44321a8ee50687398ae3174f1aeb193e",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/1a38d209f1f2222e31fc49ea9b93679d2852960d",
+                "reference": "1a38d209f1f2222e31fc49ea9b93679d2852960d",
                 "shasum": ""
             },
             "require": {
@@ -141,6 +142,11 @@
                 "bin/atoum"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "classes/"
@@ -181,7 +187,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-12-03 13:39:41"
+            "time": "2014-12-04 16:17:48"
         }
     ],
     "aliases": [],

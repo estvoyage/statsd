@@ -10,6 +10,6 @@ class set extends value\type
 {
 	static function build()
 	{
-		return parent::buildWith('s');
+		return parent::buildType('s');
 	}
 }

@@ -8,11 +8,11 @@ use
 
 class metric
 {
-	use \estvoyage\value\immutable;
+	use \estvoyage\value\world\immutable;
 
 	function __construct(bucket $bucket, value $value)
 	{
-		$this->values['data'] = new socket\data($bucket . ':' . $value);
+		$this->init([ 'data' => new socket\data($bucket . ':' . $value) ]);
 	}
 
 	function __toString()

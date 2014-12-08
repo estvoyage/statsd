@@ -3,7 +3,7 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\value,
+	estvoyage\value\world as value,
 	estvoyage\net\socket
 ;
 
@@ -13,7 +13,7 @@ class packet
 
 	function __construct(metric ...$metrics)
 	{
-		$this->values['data'] = new socket\data((string) $metrics[0]);
+		$this->init(['data' => new socket\data((string) $metrics[0]) ]);
 
 		$metrics = array_slice($metrics, 1);
 

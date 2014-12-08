@@ -10,6 +10,6 @@ class counting extends value\type
 {
 	static function build()
 	{
-		return parent::buildWith('c');
+		return parent::buildType('c');
 	}
 }
