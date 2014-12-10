@@ -3,24 +3,17 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\value\world as value,
+	estvoyage\net\mtu,
 	estvoyage\net\socket
 ;
 
 class packet
 {
-	use value\immutable;
+	use \estvoyage\value\world\immutable;
 
 	function __construct(metric ...$metrics)
 	{
-		$this->init(['data' => new socket\data((string) $metrics[0]) ]);
-
-		$metrics = array_slice($metrics, 1);
-
-		if ($metrics)
-		{
-			$this->addMetric(...$metrics);
-		}
+		$this->initData(! $metrics ? '' : join("\n", $metrics));
 	}
 
 	function __toString()
@@ -28,21 +21,33 @@ class packet
 		return (string) $this->data;
 	}
 
-	function add(metric ...$metrics)
+	function add(metric $metric, metric ...$metrics)
 	{
-		$packet = clone $this;
+		array_unshift($metrics, $metric);
 
-		foreach ($metrics as $metric)
+		$data = (string) $this;
+
+		if ($data)
 		{
-			$packet->addMetric($metric);
+			$data .= "\n";
 		}
+
+		$data .= join("\n", $metrics);
+
+		$packet = new self;
+		$packet->initData($data);
 
 		return $packet;
 	}
 
-	private function addMetric(metric $metric)
+	function split(mtu $mtu)
 	{
-		$this->values['data'] = new socket\data($this. "\n" . $metric);
+		return new packet\collection($this);
+	}
+
+	private function initData($data)
+	{
+		$this->init(['data' => new socket\data($data) ]);
 
 		return $this;
 	}
