@@ -21,10 +21,10 @@ class packet extends test
 			)
 
 			->if(
-				$packet = new statsd\packet
+				$this->newTestedInstance
 			)
 			->then
-				->object($packet->data)->isEqualTo(new socket\data)
+				->object($this->testedInstance->data)->isEqualTo(new socket\data)
 
 			->if(
 				$this->newTestedInstance($metric1)
@@ -33,10 +33,10 @@ class packet extends test
 				->object($this->testedInstance->data)->isEqualTo(new socket\data((string) $metric1))
 
 			->if(
-				$packet = new statsd\packet($metric1, $metric2)
+				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
-				->object($packet->data)->isEqualTo(new socket\data($metric1 . "\n" . $metric2))
+				->object($this->testedInstance->data)->isEqualTo(new socket\data($metric1 . "\n" . $metric2))
 		;
 	}
 
@@ -49,23 +49,23 @@ class packet extends test
 				$metric3 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX)))
 			)
 			->if(
-				$packet = new statsd\packet
+				$this->newTestedInstance
 			)
 			->then
 
-				->object($packet->add($metric1))
-					->isNotIdenticalTo($packet)
-					->isInstanceOf($packet)
+				->object($this->testedInstance->add($metric1))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 					->toString->isEqualTo($metric1)
 
-				->object($packet->add($metric1)->add($metric1))
-					->isNotIdenticalTo($packet)
-					->isInstanceOf($packet)
+				->object($this->testedInstance->add($metric1)->add($metric1))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 					->toString->isEqualTo($metric1 . "\n" . $metric1)
 
-				->object($packet->add($metric1)->add($metric1)->add($metric2, $metric3))
-					->isNotIdenticalTo($packet)
-					->isInstanceOf($packet)
+				->object($this->testedInstance->add($metric1)->add($metric1)->add($metric2, $metric3))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 					->toString->isEqualTo($metric1 . "\n" . $metric1 . "\n" . $metric2 . "\n" . $metric3)
 		;
 	}
