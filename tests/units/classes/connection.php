@@ -30,8 +30,8 @@ class connection extends test
 				->mock($socket)->call('write')->withArguments(new net\socket\data((string) $metric), $address)->once
 
 				->exception(function() use ($metricGreaterThanMtu) { $this->testedInstance->sendMetric($metricGreaterThanMtu); })
-					->isInstanceOf('estvoyage\statsd\connection\overflow')
-					->hasMessage('Metric length exceed MTU size')
+					->isInstanceOf('estvoyage\net\mtu\overflow')
+					->hasMessage('Metric length exceed MTU')
 		;
 	}
 }

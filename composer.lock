@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "d18e997f1806e4fb0c215de4f34f767647bedc70"
+                "reference": "535377de17243ffdd4dc7e76e517a7c95940a1b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/d18e997f1806e4fb0c215de4f34f767647bedc70",
-                "reference": "d18e997f1806e4fb0c215de4f34f767647bedc70",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/535377de17243ffdd4dc7e76e517a7c95940a1b0",
+                "reference": "535377de17243ffdd4dc7e76e517a7c95940a1b0",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-12-09 12:04:35"
+            "time": "2014-12-11 12:55:42"
         },
         {
             "name": "estvoyage/value",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "9a29d3b3cdcdd251b1fe7fea0fdd389ecc3539a4"
+                "reference": "bbd1a2a675c4fc1b816c85657e79e0af45ef3201"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/9a29d3b3cdcdd251b1fe7fea0fdd389ecc3539a4",
-                "reference": "9a29d3b3cdcdd251b1fe7fea0fdd389ecc3539a4",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/bbd1a2a675c4fc1b816c85657e79e0af45ef3201",
+                "reference": "bbd1a2a675c4fc1b816c85657e79e0af45ef3201",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2014-12-09 13:31:50"
+            "time": "2014-12-11 19:27:52"
         }
     ],
     "packages-dev": [

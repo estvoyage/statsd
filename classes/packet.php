@@ -7,7 +7,7 @@ use
 	estvoyage\net\socket
 ;
 
-class packet
+final class packet
 {
 	use \estvoyage\value\world\immutable;
 
@@ -27,28 +27,45 @@ class packet
 
 		$data = (string) $this;
 
-		if ($data)
-		{
-			$data .= "\n";
-		}
-
-		$data .= join("\n", $metrics);
-
-		$packet = new self;
-		$packet->initData($data);
-
-		return $packet;
+		return self::build($data . ($data ? "\n" : '') . join("\n", $metrics));
 	}
 
 	function split(mtu $mtu)
 	{
-		return new packet\collection($this);
+		$collection = new packet\collection;
+
+		$data = (string) $this;
+
+		while (strlen($data) > $mtu->asInteger)
+		{
+			$packet = substr($data, 0, $mtu->asInteger);
+			$endOfMetric = strrpos($packet, "\n");
+
+			if (! $endOfMetric)
+			{
+				throw new mtu\overflow('Unable to split packet according to MTU');
+			}
+
+			$collection = self::addToCollection($collection, substr($packet, 0, $endOfMetric));
+
+			$data = substr($packet, $endOfMetric + 1) . substr($data, $mtu->asInteger);
+		}
+
+		return self::addToCollection($collection, $data);
 	}
 
 	private function initData($data)
 	{
-		$this->init(['data' => new socket\data($data) ]);
+		return $this->init(['data' => new socket\data($data) ]);
+	}
 
-		return $this;
+	private static function build($data)
+	{
+		return (new self)->initData($data);
+	}
+
+	private static function addToCollection(packet\collection $collection, $data)
+	{
+		return ! $data ? $collection : $collection->add(self::build($data));
 	}
 }

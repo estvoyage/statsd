@@ -27,7 +27,7 @@ class connection
 
 		if (strlen($data) > $this->mtu->asInteger)
 		{
-			throw new connection\overflow('Metric length exceed MTU size');
+			throw new net\mtu\overflow('Metric length exceed MTU');
 		}
 
 		$this->socket->write($data, $this->address);
