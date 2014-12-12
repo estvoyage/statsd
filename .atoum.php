@@ -1,5 +1,7 @@
 <?php
 
+use mageekguy\atoum\reports;
+
 $runner
 	->addTestsFromDirectory(__DIR__ . '/tests/units/classes')
 	->disallowUndefinedMethodInInterface()
