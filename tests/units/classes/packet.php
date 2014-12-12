@@ -26,9 +26,9 @@ class packet extends test
 
 		$this
 			->given(
-				$metric1 = new statsd\metric(uniqid()),
-				$metric2 = new statsd\metric(uniqid()),
-				$metric3 = new statsd\metric(uniqid())
+				$metric1 = new statsd\metric,
+				$metric2 = new statsd\metric,
+				$metric3 = new statsd\metric
 			)
 
 			->if(
