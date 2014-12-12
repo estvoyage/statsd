@@ -1,4 +1,4 @@
-# *estvoyage\statsd* [![Build Status](https://secure.travis-ci.org/estvoyage/statsd.png?branch=master)](http://travis-ci.org/estvoyage/statsd)
+# *estvoyage\statsd* [![Build Status](https://secure.travis-ci.org/estvoyage/statsd.png?branch=master)](http://travis-ci.org/estvoyage/statsd) [![Coverage Status](https://coveralls.io/repos/estvoyage/statsd/badge.png)](https://coveralls.io/r/estvoyage/statsd)
 
 ## An east-oriented StatsD client written in PHP!
 
