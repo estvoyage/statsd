@@ -22,7 +22,7 @@ class packet extends test
 
 	function testAdd()
 	{
-		require __DIR__ . '/../mock/statsd/metric.php';
+		require 'mock/statsd/metric.php';
 
 		$this
 			->given(
@@ -67,10 +67,10 @@ class packet extends test
 
 	function testWriteOn()
 	{
-		require __DIR__ . '/../mock/net/mtu.php';
-		require __DIR__ . '/../mock/net/address.php';
-		require __DIR__ . '/../mock/net/socket/data.php';
-		require __DIR__ . '/../mock/statsd/metric.php';
+		require 'mock/net/mtu.php';
+		require 'mock/net/address.php';
+		require 'mock/net/socket/data.php';
+		require 'mock/statsd/metric.php';
 
 		$this
 			->given(
