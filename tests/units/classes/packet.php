@@ -10,11 +10,10 @@ use
 	mock\estvoyage\net\world\socket
 ;
 
-require 'mock/net/mtu.php';
-require 'mock/net/address.php';
-require 'mock/net/socket/data.php';
-require 'mock/statsd/metric.php';
-
+require_once 'mock/net/mtu.php';
+require_once 'mock/net/address.php';
+require_once 'mock/net/socket/data.php';
+require_once 'mock/statsd/metric.php';
 
 class packet extends test
 {

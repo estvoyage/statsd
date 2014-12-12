@@ -53,7 +53,7 @@ final class packet implements statsd\packet
 
 		foreach ($data as $dataNotWrited)
 		{
-			while ($dataNotWrited != new data)
+			while ((string) $dataNotWrited)
 			{
 				$dataNotWrited = $socket->write($dataNotWrited, $address);
 			}

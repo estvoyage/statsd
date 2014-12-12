@@ -11,13 +11,13 @@ use
 	mock\estvoyage\statsd\world\packet
 ;
 
+require_once 'mock/net/mtu.php';
+require_once 'mock/net/address.php';
+
 class connection extends test
 {
 	function testSendMetric()
 	{
-		require __DIR__ . '/../mock/net/mtu.php';
-		require __DIR__ . '/../mock/net/address.php';
-
 		$this
 			->given(
 				$packet = new packet,
