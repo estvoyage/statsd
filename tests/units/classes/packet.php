@@ -5,8 +5,8 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd,
 	estvoyage\net,
+	estvoyage\statsd,
 	mock\estvoyage\net\world\socket
 ;
 
