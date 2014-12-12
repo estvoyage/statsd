@@ -4,68 +4,53 @@ namespace estvoyage\statsd;
 
 use
 	estvoyage\net\mtu,
-	estvoyage\net\socket
+	estvoyage\net\address,
+	estvoyage\net\socket\data,
+	estvoyage\net\world\socket,
+	estvoyage\statsd\world as statsd
 ;
 
-final class packet
+final class packet implements statsd\packet
 {
-	use \estvoyage\value\world\immutable;
+	private
+		$metrics
+	;
 
 	function __construct(metric ...$metrics)
 	{
-		$this->initData(! $metrics ? '' : join("\n", $metrics));
-	}
-
-	function __toString()
-	{
-		return (string) $this->data;
+		$this->metrics = $metrics;
 	}
 
 	function add(metric $metric, metric ...$metrics)
 	{
 		array_unshift($metrics, $metric);
 
-		$data = (string) $this;
-
-		return self::build($data . ($data ? "\n" : '') . join("\n", $metrics));
+		return new self(... array_merge($this->metrics, $metrics));
 	}
 
-	function split(mtu $mtu)
+	function writeOn(socket $socket, address $address, mtu $mtu)
 	{
-		$collection = new packet\collection;
-
-		$data = (string) $this;
+		$data = join("\n", $this->metrics);
 
 		while (strlen($data) > $mtu->asInteger)
 		{
-			$packet = substr($data, 0, $mtu->asInteger);
-			$endOfMetric = strrpos($packet, "\n");
+			$endOfPacket = strrpos($data, "\n", $mtu->asInteger);
 
-			if (! $endOfMetric)
+			if (! $endOfPacket)
 			{
 				throw new mtu\overflow('Unable to split packet according to MTU');
 			}
 
-			$collection = self::addToCollection($collection, substr($packet, 0, $endOfMetric));
+			$socket->write(new data(substr($data, 0, $endOfPacket)), $address);
 
-			$data = substr($packet, $endOfMetric + 1) . substr($data, $mtu->asInteger);
+			$data = substr($data, $endOfPacket + 1);
 		}
 
-		return self::addToCollection($collection, $data);
-	}
+		if ($data)
+		{
+			$socket->write(new data($data), $address);
+		}
 
-	private function initData($data)
-	{
-		return $this->init(['data' => new socket\data($data) ]);
-	}
-
-	private static function build($data)
-	{
-		return (new self)->initData($data);
-	}
-
-	private static function addToCollection(packet\collection $collection, $data)
-	{
-		return ! $data ? $collection : $collection->add(self::build($data));
+		return $this;
 	}
 }

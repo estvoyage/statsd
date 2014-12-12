@@ -7,31 +7,30 @@ require __DIR__ . '/../runner.php';
 use
 	estvoyage\net,
 	estvoyage\statsd,
-	mock\estvoyage\net\world\socket
+	mock\estvoyage\net\world\socket,
+	mock\estvoyage\statsd\world\packet
 ;
 
 class connection extends test
 {
 	function testSendMetric()
 	{
+		require __DIR__ . '/../mock/net/mtu.php';
+		require __DIR__ . '/../mock/net/address.php';
+
 		$this
 			->given(
-				$mtu = net\mtu::build(68),
+				$packet = new packet,
+				$mtu = new net\mtu,
 				$socket = new socket,
-				$address = new net\address(new net\host('foo'), new net\port(rand(0, 65535))),
-				$metric = new statsd\metric(new statsd\bucket('foo'), new statsd\value\timing(0)),
-				$metricGreaterThanMtu = new statsd\metric(new statsd\bucket(str_repeat('a', 69)), new statsd\value\timing(0))
+				$address = new net\address
 			)
 			->if(
 				$this->newTestedInstance($address, $socket, $mtu)
 			)
 			->then
-				->object($this->testedInstance->sendMetric($metric))->isTestedInstance
-				->mock($socket)->call('write')->withArguments(new net\socket\data((string) $metric), $address)->once
-
-				->exception(function() use ($metricGreaterThanMtu) { $this->testedInstance->sendMetric($metricGreaterThanMtu); })
-					->isInstanceOf('estvoyage\net\mtu\overflow')
-					->hasMessage('Metric length exceed MTU')
+				->object($this->testedInstance->send($packet))->isTestedInstance
+				->mock($packet)->call('writeOn')->withArguments($socket, $address, $mtu)->once
 		;
 	}
 }

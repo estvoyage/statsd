@@ -5,9 +5,9 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\net,
 	estvoyage\statsd,
-	estvoyage\net\socket
+	estvoyage\net,
+	mock\estvoyage\net\world\socket
 ;
 
 class packet extends test
@@ -16,44 +16,19 @@ class packet extends test
 	{
 		$this->testedClass
 			->isFinal
-		;
-	}
-
-	function testConstructor()
-	{
-		$this
-			->given(
-				$metric1 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX))),
-				$metric2 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX)))
-			)
-
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->data)->isEqualTo(new socket\data)
-
-			->if(
-				$this->newTestedInstance($metric1)
-			)
-			->then
-				->object($this->testedInstance->data)->isEqualTo(new socket\data((string) $metric1))
-
-			->if(
-				$this->newTestedInstance($metric1, $metric2)
-			)
-			->then
-				->object($this->testedInstance->data)->isEqualTo(new socket\data($metric1 . "\n" . $metric2))
+			->implements('estvoyage\statsd\world\packet')
 		;
 	}
 
 	function testAdd()
 	{
+		require __DIR__ . '/../mock/statsd/metric.php';
+
 		$this
 			->given(
-				$metric1 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX))),
-				$metric2 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX))),
-				$metric3 = new statsd\metric(new statsd\bucket(uniqid()), new statsd\value\counting(rand(0, PHP_INT_MAX)))
+				$metric1 = new statsd\metric(uniqid()),
+				$metric2 = new statsd\metric(uniqid()),
+				$metric3 = new statsd\metric(uniqid())
 			)
 
 			->if(
@@ -90,34 +65,43 @@ class packet extends test
 		;
 	}
 
-	function testSplit()
+	function testWriteOn()
 	{
+		require __DIR__ . '/../mock/net/mtu.php';
+		require __DIR__ . '/../mock/net/address.php';
+		require __DIR__ . '/../mock/net/socket/data.php';
+		require __DIR__ . '/../mock/statsd/metric.php';
+
 		$this
 			->given(
-				$mtu = net\mtu::build(68),
-				$metric1 = new statsd\metric(new statsd\bucket(str_repeat('a', 26)), new statsd\value\counting(1000)),
-				$metric2 = new statsd\metric(new statsd\bucket(str_repeat('b', 26)), new statsd\value\counting(2000)),
-				$metric3 = new statsd\metric(new statsd\bucket(str_repeat('b', 26)), new statsd\value\counting(3000)),
-				$metricGreaterThanMtu = new statsd\metric(new statsd\bucket(str_repeat('a', $mtu->asInteger + 1)), new statsd\value\counting(rand(0, PHP_INT_MAX)))
+				$socket = new socket,
+				$address = new net\address,
+				$mtu = new net\mtu(5),
+				$metric1 = new statsd\metric('12'),
+				$metric2 = new statsd\metric('45'),
+				$metric3 = new statsd\metric('78'),
+				$metricGreaterThanMtu = new statsd\metric('123456')
 			)
 
 			->if(
 				$this->newTestedInstance($metric1)
 			)
 			->then
-				->object($this->testedInstance->split($mtu))->isEqualTo(new statsd\packet\collection($this->testedInstance))
+				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
+				->mock($socket)->call('write')->withArguments(new net\socket\data('12'), $address)->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
-				->object($this->testedInstance->split($mtu))->isEqualTo(new statsd\packet\collection($this->testedInstance))
+				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
+				->mock($socket)->call('write')->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
 			)
 			->then
-				->exception(function() use ($mtu) { $this->testedInstance->split($mtu); })
+				->exception(function() use ($socket, $address, $mtu) { $this->testedInstance->writeOn($socket, $address, $mtu); })
 					->isInstanceOf('estvoyage\net\mtu\overflow')
 					->hasMessage('Unable to split packet according to MTU')
 
@@ -125,13 +109,11 @@ class packet extends test
 				$this->newTestedInstance($metric1, $metric2, $metric3)
 			)
 			->then
-				->object($this->testedInstance->split($mtu))
-					->isEqualTo(
-						new statsd\packet\collection(
-							$this->newTestedInstance($metric1, $metric2),
-							$this->newTestedInstance($metric3)
-						)
-					)
+				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
+				->mock($socket)
+					->call('write')
+						->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->twice
+						->withArguments(new net\socket\data('78'), $address)->once
 		;
 	}
 }

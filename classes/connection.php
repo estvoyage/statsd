@@ -3,7 +3,8 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\net
+	estvoyage\net,
+	estvoyage\statsd\world as statsd
 ;
 
 class connection
@@ -21,16 +22,9 @@ class connection
 		$this->mtu = $mtu;
 	}
 
-	function sendMetric(metric $metric)
+	function send(statsd\packet $packet)
 	{
-		$data = new net\socket\data((string) (new packet)->add($metric));
-
-		if (strlen($data) > $this->mtu->asInteger)
-		{
-			throw new net\mtu\overflow('Metric length exceed MTU');
-		}
-
-		$this->socket->write($data, $this->address);
+		$packet->writeOn($this->socket, $this->address, $this->mtu);
 
 		return $this;
 	}
