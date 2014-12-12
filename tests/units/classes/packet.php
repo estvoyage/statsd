@@ -10,6 +10,12 @@ use
 	mock\estvoyage\net\world\socket
 ;
 
+require 'mock/net/mtu.php';
+require 'mock/net/address.php';
+require 'mock/net/socket/data.php';
+require 'mock/statsd/metric.php';
+
+
 class packet extends test
 {
 	function testClass()
@@ -22,8 +28,6 @@ class packet extends test
 
 	function testAdd()
 	{
-		require 'mock/statsd/metric.php';
-
 		$this
 			->given(
 				$metric1 = new statsd\metric,
@@ -67,14 +71,9 @@ class packet extends test
 
 	function testWriteOn()
 	{
-		require 'mock/net/mtu.php';
-		require 'mock/net/address.php';
-		require 'mock/net/socket/data.php';
-		require 'mock/statsd/metric.php';
-
 		$this
 			->given(
-				$socket = new socket,
+				$this->calling($socket = new socket)->write = new net\socket\data,
 				$address = new net\address,
 				$mtu = new net\mtu(5),
 				$metric1 = new statsd\metric('12'),

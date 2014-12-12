@@ -30,25 +30,33 @@ final class packet implements statsd\packet
 
 	function writeOn(socket $socket, address $address, mtu $mtu)
 	{
-		$data = join("\n", $this->metrics);
+		$data = [];
 
-		while (strlen($data) > $mtu->asInteger)
+		$metrics = join("\n", $this->metrics);
+
+		while (strlen($metrics) > $mtu->asInteger)
 		{
-			$endOfPacket = strrpos($data, "\n", $mtu->asInteger);
-
-			if (! $endOfPacket)
+			if (! ($endOfPacket = strrpos($metrics, "\n", $mtu->asInteger)))
 			{
 				throw new mtu\overflow('Unable to split packet according to MTU');
 			}
 
-			$socket->write(new data(substr($data, 0, $endOfPacket)), $address);
+			$data[] = new data(substr($metrics, 0, $endOfPacket));
 
-			$data = substr($data, $endOfPacket + 1);
+			$metrics = substr($metrics, $endOfPacket + 1);
 		}
 
-		if ($data)
+		if ($metrics)
 		{
-			$socket->write(new data($data), $address);
+			$data[] = new data($metrics);
+		}
+
+		foreach ($data as $dataNotWrited)
+		{
+			while ($dataNotWrited != new data)
+			{
+				$dataNotWrited = $socket->write($dataNotWrited, $address);
+			}
 		}
 
 		return $this;

@@ -4,7 +4,7 @@ namespace estvoyage\net\socket;
 
 class data
 {
-	function __construct($value)
+	function __construct($value = '')
 	{
 		$this->asString = $value;
 	}
