@@ -16,6 +16,14 @@ require_once 'mock/net/address.php';
 
 class connection extends test
 {
+	function testClass()
+	{
+		$this->testedClass
+			->isAbstract
+			->implements('estvoyage\statsd\world\connection')
+		;
+	}
+
 	function testSend()
 	{
 		$this

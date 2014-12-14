@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-abstract class connection
+abstract class connection implements statsd\connection
 {
 	private
 		$address,
