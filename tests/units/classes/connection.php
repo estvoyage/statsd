@@ -16,14 +16,14 @@ require_once 'mock/net/address.php';
 
 class connection extends test
 {
-	function testSendMetric()
+	function testSend()
 	{
 		$this
 			->given(
 				$packet = new packet,
-				$mtu = new net\mtu,
+				$address = new net\address,
 				$socket = new socket,
-				$address = new net\address
+				$mtu = new net\mtu
 			)
 			->if(
 				$this->newTestedInstance($address, $socket, $mtu)

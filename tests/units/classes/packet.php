@@ -86,14 +86,14 @@ class packet extends test
 			)
 			->then
 				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
-				->mock($socket)->call('write')->withArguments(new net\socket\data('12'), $address)->once
+				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12'), $address)->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
 				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
-				->mock($socket)->call('write')->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->once
+				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
@@ -109,7 +109,7 @@ class packet extends test
 			->then
 				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
 				->mock($socket)
-					->call('write')
+					->call('writeAll')
 						->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->twice
 						->withArguments(new net\socket\data('78'), $address)->once
 		;
