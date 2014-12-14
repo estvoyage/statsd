@@ -3,26 +3,24 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\value\world as value,
-	estvoyage\net
+	estvoyage\statsd\world as statsd
 ;
 
 class client
 {
-	use value\immutable;
-
 	private
-		$socket,
-		$address,
-		$mtu
+		$connection
 	;
 
-	function __construct(net\socket $socket, net\mtu $mtu = null, net\host $host = null, net\port $port = null)
+	function __construct(statsd\connection $connection)
 	{
-		$this->socket = $socket;
-		$this->address = new net\address($host ?: new net\host, $port ?: new net\port(8125));
-		$this->mtu = $mtu;
+		$this->connection = $connection;
+	}
 
-		$this->init(['host' => $this->address->host, 'port' => $this->address->port ]);
+	function send(statsd\packet $packet)
+	{
+		$this->connection->send($packet);
+
+		return $this;
 	}
 }
