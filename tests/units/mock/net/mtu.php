@@ -8,4 +8,9 @@ class mtu
 	{
 		$this->asInteger = $value;
 	}
+
+	static function build($value = 68)
+	{
+		return new self($value);
+	}
 }
