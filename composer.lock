@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b64cf49232463dae34a2d65154c3cb84",
+    "hash": "a90775a219c5c5071f0d49424b39326c",
     "packages": [
         {
             "name": "estvoyage/net",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "535377de17243ffdd4dc7e76e517a7c95940a1b0"
+                "reference": "e40d1db31befee6631d82ad5241d75132e8b9f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/535377de17243ffdd4dc7e76e517a7c95940a1b0",
-                "reference": "535377de17243ffdd4dc7e76e517a7c95940a1b0",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/e40d1db31befee6631d82ad5241d75132e8b9f0c",
+                "reference": "e40d1db31befee6631d82ad5241d75132e8b9f0c",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-12-11 12:55:42"
+            "time": "2014-12-14 19:52:19"
         },
         {
             "name": "estvoyage/value",
