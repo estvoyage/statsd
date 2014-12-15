@@ -27,9 +27,11 @@ class client
 		return $this;
 	}
 
-	function sendMetric(metric $metric)
+	function sendMetric(metric $metric, metric... $metrics)
 	{
-		return $this->send(new packet($metric));
+		array_unshift($metrics, $metric);
+
+		return $this->send(new packet(... $metrics));
 	}
 
 	function gauge($bucket, $value)

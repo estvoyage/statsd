@@ -34,15 +34,23 @@ class client extends test
 
 		$this
 			->given(
-				$metric = new \mock\estvoyage\statsd\metric,
+				$metric1 = new \mock\estvoyage\statsd\metric,
+				$metric2 = new \mock\estvoyage\statsd\metric,
+				$metric3 = new \mock\estvoyage\statsd\metric,
 				$connection = new mock\connection
 			)
 			->if(
 				$this->newTestedInstance($connection)
 			)
 			->then
-				->object($this->testedInstance->sendMetric($metric))->isTestedInstance
-				->mock($connection)->call('send')->withArguments(new statsd\packet($metric))->once
+				->object($this->testedInstance->sendMetric($metric1))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet($metric1))->once
+
+				->object($this->testedInstance->sendMetric($metric1, $metric2))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet($metric1, $metric2))->once
+
+				->object($this->testedInstance->sendMetric($metric1, $metric2, $metric3))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet($metric1, $metric2, $metric3))->once
 		;
 	}
 
