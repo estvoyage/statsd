@@ -11,6 +11,14 @@ use
 
 class metric extends test
 {
+	function testClass()
+	{
+		$this->testedClass
+			->isFinal
+			->extends('estvoyage\value\string')
+		;
+	}
+
 	function testConstructor()
 	{
 		$this
@@ -22,22 +30,7 @@ class metric extends test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->object($this->testedInstance->data)->isEqualTo(new socket\data($bucket . ':' . $value));
-		;
-	}
-
-	function testCastToString()
-	{
-		$this
-			->given(
-				$bucket = new statsd\bucket(uniqid()),
-				$value = new statsd\value\counting(rand(1, PHP_INT_MAX))
-			)
-			->if(
-				$this->newTestedInstance($bucket, $value)
-			)
-			->then
-				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value);
+				->string($this->testedInstance->asString)->isEqualTo($bucket . ':' . $value);
 		;
 	}
 }
