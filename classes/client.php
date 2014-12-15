@@ -47,6 +47,16 @@ class client
 		return $this->sendMetric(new metric\counting($bucket, $value, $sampling));
 	}
 
+	function increment($bucket, $sampling = null, $value = null)
+	{
+		return $this->counting($bucket, $value ?: 1, $sampling);
+	}
+
+	function decrement($bucket, $sampling = null, $value = null)
+	{
+		return $this->counting($bucket, - ($value ?: 1), $sampling);
+	}
+
 	function set($bucket, $value)
 	{
 		return $this->sendMetric(new metric\set($bucket, $value));

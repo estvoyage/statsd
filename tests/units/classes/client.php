@@ -84,6 +84,74 @@ class client extends test
 		;
 	}
 
+	function testIncrement()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$positiveValue = rand(2, PHP_INT_MAX),
+				$negativeValue = -rand(0, PHP_INT_MAX),
+				$sampling = rand(1, 100) / 1000.,
+				$connection = new mock\connection
+			)
+			->if(
+				$this->newTestedInstance($connection)
+			)
+			->then
+				->object($this->testedInstance->increment($bucket))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, 1)))->once
+
+				->object($this->testedInstance->increment($bucket, $sampling))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, 1, $sampling)))->once
+
+				->object($this->testedInstance->increment($bucket, null, $positiveValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, $positiveValue)))->once
+
+				->object($this->testedInstance->increment($bucket, $sampling, $positiveValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, $positiveValue, $sampling)))->once
+
+				->object($this->testedInstance->increment($bucket, null, $negativeValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, $negativeValue)))->once
+
+				->object($this->testedInstance->increment($bucket, $sampling, $negativeValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, $negativeValue, $sampling)))->once
+		;
+	}
+
+	function testDecrement()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$positiveValue = rand(2, PHP_INT_MAX),
+				$negativeValue = -rand(0, PHP_INT_MAX),
+				$sampling = rand(1, 100) / 1000.,
+				$connection = new mock\connection
+			)
+			->if(
+				$this->newTestedInstance($connection)
+			)
+			->then
+				->object($this->testedInstance->decrement($bucket))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, -1)))->once
+
+				->object($this->testedInstance->decrement($bucket, $sampling))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, -1, $sampling)))->once
+
+				->object($this->testedInstance->decrement($bucket, null, $positiveValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, - $positiveValue)))->once
+
+				->object($this->testedInstance->decrement($bucket, $sampling, $positiveValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, - $positiveValue, $sampling)))->once
+
+				->object($this->testedInstance->decrement($bucket, null, $negativeValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, - $negativeValue)))->once
+
+				->object($this->testedInstance->decrement($bucket, $sampling, $negativeValue))->isTestedInstance
+				->mock($connection)->call('send')->withArguments(new statsd\packet(new statsd\metric\counting($bucket, - $negativeValue, $sampling)))->once
+		;
+	}
+
 	function testTiming()
 	{
 		$this
