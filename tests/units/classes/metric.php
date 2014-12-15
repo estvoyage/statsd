@@ -5,16 +5,18 @@ namespace estvoyage\statsd\tests\units;
 require __DIR__ . '/../runner.php';
 
 use
-	estvoyage\statsd,
-	estvoyage\net\socket
+	estvoyage\statsd
 ;
+
+require_once 'mock/statsd/bucket.php';
+require_once 'mock/statsd/value.php';
 
 class metric extends test
 {
 	function testClass()
 	{
 		$this->testedClass
-			->isFinal
+			->isAbstract
 			->extends('estvoyage\value\string')
 		;
 	}
@@ -24,7 +26,7 @@ class metric extends test
 		$this
 			->given(
 				$bucket = new statsd\bucket(uniqid()),
-				$value = new statsd\value\counting(rand(1, PHP_INT_MAX))
+				$value = new statsd\value(rand(1, PHP_INT_MAX))
 			)
 			->if(
 				$this->newTestedInstance($bucket, $value)

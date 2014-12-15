@@ -3,7 +3,10 @@
 namespace estvoyage\statsd;
 
 use
-	estvoyage\statsd\world as statsd
+	estvoyage\statsd\world as statsd,
+	estvoyage\statsd\metric,
+	estvoyage\statsd\bucket,
+	estvoyage\statsd\value
 ;
 
 class client
@@ -22,5 +25,30 @@ class client
 		$this->connection->send($packet);
 
 		return $this;
+	}
+
+	function sendMetric(metric $metric)
+	{
+		return $this->send(new packet($metric));
+	}
+
+	function gauge($bucket, $value)
+	{
+		return $this->sendMetric(new metric\gauge($bucket, $value));
+	}
+
+	function timing($bucket, $value)
+	{
+		return $this->sendMetric(new metric\timing($bucket, $value));
+	}
+
+	function counting($bucket, $value, $sampling = null)
+	{
+		return $this->sendMetric(new metric\counting($bucket, $value, $sampling));
+	}
+
+	function set($bucket, $value)
+	{
+		return $this->sendMetric(new metric\set($bucket, $value));
 	}
 }

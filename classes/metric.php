@@ -6,7 +6,7 @@ use
 	estvoyage\net\socket
 ;
 
-final class metric extends \estvoyage\value\string
+abstract class metric extends \estvoyage\value\string
 {
 	function __construct(bucket $bucket, value $value)
 	{
