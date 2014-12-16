@@ -11,7 +11,6 @@ use
 ;
 
 require_once 'mock/net/mtu.php';
-require_once 'mock/net/address.php';
 require_once 'mock/net/socket/data.php';
 require_once 'mock/statsd/metric.php';
 
@@ -73,7 +72,6 @@ class packet extends test
 		$this
 			->given(
 				$this->calling($socket = new socket)->write = new net\socket\data,
-				$address = new net\address,
 				$mtu = new net\mtu(5),
 				$metric1 = new statsd\metric('12'),
 				$metric2 = new statsd\metric('45'),
@@ -85,21 +83,21 @@ class packet extends test
 				$this->newTestedInstance($metric1)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
-				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12'), $address)->once
+				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
+				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12'))->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
-				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->once
+				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
+				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12' . "\n" . '45'))->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
 			)
 			->then
-				->exception(function() use ($socket, $address, $mtu) { $this->testedInstance->writeOn($socket, $address, $mtu); })
+				->exception(function() use ($socket, $mtu) { $this->testedInstance->writeOn($socket, $mtu); })
 					->isInstanceOf('estvoyage\net\mtu\overflow')
 					->hasMessage('Unable to split packet according to MTU')
 
@@ -107,11 +105,11 @@ class packet extends test
 				$this->newTestedInstance($metric1, $metric2, $metric3)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $address, $mtu))->isTestedInstance
+				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
 				->mock($socket)
 					->call('writeAll')
-						->withArguments(new net\socket\data('12' . "\n" . '45'), $address)->twice
-						->withArguments(new net\socket\data('78'), $address)->once
+						->withArguments(new net\socket\data('12' . "\n" . '45'))->twice
+						->withArguments(new net\socket\data('78'))->once
 		;
 	}
 }

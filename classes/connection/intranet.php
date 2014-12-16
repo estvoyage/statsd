@@ -9,8 +9,8 @@ use
 
 final class intranet extends statsd\connection
 {
-	function __construct(net\address $address, net\world\socket $socket)
+	function __construct(net\world\socket $socket)
 	{
-		parent::__construct($address, $socket, net\mtu::build(1432));
+		parent::__construct($socket, net\mtu::build(1432));
 	}
 }

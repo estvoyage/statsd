@@ -28,7 +28,7 @@ final class packet implements statsd\packet
 		return new self(... array_merge($this->metrics, $metrics));
 	}
 
-	function writeOn(socket $socket, address $address, mtu $mtu)
+	function writeOn(socket $socket, mtu $mtu)
 	{
 		$data = [];
 
@@ -53,7 +53,7 @@ final class packet implements statsd\packet
 
 		foreach ($data as $dataNotWrited)
 		{
-			$socket->writeAll($dataNotWrited, $address);
+			$socket->writeAll($dataNotWrited);
 		}
 
 		return $this;

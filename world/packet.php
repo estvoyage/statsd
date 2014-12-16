@@ -10,5 +10,5 @@ use
 
 interface packet
 {
-	function writeOn(socket $socket, address $address, mtu $mtu);
+	function writeOn(socket $socket, mtu $mtu);
 }

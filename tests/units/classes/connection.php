@@ -12,7 +12,6 @@ use
 ;
 
 require_once 'mock/net/mtu.php';
-require_once 'mock/net/address.php';
 
 class connection extends test
 {
@@ -29,16 +28,15 @@ class connection extends test
 		$this
 			->given(
 				$packet = new packet,
-				$address = new net\address,
 				$socket = new socket,
 				$mtu = new net\mtu
 			)
 			->if(
-				$this->newTestedInstance($address, $socket, $mtu)
+				$this->newTestedInstance($socket, $mtu)
 			)
 			->then
 				->object($this->testedInstance->send($packet))->isTestedInstance
-				->mock($packet)->call('writeOn')->withArguments($socket, $address, $mtu)->once
+				->mock($packet)->call('writeOn')->withArguments($socket, $mtu)->once
 		;
 	}
 }

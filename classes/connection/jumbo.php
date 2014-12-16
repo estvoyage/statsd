@@ -9,8 +9,8 @@ use
 
 final class jumbo extends statsd\connection
 {
-	function __construct(net\address $address, net\world\socket $socket)
+	function __construct(net\world\socket $socket)
 	{
-		parent::__construct($address, $socket, net\mtu::build(8932));
+		parent::__construct($socket, net\mtu::build(8932));
 	}
 }

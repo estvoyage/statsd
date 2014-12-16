@@ -28,16 +28,15 @@ class internet extends units\test
 	{
 		$this
 			->given(
-				$packet = new packet,
-				$address = new net\address,
-				$socket = new socket
+				$socket = new socket,
+				$packet = new packet
 			)
 			->if(
-				$this->newTestedInstance($address, $socket)
+				$this->newTestedInstance($socket)
 			)
 			->then
 				->object($this->testedInstance->send($packet))->isTestedInstance
-				->mock($packet)->call('writeOn')->withArguments($socket, $address, net\mtu::build(512))->once
+				->mock($packet)->call('writeOn')->withArguments($socket, net\mtu::build(512))->once
 		;
 	}
 }

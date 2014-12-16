@@ -10,21 +10,19 @@ use
 abstract class connection implements statsd\connection
 {
 	private
-		$address,
 		$socket,
 		$mtu
 	;
 
-	function __construct(net\address $address, net\world\socket $socket, net\mtu $mtu)
+	function __construct(net\world\socket $socket, net\mtu $mtu)
 	{
-		$this->address = $address;
 		$this->socket = $socket;
 		$this->mtu = $mtu;
 	}
 
 	function send(statsd\packet $packet)
 	{
-		$packet->writeOn($this->socket, $this->address, $this->mtu);
+		$packet->writeOn($this->socket, $this->mtu);
 
 		return $this;
 	}
