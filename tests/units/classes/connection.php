@@ -23,7 +23,7 @@ class connection extends test
 		;
 	}
 
-	function testSend()
+	function testPacketShouldBeSend()
 	{
 		$this
 			->given(
@@ -35,8 +35,8 @@ class connection extends test
 				$this->newTestedInstance($socket, $mtu)
 			)
 			->then
-				->object($this->testedInstance->send($packet))->isTestedInstance
-				->mock($packet)->call('writeOn')->withArguments($socket, $mtu)->once
+				->object($this->testedInstance->packetShouldBeSend($packet))->isTestedInstance
+				->mock($packet)->call('shouldBeSendOn')->withArguments($socket, $mtu)->once
 		;
 	}
 }

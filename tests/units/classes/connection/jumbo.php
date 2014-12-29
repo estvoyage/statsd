@@ -35,8 +35,8 @@ class jumbo extends units\test
 				$this->newTestedInstance($socket)
 			)
 			->then
-				->object($this->testedInstance->send($packet))->isTestedInstance
-				->mock($packet)->call('writeOn')->withArguments($socket, net\mtu::build(8932))->once
+				->object($this->testedInstance->packetShouldBeSend($packet))->isTestedInstance
+				->mock($packet)->call('shouldBeSendOn')->withArguments($socket, net\mtu::build(8932))->once
 		;
 	}
 }

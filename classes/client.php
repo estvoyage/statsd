@@ -4,63 +4,35 @@ namespace estvoyage\statsd;
 
 use
 	estvoyage\statsd\world as statsd,
-	estvoyage\statsd\metric,
-	estvoyage\statsd\bucket,
-	estvoyage\statsd\value
+	estvoyage\statsd\metric
 ;
 
-class client
+final class client implements statsd\client
 {
 	private
-		$connection
+		$connection,
+		$builder
 	;
 
-	function __construct(statsd\connection $connection)
+	function __construct(statsd\connection $connection, statsd\packet\builder $builder = null)
 	{
 		$this->connection = $connection;
+		$this->builder = $builder ?: new packet\builder;
 	}
 
-	function send(statsd\packet $packet)
+	function endOfCode()
 	{
-		$this->connection->send($packet);
+		$this->builder->packetShouldBeSendOn($this->connection);
 
 		return $this;
 	}
 
-	function sendMetric(metric $metric, metric... $metrics)
+	function codeHasGeneratedMetrics(metric $metric, metric... $metrics)
 	{
 		array_unshift($metrics, $metric);
 
-		return $this->send(new packet(... $metrics));
-	}
+		$this->builder->useMetrics(... $metrics);
 
-	function gauge($bucket, $value)
-	{
-		return $this->sendMetric(new metric\gauge($bucket, $value));
-	}
-
-	function timing($bucket, $value)
-	{
-		return $this->sendMetric(new metric\timing($bucket, $value));
-	}
-
-	function counting($bucket, $value, $sampling = null)
-	{
-		return $this->sendMetric(new metric\counting($bucket, $value, $sampling));
-	}
-
-	function increment($bucket, $sampling = null, $value = null)
-	{
-		return $this->counting($bucket, $value ?: 1, $sampling);
-	}
-
-	function decrement($bucket, $sampling = null, $value = null)
-	{
-		return $this->counting($bucket, - ($value ?: 1), $sampling);
-	}
-
-	function set($bucket, $value)
-	{
-		return $this->sendMetric(new metric\set($bucket, $value));
+		return $this;
 	}
 }

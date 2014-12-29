@@ -24,7 +24,7 @@ class internet extends units\test
 		;
 	}
 
-	function testSend()
+	function testPacketShouldBeSend()
 	{
 		$this
 			->given(
@@ -35,8 +35,8 @@ class internet extends units\test
 				$this->newTestedInstance($socket)
 			)
 			->then
-				->object($this->testedInstance->send($packet))->isTestedInstance
-				->mock($packet)->call('writeOn')->withArguments($socket, net\mtu::build(512))->once
+				->object($this->testedInstance->packetShouldBeSend($packet))->isTestedInstance
+				->mock($packet)->call('shouldBeSendOn')->withArguments($socket, net\mtu::build(512))->once
 		;
 	}
 }

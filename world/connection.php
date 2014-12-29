@@ -4,5 +4,5 @@ namespace estvoyage\statsd\world;
 
 interface connection
 {
-	function send(packet $packet);
+	function packetShouldBeSend(packet $packet);
 }

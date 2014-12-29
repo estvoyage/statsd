@@ -24,50 +24,7 @@ class packet extends test
 		;
 	}
 
-	function testAdd()
-	{
-		$this
-			->given(
-				$metric1 = new statsd\metric,
-				$metric2 = new statsd\metric,
-				$metric3 = new statsd\metric
-			)
-
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->add($metric1))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($metric1))
-
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->add($metric1)->add($metric1))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($metric1, $metric1))
-
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->add($metric1)->add($metric1)->add($metric2, $metric3))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($metric1, $metric1, $metric2, $metric3))
-
-			->if(
-				$this->newTestedInstance($metric1, $metric2)
-			)
-			->then
-				->object($this->testedInstance->add($metric3))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($metric1, $metric2, $metric3))
-		;
-	}
-
-	function testWriteOn()
+	function testShouldBeSendOn()
 	{
 		$this
 			->given(
@@ -83,21 +40,21 @@ class packet extends test
 				$this->newTestedInstance($metric1)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
+				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
 				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12'))->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
+				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
 				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12' . "\n" . '45'))->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
 			)
 			->then
-				->exception(function() use ($socket, $mtu) { $this->testedInstance->writeOn($socket, $mtu); })
+				->exception(function() use ($socket, $mtu) { $this->testedInstance->shouldBeSendOn($socket, $mtu); })
 					->isInstanceOf('estvoyage\net\mtu\overflow')
 					->hasMessage('Unable to split packet according to MTU')
 
@@ -105,7 +62,7 @@ class packet extends test
 				$this->newTestedInstance($metric1, $metric2, $metric3)
 			)
 			->then
-				->object($this->testedInstance->writeOn($socket, $mtu))->isTestedInstance
+				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
 				->mock($socket)
 					->call('writeAll')
 						->withArguments(new net\socket\data('12' . "\n" . '45'))->twice

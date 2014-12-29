@@ -10,5 +10,5 @@ use
 
 interface packet
 {
-	function writeOn(socket $socket, mtu $mtu);
+	function shouldBeSendOn(socket $socket, mtu $mtu);
 }

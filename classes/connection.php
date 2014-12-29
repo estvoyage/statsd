@@ -20,9 +20,9 @@ abstract class connection implements statsd\connection
 		$this->mtu = $mtu;
 	}
 
-	function send(statsd\packet $packet)
+	function packetShouldBeSend(statsd\packet $packet)
 	{
-		$packet->writeOn($this->socket, $this->mtu);
+		$packet->shouldBeSendOn($this->socket, $this->mtu);
 
 		return $this;
 	}
