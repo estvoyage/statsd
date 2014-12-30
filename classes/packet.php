@@ -18,12 +18,12 @@ final class packet implements statsd\packet
 
 	function __construct(metric ...$metrics)
 	{
-		$this->metrics = array_unique($metrics);
+		$this->metrics = join("\n", $metrics);
 	}
 
 	function shouldBeSendOn(socket $socket, mtu $mtu)
 	{
-		$metrics = join("\n", $this->metrics);
+		$metrics = $this->metrics;
 
 		while (strlen($metrics) > $mtu->asInteger)
 		{
@@ -32,15 +32,12 @@ final class packet implements statsd\packet
 				throw new mtu\overflow('Unable to split packet according to MTU');
 			}
 
-			$socket->writeAll(new data(substr($metrics, 0, $endOfPacket)));
+			$socket->mustSend(new data(substr($metrics, 0, $endOfPacket)));
 
 			$metrics = substr($metrics, $endOfPacket + 1);
 		}
 
-		if ($metrics)
-		{
-			$socket->writeAll(new data($metrics));
-		}
+		$socket->mustSend(new data($metrics));
 
 		return $this;
 	}

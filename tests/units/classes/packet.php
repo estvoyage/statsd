@@ -28,7 +28,7 @@ class packet extends test
 	{
 		$this
 			->given(
-				$this->calling($socket = new socket)->write = new net\socket\data,
+				$socket = new socket,
 				$mtu = new net\mtu(5),
 				$metric1 = new statsd\metric('12'),
 				$metric2 = new statsd\metric('45'),
@@ -41,14 +41,14 @@ class packet extends test
 			)
 			->then
 				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
-				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12'))->once
+				->mock($socket)->call('mustSend')->withArguments(new net\socket\data('12'))->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
 				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
-				->mock($socket)->call('writeAll')->withArguments(new net\socket\data('12' . "\n" . '45'))->once
+				->mock($socket)->call('mustSend')->withArguments(new net\socket\data('12' . "\n" . '45'))->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
@@ -64,7 +64,7 @@ class packet extends test
 			->then
 				->object($this->testedInstance->shouldBeSendOn($socket, $mtu))->isTestedInstance
 				->mock($socket)
-					->call('writeAll')
+					->call('mustSend')
 						->withArguments(new net\socket\data('12' . "\n" . '45'))->twice
 						->withArguments(new net\socket\data('78'))->once
 		;
