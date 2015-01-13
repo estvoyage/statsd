@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "85ebd181a9e1ae7796383c80bd0e21cec99e7cb7"
+                "reference": "908b3ef99167318866f178faff6ab3239b82f450"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/85ebd181a9e1ae7796383c80bd0e21cec99e7cb7",
-                "reference": "85ebd181a9e1ae7796383c80bd0e21cec99e7cb7",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/908b3ef99167318866f178faff6ab3239b82f450",
+                "reference": "908b3ef99167318866f178faff6ab3239b82f450",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2014-12-31 12:24:00"
+            "time": "2015-01-12 12:16:31"
         },
         {
             "name": "estvoyage/value",
@@ -116,12 +116,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "37210dcc29ef98e8623fbb08531179d5b4c42f4d"
+                "reference": "6fe185c6fe4884ff123eaf6c147912dfe8835218"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/37210dcc29ef98e8623fbb08531179d5b4c42f4d",
-                "reference": "37210dcc29ef98e8623fbb08531179d5b4c42f4d",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/6fe185c6fe4884ff123eaf6c147912dfe8835218",
+                "reference": "6fe185c6fe4884ff123eaf6c147912dfe8835218",
                 "shasum": ""
             },
             "require": {
@@ -187,7 +187,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2014-12-30 19:41:33"
+            "time": "2015-01-12 13:54:27"
         }
     ],
     "aliases": [],
