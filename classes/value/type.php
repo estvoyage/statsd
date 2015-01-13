@@ -12,7 +12,7 @@ abstract class type
 		__construct as private;
 	}
 
-	protected static
+	private static
 		$instances
 	;
 
