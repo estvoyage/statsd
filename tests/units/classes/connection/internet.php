@@ -12,7 +12,6 @@ use
 ;
 
 require_once 'mock/net/mtu.php';
-require_once 'mock/net/address.php';
 
 class internet extends units\test
 {

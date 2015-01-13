@@ -6,6 +6,7 @@ require __DIR__ . '/../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
+	estvoyage\statsd\client as testedClass,
 	estvoyage\statsd\packet,
 	mock\estvoyage\statsd\world as mock
 ;
@@ -20,7 +21,7 @@ class client extends test
 		;
 	}
 
-	function testEndOfCode()
+	function testNoMoreMetric()
 	{
 		require_once 'mock/statsd/metric.php';
 
@@ -37,25 +38,25 @@ class client extends test
 				$this->newTestedInstance($connection)
 			)
 			->then
-				->object($this->testedInstance->endOfCode())->isTestedInstance
+				->object($this->testedInstance->noMoreMetric())->isTestedInstance
 				->mock($connection)->call('packetShouldBeSend')->withArguments(new packet)->once
 
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1)->endOfCode())->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1)->noMoreMetric())->isTestedInstance
 				->mock($connection)->call('packetShouldBeSend')->withArguments(new packet($metric1))->once
 
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1, $metric2, $metric3)->endOfCode())->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1, $metric2, $metric3)->noMoreMetric())->isTestedInstance
 				->mock($connection)->call('packetShouldBeSend')->withArguments(new packet($metric1, $metric2, $metric3))->once
 
 			->if(
 				$this->newTestedInstance($connection, $packetBuilder)
 			)
 			->then
-				->object($this->testedInstance->endOfCode())->isTestedInstance
+				->object($this->testedInstance->noMoreMetric())->isTestedInstance
 				->mock($packetBuilder)->call('packetShouldBeSendOn')->withIdenticalArguments($connection)->once
 		;
 	}
 
-	function testCodeHasGeneratedMetrics()
+	function testMetricsAre()
 	{
 		require_once 'mock/statsd/metric.php';
 
@@ -71,21 +72,21 @@ class client extends test
 				$this->newTestedInstance(new mock\connection)
 			)
 			->then
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1))->isTestedInstance
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1, $metric2))->isTestedInstance
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1, $metric2, $metric3))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1, $metric2))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1, $metric2, $metric3))->isTestedInstance
 
 			->if(
 				$this->newTestedInstance(new mock\connection, $packetBuilder)
 			)
 			->then
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1))->isTestedInstance
 				->mock($packetBuilder)->call('useMetrics')->withIdenticalArguments($metric1)->once
 
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1, $metric2))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1, $metric2))->isTestedInstance
 				->mock($packetBuilder)->call('useMetrics')->withIdenticalArguments($metric1, $metric2)->once
 
-				->object($this->testedInstance->codeHasGeneratedMetrics($metric1, $metric2, $metric3))->isTestedInstance
+				->object($this->testedInstance->metricsAre($metric1, $metric2, $metric3))->isTestedInstance
 				->mock($packetBuilder)->call('useMetrics')->withIdenticalArguments($metric1, $metric2, $metric3)->once
 		;
 	}

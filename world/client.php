@@ -11,6 +11,6 @@ use
 
 interface client
 {
-	function endOfCode();
-	function codeHasGeneratedMetrics(metric $metric, metric... $metrics);
+	function noMoreMetric();
+	function metricsAre(metric $metric, metric... $metrics);
 }

@@ -22,14 +22,14 @@ final class counter
 
 	function increment($bucket, $value = 1)
 	{
-		$this->client->codeHasGeneratedMetrics($this->buildMetric($bucket, $value));
+		$this->client->metricsAre($this->buildMetric($bucket, $value));
 
 		return $this;
 	}
 
 	function decrement($bucket, $value = 1)
 	{
-		$this->client->codeHasGeneratedMetrics($this->buildMetric($bucket, - $value));
+		$this->client->metricsAre($this->buildMetric($bucket, - $value));
 
 		return $this;
 	}

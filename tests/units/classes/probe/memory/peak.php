@@ -33,7 +33,7 @@ class peak extends units\test
 			)
 			->then
 				->object($this->testedInstance->mark($bucket))->isTestedInstance
-				->mock($client)->call('codeHasGeneratedMetrics')->withArguments(new metric\gauge($bucket, $stop - $start))->once
+				->mock($client)->call('metricsAre')->withArguments(new metric\gauge($bucket, $stop - $start))->once
 		;
 	}
 }

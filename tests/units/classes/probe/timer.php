@@ -33,7 +33,7 @@ class timer extends units\test
 			)
 			->then
 				->object($this->testedInstance->mark($bucket))->isTestedInstance
-				->mock($client)->call('codeHasGeneratedMetrics')->withArguments(new metric\timing($bucket, ($stop * 10000) - ($start * 10000)))->once
+				->mock($client)->call('metricsAre')->withArguments(new metric\timing($bucket, ($stop * 10000) - ($start * 10000)))->once
 		;
 	}
 }

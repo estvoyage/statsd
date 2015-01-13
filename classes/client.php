@@ -20,14 +20,14 @@ final class client implements statsd\client
 		$this->builder = $builder ?: new packet\builder;
 	}
 
-	function endOfCode()
+	function noMoreMetric()
 	{
 		$this->builder->packetShouldBeSendOn($this->connection);
 
 		return $this;
 	}
 
-	function codeHasGeneratedMetrics(metric $metric, metric... $metrics)
+	function metricsAre(metric $metric, metric... $metrics)
 	{
 		array_unshift($metrics, $metric);
 

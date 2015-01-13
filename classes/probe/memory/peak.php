@@ -22,7 +22,7 @@ final class peak
 
 	function mark($bucket)
 	{
-		$this->client->codeHasGeneratedMetrics(new metric\gauge($bucket, memory_get_peak_usage(true) - $this->start));
+		$this->client->metricsAre(new metric\gauge($bucket, memory_get_peak_usage(true) - $this->start));
 
 		return $this;
 	}
