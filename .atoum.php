@@ -7,6 +7,8 @@ $runner
 	->disallowUndefinedMethodInInterface()
 ;
 
+$runner->getScore()->getCoverage()->excludeDirectory(__DIR__ . '/tests/units/mock');
+
 $travis = getenv('TRAVIS');
 
 if ($travis)
