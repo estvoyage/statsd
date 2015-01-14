@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\metric\value;
+namespace estvoyage\statsd\metric;
 
 use
-	estvoyage\value
+	estvoyage\value\float
 ;
 
-class sampling extends value\float\unsigned
+class sampling extends float\unsigned
 {
 	function __construct($value = 1.0)
 	{

@@ -39,7 +39,7 @@ class counting extends units\test
 				$this->newTestedInstance($bucket, $value, $sampling)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value) . '|' . statsd\metric\type\counting::build() . '|@' . (new statsd\metric\value\sampling($sampling))));
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value) . '|' . statsd\metric\type\counting::build() . '|@' . (new statsd\metric\sampling($sampling))));
 		;
 	}
 }

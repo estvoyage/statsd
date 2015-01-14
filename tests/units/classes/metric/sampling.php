@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\tests\units\metric\value;
+namespace estvoyage\statsd\tests\units\metric;
 
-require __DIR__ . '/../../../runner.php';
+require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\metric\value
+	estvoyage\statsd\metric
 ;
 
 class sampling extends units\test
@@ -31,7 +31,7 @@ class sampling extends units\test
 	 */
 	function testValidateWithValidValue($value)
 	{
-		$this->boolean(value\sampling::validate($value))->isTrue;
+		$this->boolean(metric\sampling::validate($value))->isTrue;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class sampling extends units\test
 	 */
 	function testValidateWithInvalidValue($value)
 	{
-		$this->boolean(value\sampling::validate($value))->isFalse;
+		$this->boolean(metric\sampling::validate($value))->isFalse;
 	}
 
 	/**
