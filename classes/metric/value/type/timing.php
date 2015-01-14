@@ -1,10 +1,10 @@
 <?php
 
-namespace estvoyage\statsd\value\type;
+namespace estvoyage\statsd\metric\value\type;
 
 use
 	estvoyage\value\string,
-	estvoyage\statsd\value
+	estvoyage\statsd\metric\value
 ;
 
 class timing extends value\type

@@ -1,8 +1,8 @@
 <?php
 
-namespace estvoyage\statsd\value;
+namespace estvoyage\statsd\metric\value;
 
-class type
+class sampling
 {
 	function __construct($value)
 	{

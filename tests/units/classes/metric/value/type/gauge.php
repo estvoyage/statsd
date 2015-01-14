@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\tests\units\value\type;
+namespace estvoyage\statsd\tests\units\metric\value\type;
 
-require __DIR__ . '/../../../runner.php';
+require __DIR__ . '/../../../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\value\type
+	estvoyage\statsd\metric\value\type
 ;
 
 class gauge extends units\test

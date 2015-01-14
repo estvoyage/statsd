@@ -1,9 +1,9 @@
 <?php
 
-namespace estvoyage\statsd\value\type;
+namespace estvoyage\statsd\metric\value\type;
 
 use
-	estvoyage\statsd\value
+	estvoyage\statsd\metric\value
 ;
 
 class counting extends value\type

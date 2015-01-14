@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\tests\units\value;
+namespace estvoyage\statsd\tests\units\metric\value;
 
-require __DIR__ . '/../../runner.php';
+require __DIR__ . '/../../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\value
+	estvoyage\statsd\metric\value
 ;
 
 class sampling extends units\test
