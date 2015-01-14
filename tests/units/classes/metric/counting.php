@@ -32,13 +32,13 @@ class counting extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value\counting($value)))
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value($value)) . '|' . statsd\value\type\counting::build())
 
 			->if(
 				$this->newTestedInstance($bucket, $value, $sampling)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value\counting($value) . '|@' . (new statsd\value\sampling($sampling))));
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value($value) . '|' . statsd\value\type\counting::build() . '|@' . (new statsd\value\sampling($sampling))));
 		;
 	}
 }

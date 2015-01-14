@@ -30,7 +30,7 @@ class timing extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value\timing($value)))
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value($value) . '|' . statsd\value\type\timing::build()))
 		;
 	}
 }

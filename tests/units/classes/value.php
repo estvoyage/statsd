@@ -14,6 +14,7 @@ class value extends test
 	function testClass()
 	{
 		$this->testedClass
+			->isFinal
 			->extends('estvoyage\value\integer')
 		;
 	}
@@ -21,19 +22,21 @@ class value extends test
 	/**
 	 * @dataProvider validValueProvider
 	 */
-	function testContructorWithValidValue($value, $type)
+	function testContructorWithValidValue($value)
 	{
 		$this
-			->integer($this->newTestedInstance($value, $type)->asInteger)->isIdenticalTo($value)
+			->integer($this->newTestedInstance($value)->asInteger)->isEqualTo($value)
 		;
 	}
 
 	/**
 	 * @dataProvider validValueProvider
 	 */
-	function testCastToString($value, $type)
+	function testCastToString($value)
 	{
-		$this->castToString($this->newTestedInstance($value, $type))->isEqualTo($value . '|' . $type);
+		$this
+			->castToString($this->newTestedInstance($value))->isEqualTo($value)
+		;
 	}
 
 	/**
@@ -41,7 +44,7 @@ class value extends test
 	 */
 	function testContructorWithInvalidValue($value)
 	{
-		$this->exception(function() use ($value) { $this->newTestedInstance($value, type\counting::build()); })
+		$this->exception(function() use ($value) { $this->newTestedInstance($value); })
 			->isInstanceOf('domainException')
 			->hasMessage('Value should be an integer')
 		;
@@ -50,7 +53,7 @@ class value extends test
 	/**
 	 * @dataProvider validValueProvider
 	 */
-	function testValidateWithValidValue($value, $type)
+	function testValidateWithValidValue($value)
 	{
 		$this->boolean(statsd\value::validate($value))->isTrue;
 	}
@@ -66,9 +69,9 @@ class value extends test
 	protected function validValueProvider()
 	{
 		return [
-			'negative integer' => [ - rand(1, PHP_INT_MAX), type\counting::build() ],
-			'zero as integer' => [ 0, type\counting::build() ],
-			'positive integer' => [ rand(1, PHP_INT_MAX), type\counting::build() ]
+			'negative integer' => - rand(1, PHP_INT_MAX),
+			'zero as integer' => 0,
+			'positive integer' => rand(1, PHP_INT_MAX)
 		];
 	}
 

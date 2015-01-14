@@ -30,7 +30,7 @@ class set extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value\set($value)))
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value($value)) . '|' . statsd\value\type\set::build())
 		;
 	}
 }
