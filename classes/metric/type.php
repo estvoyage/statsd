@@ -1,14 +1,14 @@
 <?php
 
-namespace estvoyage\statsd\metric\value;
+namespace estvoyage\statsd\metric;
 
 use
-	estvoyage\value\world as value
+	estvoyage\value\world
 ;
 
 abstract class type
 {
-	use value\string {
+	use world\string {
 		__construct as private;
 	}
 

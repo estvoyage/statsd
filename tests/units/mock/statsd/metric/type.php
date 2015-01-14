@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd\metric\value;
+namespace estvoyage\statsd\metric;
 
 class type
 {

@@ -10,6 +10,6 @@ final class timing extends statsd\metric
 {
 	function __construct($bucket, $value)
 	{
-		parent::__construct(new statsd\bucket($bucket), new statsd\metric\value($value), statsd\metric\value\type\timing::build());
+		parent::__construct(new statsd\bucket($bucket), new statsd\metric\value($value), statsd\metric\type\timing::build());
 	}
 }

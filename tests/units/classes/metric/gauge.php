@@ -6,7 +6,8 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd
+	estvoyage\statsd,
+	estvoyage\statsd\metric
 ;
 
 class gauge extends units\test
@@ -30,7 +31,7 @@ class gauge extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value)) . '|' . statsd\metric\value\type\gauge::build())
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value)) . '|' . statsd\metric\type\gauge::build())
 		;
 	}
 }

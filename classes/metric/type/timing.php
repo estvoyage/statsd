@@ -1,13 +1,13 @@
 <?php
 
-namespace estvoyage\statsd\metric\value\type;
+namespace estvoyage\statsd\metric\type;
 
 use
 	estvoyage\value\string,
-	estvoyage\statsd\metric\value
+	estvoyage\statsd\metric
 ;
 
-class timing extends value\type
+class timing extends metric\type
 {
 	static function build()
 	{

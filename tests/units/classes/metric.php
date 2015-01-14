@@ -14,7 +14,7 @@ class metric extends test
 	{
 		require_once 'mock/statsd/bucket.php';
 		require_once 'mock/statsd/metric/value.php';
-		require_once 'mock/statsd/metric/value/type.php';
+		require_once 'mock/statsd/metric/type.php';
 		require_once 'mock/statsd/metric/value/sampling.php';
 	}
 
@@ -32,7 +32,7 @@ class metric extends test
 			->given(
 				$bucket = new statsd\bucket(uniqid()),
 				$value = new statsd\metric\value(rand(1, PHP_INT_MAX)),
-				$type = new statsd\metric\value\type(uniqid()),
+				$type = new statsd\metric\type(uniqid()),
 				$noSampling = new statsd\metric\value\sampling(1.),
 				$sampling = new statsd\metric\value\sampling(rand(1, 10) / 100)
 			)

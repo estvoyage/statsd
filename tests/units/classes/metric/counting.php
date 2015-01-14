@@ -6,7 +6,8 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd
+	estvoyage\statsd,
+	estvoyage\statsd\metric
 ;
 
 class counting extends units\test
@@ -32,13 +33,13 @@ class counting extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value)) . '|' . statsd\metric\value\type\counting::build())
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new metric\value($value)) . '|' . metric\type\counting::build())
 
 			->if(
 				$this->newTestedInstance($bucket, $value, $sampling)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value) . '|' . statsd\metric\value\type\counting::build() . '|@' . (new statsd\metric\value\sampling($sampling))));
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value) . '|' . statsd\metric\type\counting::build() . '|@' . (new statsd\metric\value\sampling($sampling))));
 		;
 	}
 }

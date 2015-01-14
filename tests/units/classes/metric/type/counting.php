@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\tests\units\metric\value\type;
+namespace estvoyage\statsd\tests\units\metric\type;
 
-require __DIR__ . '/../../../../runner.php';
+require __DIR__ . '/../../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\metric\value\type
+	estvoyage\statsd\metric\type
 ;
 
 class counting extends units\test
