@@ -1,15 +1,16 @@
 <?php
 
-namespace estvoyage\statsd\tests\units;
+namespace estvoyage\statsd\tests\units\metric;
 
-require __DIR__ . '/../runner.php';
+require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd,
-	estvoyage\statsd\value\type
+	estvoyage\statsd\value\type,
+	estvoyage\statsd\tests\units
 ;
 
-class value extends test
+class value extends units\test
 {
 	function testClass()
 	{
@@ -55,7 +56,7 @@ class value extends test
 	 */
 	function testValidateWithValidValue($value)
 	{
-		$this->boolean(statsd\value::validate($value))->isTrue;
+		$this->boolean(statsd\metric\value::validate($value))->isTrue;
 	}
 
 	/**
@@ -63,7 +64,7 @@ class value extends test
 	 */
 	function testValidateWithInvalidValue($value)
 	{
-		$this->boolean(statsd\value::validate($value))->isFalse;
+		$this->boolean(statsd\metric\value::validate($value))->isFalse;
 	}
 
 	protected function validValueProvider()

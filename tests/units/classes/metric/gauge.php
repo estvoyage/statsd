@@ -30,7 +30,7 @@ class gauge extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\value($value)) . '|' . statsd\value\type\gauge::build())
+				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value)) . '|' . statsd\value\type\gauge::build())
 		;
 	}
 }

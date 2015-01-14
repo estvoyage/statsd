@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd;
+namespace estvoyage\statsd\metric;
 
 use
 	estvoyage\value\string,
