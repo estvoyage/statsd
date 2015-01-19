@@ -21,23 +21,28 @@ final class packet implements statsd\packet
 		$this->metrics = join("\n", $metrics);
 	}
 
-	function shouldBeSendOn(socket $socket, mtu $mtu)
+	function socketHasMtu(socket $socket, mtu $mtu)
 	{
 		$metrics = $this->metrics;
 
-		while (strlen($metrics) > $mtu->asInteger)
+		if ($metrics)
 		{
-			if (! ($endOfPacket = strrpos($metrics, "\n", $mtu->asInteger)))
+			$buffer = new packet\buffer($socket);
+
+			while (strlen($metrics) > $mtu->asInteger)
 			{
-				throw new mtu\overflow('Unable to split packet according to MTU');
+				if (! ($endOfPacket = strrpos($metrics, "\n", $mtu->asInteger)))
+				{
+					throw new mtu\overflow('Unable to split packet according to MTU');
+				}
+
+				$buffer->newData(new data(substr($metrics, 0, $endOfPacket)));
+
+				$metrics = substr($metrics, $endOfPacket + 1);
 			}
 
-			$socket->mustSend(new data(substr($metrics, 0, $endOfPacket)));
-
-			$metrics = substr($metrics, $endOfPacket + 1);
+			$buffer->newData(new data($metrics));
 		}
-
-		$socket->mustSend(new data($metrics));
 
 		return $this;
 	}

@@ -12,5 +12,6 @@ use
 interface client
 {
 	function noMoreMetric();
-	function metricsAre(metric $metric, metric... $metrics);
+	function newMetric(metric $metric);
+	function newMetrics(metric $metric1, metric $metric2, metric... $metrics);
 }

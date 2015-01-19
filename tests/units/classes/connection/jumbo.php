@@ -11,11 +11,13 @@ use
 	mock\estvoyage\statsd\world\packet
 ;
 
-require_once 'mock/net/mtu.php';
-require_once 'mock/net/address.php';
-
 class jumbo extends units\test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/net/mtu.php';
+	}
+
 	function testClass()
 	{
 		$this->testedClass
@@ -24,7 +26,7 @@ class jumbo extends units\test
 		;
 	}
 
-	function testSend()
+	function testNewPacket()
 	{
 		$this
 			->given(
@@ -35,8 +37,8 @@ class jumbo extends units\test
 				$this->newTestedInstance($socket)
 			)
 			->then
-				->object($this->testedInstance->packetShouldBeSend($packet))->isTestedInstance
-				->mock($packet)->call('shouldBeSendOn')->withArguments($socket, net\mtu::build(8932))->once
+				->object($this->testedInstance->newPacket($packet))->isTestedInstance
+				->mock($packet)->call('socketHasMtu')->withArguments($socket, net\mtu::build(8932))->once
 		;
 	}
 }

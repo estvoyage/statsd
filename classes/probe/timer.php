@@ -22,7 +22,7 @@ final class timer
 
 	function mark($bucket)
 	{
-		$this->client->metricsAre(new metric\timing($bucket, self::now() - $this->start));
+		$this->client->newMetric(new metric\timing($bucket, self::now() - $this->start));
 
 		return $this;
 	}

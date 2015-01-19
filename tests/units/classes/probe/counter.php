@@ -35,31 +35,31 @@ class counter extends units\test
 			)
 			->then
 				->object($this->testedInstance->increment($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, 1))->once
 
 			->if(
 				$this->newTestedInstance($client, 1)
 			)
 			->then
 				->object($this->testedInstance->increment($bucket, $count))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, 1 + $count))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, 1 + $count))->once
 
 				->object($this->testedInstance->increment($bucket, - $count))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, 1 - $count))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, 1 - $count))->once
 
 			->if(
 				$this->newTestedInstance($client, $start)
 			)
 			->then
 				->object($this->testedInstance->increment($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, $start + 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, $start + 1))->once
 
 			->if(
 				$this->newTestedInstance($client, - $start)
 			)
 			->then
 				->object($this->testedInstance->increment($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, $start + 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, $start + 1))->once
 		;
 	}
 
@@ -77,31 +77,31 @@ class counter extends units\test
 			)
 			->then
 				->object($this->testedInstance->decrement($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, - 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, - 1))->once
 
 			->if(
 				$this->newTestedInstance($client, 1)
 			)
 			->then
 				->object($this->testedInstance->decrement($bucket, $count))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, 1 - $count))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, 1 - $count))->once
 
 				->object($this->testedInstance->decrement($bucket, - $count))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, 1 + $count))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, 1 + $count))->once
 
 			->if(
 				$this->newTestedInstance($client, $start)
 			)
 			->then
 				->object($this->testedInstance->decrement($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, $start - 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, $start - 1))->once
 
 			->if(
 				$this->newTestedInstance($client, - $start)
 			)
 			->then
 				->object($this->testedInstance->decrement($bucket))->isTestedInstance
-				->mock($client)->call('metricsAre')->withArguments(new metric\counting($bucket, $start - 1))->once
+				->mock($client)->call('newMetric')->withArguments(new metric\counting($bucket, $start - 1))->once
 		;
 	}
 }

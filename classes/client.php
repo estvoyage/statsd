@@ -10,28 +10,47 @@ use
 final class client implements statsd\client
 {
 	private
-		$connection,
-		$builder
+		$connection
 	;
 
-	function __construct(statsd\connection $connection, statsd\packet\builder $builder = null)
+	function __construct(statsd\connection $connection)
 	{
 		$this->connection = $connection;
-		$this->builder = $builder ?: new packet\builder;
+
+		$this->init();
+	}
+
+	function __destruct()
+	{
+		$this->noMoreMetric();
 	}
 
 	function noMoreMetric()
 	{
-		$this->builder->packetShouldBeSendOn($this->connection);
+		$this->connection->newPacket(new packet(... $this->metrics));
+
+		return $this->init();
+	}
+
+	function newMetric(metric $metric)
+	{
+		$this->metrics[] = $metric;
 
 		return $this;
 	}
 
-	function metricsAre(metric $metric, metric... $metrics)
+	function newMetrics(metric $metric1, metric $metric2, metric... $metrics)
 	{
-		array_unshift($metrics, $metric);
+		array_unshift($metrics, $metric1, $metric2);
 
-		$this->builder->useMetrics(... $metrics);
+		$this->metrics = array_merge($this->metrics, $metrics);
+
+		return $this;
+	}
+
+	private function init()
+	{
+		$this->metrics = [];
 
 		return $this;
 	}
