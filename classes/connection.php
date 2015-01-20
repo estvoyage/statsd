@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-abstract class connection implements statsd\connection
+final class connection implements statsd\connection
 {
 	private
 		$socket,

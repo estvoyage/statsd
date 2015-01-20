@@ -18,7 +18,7 @@ class connection extends test
 	function testClass()
 	{
 		$this->testedClass
-			->isAbstract
+			->isFinal
 			->implements('estvoyage\statsd\world\connection')
 		;
 	}
