@@ -17,7 +17,7 @@ final class connection implements statsd\connection
 	function __construct(net\world\socket $socket = null, net\mtu $mtu = null)
 	{
 		$this->socket = $socket ?: new net\socket\udp(new net\host('127.0.0.1'), new net\port(8125));
-		$this->mtu = $mtu ?: new net\mtu(512);
+		$this->mtu = $mtu ?: net\mtu::build(512);
 	}
 
 	function newPacket(statsd\packet $packet)

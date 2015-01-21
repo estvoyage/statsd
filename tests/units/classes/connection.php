@@ -29,7 +29,7 @@ class connection extends test
 			->given(
 				$packet = new packet,
 				$socket = new socket,
-				$mtu = new net\mtu
+				$mtu = net\mtu::build()
 			)
 
 			->if(
@@ -37,14 +37,14 @@ class connection extends test
 			)
 			->then
 				->object($this->testedInstance->newPacket($packet))->isTestedInstance
-				->mock($packet)->call('socketHasMtu')->withArguments(new net\socket\udp(new net\host('127.0.0.1'), new net\port(8125)), new net\mtu(512))->once
+				->mock($packet)->call('socketHasMtu')->withArguments(new net\socket\udp(new net\host('127.0.0.1'), new net\port(8125)), net\mtu::build(512))->once
 
 			->if(
 				$this->newTestedInstance($socket)
 			)
 			->then
 				->object($this->testedInstance->newPacket($packet))->isTestedInstance
-				->mock($packet)->call('socketHasMtu')->withArguments($socket, new net\mtu(512))->once
+				->mock($packet)->call('socketHasMtu')->withArguments($socket, net\mtu::build(512))->once
 
 			->if(
 				$this->newTestedInstance($socket, $mtu)

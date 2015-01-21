@@ -32,7 +32,7 @@ class packet extends test
 		$this
 			->given(
 				$socket = new socket,
-				$mtu = new net\mtu(5),
+				$mtu = net\mtu::build(5),
 				$metric1 = new statsd\metric('12'),
 				$metric2 = new statsd\metric('45'),
 				$metric3 = new statsd\metric('78'),
