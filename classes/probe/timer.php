@@ -20,9 +20,9 @@ final class timer
 		$this->start = self::now();
 	}
 
-	function mark($bucket)
+	function useBucket(metric\bucket $bucket)
 	{
-		$this->client->newMetric(new metric\timing($bucket, self::now() - $this->start));
+		$this->client->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
 
 		return $this;
 	}

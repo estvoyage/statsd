@@ -8,8 +8,8 @@ use
 
 final class set extends statsd\metric
 {
-	function __construct($bucket, $value)
+	function __construct(bucket $bucket, value $value)
 	{
-		parent::__construct(new statsd\bucket($bucket), new statsd\metric\value($value), statsd\metric\type\set::build());
+		parent::__construct($bucket, $value, type\set::build());
 	}
 }

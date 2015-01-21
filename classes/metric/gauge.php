@@ -8,8 +8,8 @@ use
 
 final class gauge extends statsd\metric
 {
-	function __construct($bucket, $value)
+	function __construct(bucket $bucket, value $value)
 	{
-		parent::__construct(new statsd\bucket($bucket), new statsd\metric\value($value), statsd\metric\type\gauge::build());
+		parent::__construct($bucket, $value, type\gauge::build());
 	}
 }

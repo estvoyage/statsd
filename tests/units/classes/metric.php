@@ -12,7 +12,7 @@ class metric extends test
 {
 	function beforeTestMethod($method)
 	{
-		require_once 'mock/statsd/bucket.php';
+		require_once 'mock/statsd/metric/bucket.php';
 		require_once 'mock/statsd/metric/value.php';
 		require_once 'mock/statsd/metric/type.php';
 		require_once 'mock/statsd/metric/sampling.php';
@@ -30,7 +30,7 @@ class metric extends test
 	{
 		$this
 			->given(
-				$bucket = new statsd\bucket(uniqid()),
+				$bucket = new statsd\metric\bucket(uniqid()),
 				$value = new statsd\metric\value(rand(1, PHP_INT_MAX)),
 				$type = new statsd\metric\type(uniqid()),
 				$noSampling = new statsd\metric\sampling(1.),

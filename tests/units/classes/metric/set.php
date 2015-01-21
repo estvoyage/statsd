@@ -6,11 +6,17 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd
+	estvoyage\statsd\metric
 ;
 
 class set extends units\test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/statsd/metric/bucket.php';
+		require_once 'mock/statsd/metric/value.php';
+	}
+
 	function testClass()
 	{
 		$this->testedClass
@@ -23,14 +29,14 @@ class set extends units\test
 	{
 		$this
 			->given(
-				$bucket = uniqid(),
-				$value = rand(- PHP_INT_MAX, PHP_INT_MAX)
+				$bucket = new metric\bucket(uniqid()),
+				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 			->if(
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo((new statsd\bucket($bucket)) . ':' . (new statsd\metric\value($value)) . '|' . statsd\metric\type\set::build())
+				->string($this->testedInstance->asString)->isEqualTo($bucket . ':' . $value . '|' . metric\type\set::build())
 		;
 	}
 }

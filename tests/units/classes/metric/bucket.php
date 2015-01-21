@@ -1,14 +1,15 @@
 <?php
 
-namespace estvoyage\statsd\tests\units;
+namespace estvoyage\statsd\tests\units\metric;
 
-require __DIR__ . '/../runner.php';
+require __DIR__ . '/../../runner.php';
 
 use
-	estvoyage\statsd\bucket as testedClass
+	estvoyage\statsd\tests\units,
+	estvoyage\statsd\metric\bucket as testedClass
 ;
 
-class bucket extends test
+class bucket extends units\test
 {
 	function testClass()
 	{

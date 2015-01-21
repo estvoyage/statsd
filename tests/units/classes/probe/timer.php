@@ -12,6 +12,11 @@ use
 
 class timer extends units\test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/statsd/metric/bucket.php';
+	}
+
 	function testClass()
 	{
 		$this->testedClass
@@ -19,12 +24,12 @@ class timer extends units\test
 		;
 	}
 
-	function testMark()
+	function testUseMetric()
 	{
 		$this
 			->given(
 				$client = new statsd\client,
-				$bucket = uniqid(),
+				$bucket = new metric\bucket(uniqid()),
 				$this->function->microtime[1] = $start = 1418733215.0566,
 				$this->function->microtime[2] = $stop = 1418733220.6586
 			)
@@ -32,8 +37,8 @@ class timer extends units\test
 				$this->newTestedInstance($client)
 			)
 			->then
-				->object($this->testedInstance->mark($bucket))->isTestedInstance
-				->mock($client)->call('newMetric')->withArguments(new metric\timing($bucket, ($stop * 10000) - ($start * 10000)))->once
+				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
+				->mock($client)->call('newMetric')->withArguments(new metric\timing($bucket, new metric\value(($stop * 10000) - ($start * 10000))))->once
 		;
 	}
 }

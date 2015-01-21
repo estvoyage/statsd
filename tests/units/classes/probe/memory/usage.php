@@ -12,6 +12,11 @@ use
 
 class usage extends units\test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/statsd/metric/bucket.php';
+	}
+
 	function testClass()
 	{
 		$this->testedClass
@@ -19,12 +24,12 @@ class usage extends units\test
 		;
 	}
 
-	function testMark()
+	function testUseBucket()
 	{
 		$this
 			->given(
 				$client = new statsd\client,
-				$bucket = uniqid(),
+				$bucket = new metric\bucket(uniqid()),
 				$this->function->memory_get_usage[1] = $start = rand(2000, 3000),
 				$this->function->memory_get_usage[2] = $stop = rand(4000, 5000)
 			)
@@ -32,8 +37,8 @@ class usage extends units\test
 				$this->newTestedInstance($client)
 			)
 			->then
-				->object($this->testedInstance->mark($bucket))->isTestedInstance
-				->mock($client)->call('newMetric')->withArguments(new metric\gauge($bucket, $stop - $start))->once
+				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
+				->mock($client)->call('newMetric')->withArguments(new metric\gauge($bucket, new metric\value($stop - $start)))->once
 		;
 	}
 }

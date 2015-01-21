@@ -20,9 +20,9 @@ final class peak
 		$this->start = memory_get_peak_usage(true);
 	}
 
-	function mark($bucket)
+	function useBucket(metric\bucket $bucket)
 	{
-		$this->client->newMetric(new metric\gauge($bucket, memory_get_peak_usage(true) - $this->start));
+		$this->client->newMetric(new metric\gauge($bucket, new metric\value(memory_get_peak_usage(true) - $this->start)));
 
 		return $this;
 	}
