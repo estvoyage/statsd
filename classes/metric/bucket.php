@@ -23,7 +23,7 @@ class bucket extends value\string
 
 		if ($invalid || ! self::isValidBucket($string))
 		{
-			throw new \domainException('Bucket should be a not empty string');
+			throw new \domainException('Bucket should be a string which contains alphanumeric characters or underscore');
 		}
 	}
 
@@ -34,6 +34,6 @@ class bucket extends value\string
 
 	private static function isValidBucket($string)
 	{
-		return $string !== '' && preg_match('/[\s@|]/', $string) === 0;
+		return preg_match('/^(?:[a-z0-9_]+\.)*[a-z0-9_]+$/i', $string);
 	}
 }
