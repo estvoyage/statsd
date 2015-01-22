@@ -9,3 +9,16 @@ This script send three different type of metric to a local statsd server which l
 */
 
 require __DIR__ . '/../vendor/autoload.php';
+
+use
+	estvoyage\statsd,
+	estvoyage\statsd\metric\bucket,
+	estvoyage\statsd\metric\value,
+	estvoyage\statsd\metric\counting,
+	estvoyage\statsd\metric\timing
+;
+
+(new statsd\client(new statsd\connection))
+	->newMetric(new counting(new bucket(uniqid())))
+	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
+;

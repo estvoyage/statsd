@@ -8,23 +8,16 @@ use
 
 class bucket extends value\string
 {
-	function __construct($string)
+	const allowedCharacters = '-+a-z0-9_{}:%\]\[';
+
+	function __construct($value)
 	{
-		$invalid = false;
-
-		try
+		if (! self::validate($value))
 		{
-			parent::__construct($string);
-		}
-		catch (\exception $exception)
-		{
-			$invalid = true;
+			throw new \domainException('Bucket should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %');
 		}
 
-		if ($invalid || ! self::isValidBucket($string))
-		{
-			throw new \domainException('Bucket should be a string which contains alphanumeric characters or underscore');
-		}
+		parent::__construct($value);
 	}
 
 	static function validate($value)
@@ -34,6 +27,6 @@ class bucket extends value\string
 
 	private static function isValidBucket($string)
 	{
-		return preg_match('/^(?:[a-z0-9_]+\.)*[a-z0-9_]+$/i', $string);
+		return preg_match('/^(?:[' . self::allowedCharacters . ']+\.)*[' . self::allowedCharacters . ']+$/i', $string);
 	}
 }

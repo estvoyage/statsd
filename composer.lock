@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "4a0c58915e56b200445c36edc6894bc8df27d62b"
+                "reference": "dd59cbbcd1294a97743e980d22023c722c3bbe67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/4a0c58915e56b200445c36edc6894bc8df27d62b",
-                "reference": "4a0c58915e56b200445c36edc6894bc8df27d62b",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/dd59cbbcd1294a97743e980d22023c722c3bbe67",
+                "reference": "dd59cbbcd1294a97743e980d22023c722c3bbe67",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2015-01-19 12:09:53"
+            "time": "2015-01-21 17:41:17"
         },
         {
             "name": "estvoyage/value",
