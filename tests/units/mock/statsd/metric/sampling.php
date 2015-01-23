@@ -2,15 +2,6 @@
 
 namespace estvoyage\statsd\metric;
 
-class sampling
+final class sampling extends \estvoyage\value\float
 {
-	function __construct($value)
-	{
-		$this->value = $value;
-	}
-
-	function __toString()
-	{
-		return (string) $this->value;
-	}
 }

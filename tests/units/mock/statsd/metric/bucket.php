@@ -2,15 +2,10 @@
 
 namespace estvoyage\statsd\metric;
 
-class bucket
+class bucket extends \estvoyage\value\string
 {
 	function __construct($value = '')
 	{
-		$this->value = $value;
-	}
-
-	function __toString()
-	{
-		return (string) $this->value;
+		parent::__construct($value);
 	}
 }

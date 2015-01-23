@@ -2,15 +2,6 @@
 
 namespace estvoyage\statsd\metric;
 
-class type
+class type extends \estvoyage\value\string
 {
-	function __construct($value)
-	{
-		$this->value = $value;
-	}
-
-	function __toString()
-	{
-		return (string) $this->value;
-	}
 }

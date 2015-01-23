@@ -2,15 +2,10 @@
 
 namespace estvoyage\statsd\metric;
 
-class value
+class value extends \estvoyage\value\integer
 {
-	function __construct($value = '')
+	function __construct($value = 0)
 	{
-		$this->value = $value;
-	}
-
-	function __toString()
-	{
-		return (string) $this->value;
+		parent::__construct($value);
 	}
 }

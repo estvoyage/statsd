@@ -20,5 +20,6 @@ use
 
 (new statsd\client(new statsd\connection))
 	->newMetric(new counting(new bucket(uniqid())))
+	->newMetric(counting::from(uniqid()))
 	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
 ;
