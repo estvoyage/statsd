@@ -14,6 +14,7 @@ class bucket extends units\test
 	function testClass()
 	{
 		$this->testedClass
+			->isFinal
 			->extends('estvoyage\value\string')
 		;
 	}
@@ -51,6 +52,20 @@ class bucket extends units\test
 	function testValidateWithInvalidValue($value)
 	{
 		$this->boolean(testedClass::validate($value))->isFalse;
+	}
+
+	function testParentIs()
+	{
+		$this
+			->given(
+				$parent = $this->newTestedInstance(uniqid())
+			)
+			->if(
+				$this->newTestedInstance(uniqid())
+			)
+			->then
+				->object($this->testedInstance->parentIs($parent))->isEqualTo($this->newTestedInstance($parent . '.' . $this->testedInstance))
+		;
 	}
 
 	protected function validValueProvider()

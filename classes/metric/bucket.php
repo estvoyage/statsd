@@ -6,7 +6,7 @@ use
 	estvoyage\value
 ;
 
-class bucket extends value\string
+final class bucket extends value\string
 {
 	const allowedCharacters = '-+a-z0-9_{}:%\]\[';
 
@@ -24,6 +24,11 @@ class bucket extends value\string
 		{
 			throw new \domainException('Bucket should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %');
 		}
+	}
+
+	function parentIs(self $parent)
+	{
+		return new self($parent . '.' . $this);
 	}
 
 	static function validate($value)
