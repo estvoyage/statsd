@@ -39,4 +39,19 @@ class timing extends units\test
 				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value . '|' . metric\type\timing::build())
 		;
 	}
+
+	function testFrom()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(1, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance(new metric\bucket($bucket), new metric\value($value))
+			)
+			->then
+				->object(metric\timing::from($bucket, $value))->isEqualTo($this->testedInstance)
+		;
+	}
 }

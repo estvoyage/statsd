@@ -22,4 +22,5 @@ use
 	->newMetric(new counting(new bucket(uniqid())))
 	->newMetric(counting::from(uniqid()))
 	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
+	->newMetric(timing::from(uniqid(), rand(1, 100)))
 ;
