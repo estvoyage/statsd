@@ -39,4 +39,19 @@ class gauge extends units\test
 				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value . '|' . metric\type\gauge::build())
 		;
 	}
+
+	function testFrom()
+	{
+		$this
+			->given(
+				$bucket = uniqid(),
+				$value = rand(1, PHP_INT_MAX)
+			)
+			->if(
+				$this->newTestedInstance(new metric\bucket($bucket), new metric\value($value))
+			)
+			->then
+				->object(metric\gauge::from($bucket, $value))->isEqualTo($this->testedInstance)
+		;
+	}
 }

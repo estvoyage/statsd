@@ -15,12 +15,18 @@ use
 	estvoyage\statsd\metric\bucket,
 	estvoyage\statsd\metric\value,
 	estvoyage\statsd\metric\counting,
-	estvoyage\statsd\metric\timing
+	estvoyage\statsd\metric\timing,
+	estvoyage\statsd\metric\gauge
 ;
 
 (new statsd\client(new statsd\connection))
+
 	->newMetric(new counting(new bucket(uniqid())))
 	->newMetric(counting::from(uniqid()))
+
 	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
 	->newMetric(timing::from(uniqid(), rand(1, 100)))
+
+	->newMetric(new gauge(new bucket(uniqid()), new value(rand(1, 100))))
+	->newMetric(gauge::from(uniqid(), rand(1, 100)))
 ;
