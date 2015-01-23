@@ -10,12 +10,18 @@ class sampling extends float\unsigned
 {
 	function __construct($value = 1.0)
 	{
-		if (! self::validate($value))
+		$domainException = null;
+
+		try
+		{
+			parent::__construct($value);
+		}
+		catch (\domainException $domainException) {}
+
+		if ($domainException || ! self::isGreaterThanZero($value))
 		{
 			throw new \domainException('Sampling should be a float greater than 0.');
 		}
-
-		parent::__construct($value);
 	}
 
 	static function validate($value)

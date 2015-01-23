@@ -12,12 +12,18 @@ class bucket extends value\string
 
 	function __construct($value)
 	{
-		if (! self::validate($value))
+		$domainException = null;
+
+		try
+		{
+			parent::__construct($value);
+		}
+		catch (\exception $domainException) {}
+
+		if ($domainException || ! self::isValidBucket($value))
 		{
 			throw new \domainException('Bucket should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %');
 		}
-
-		parent::__construct($value);
 	}
 
 	static function validate($value)
