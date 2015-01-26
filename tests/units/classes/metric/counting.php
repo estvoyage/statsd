@@ -30,7 +30,7 @@ class counting extends units\test
 	{
 		$this
 			->given(
-				$bucket = new metric\bucket(uniqid()),
+				$bucket = metric\bucket::ofName(uniqid()),
 				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX)),
 				$sampling = new metric\sampling(rand(1, 100) / 1000)
 			)
@@ -65,19 +65,19 @@ class counting extends units\test
 			)
 
 			->if(
-				$this->newTestedInstance(new metric\bucket($bucket))
+				$this->newTestedInstance(metric\bucket::ofName($bucket))
 			)
 			->then
 				->object(metric\counting::from($bucket))->isEqualTo($this->testedInstance)
 
 			->if(
-				$this->newTestedInstance(new metric\bucket($bucket), new metric\value($value))
+				$this->newTestedInstance(metric\bucket::ofName($bucket), new metric\value($value))
 			)
 			->then
 				->object(metric\counting::from($bucket, $value))->isEqualTo($this->testedInstance)
 
 			->if(
-				$this->newTestedInstance(new metric\bucket($bucket), new metric\value($value), new metric\sampling($sampling))
+				$this->newTestedInstance(metric\bucket::ofName($bucket), new metric\value($value), new metric\sampling($sampling))
 			)
 			->then
 				->object(metric\counting::from($bucket, $value, $sampling))->isEqualTo($this->testedInstance)

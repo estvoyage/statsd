@@ -21,7 +21,7 @@ final class counting extends statsd\metric
 	static function from($bucketAsString, $valueAsInteger = 1, $samplingAsFloat = 1.)
 	{
 		return new self(
-			new bucket($bucketAsString),
+			bucket::ofName($bucketAsString),
 			new value($valueAsInteger),
 			new sampling($samplingAsFloat)
 		);

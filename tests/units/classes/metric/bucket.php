@@ -6,7 +6,7 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
-	estvoyage\statsd\metric\bucket as testedClass
+	estvoyage\statsd\metric
 ;
 
 class bucket extends units\test
@@ -15,7 +15,6 @@ class bucket extends units\test
 	{
 		$this->testedClass
 			->isFinal
-			->extends('estvoyage\value\string')
 		;
 	}
 
@@ -24,7 +23,7 @@ class bucket extends units\test
 	 */
 	function testContructorWithValidValue($value)
 	{
-		$this->string($this->newTestedInstance($value)->asString)->isIdenticalTo($value);
+		$this->string(metric\bucket::ofName($value)->asString)->isIdenticalTo($value);
 	}
 
 	/**
@@ -32,9 +31,9 @@ class bucket extends units\test
 	 */
 	function testContructorWithInvalidValue($value)
 	{
-		$this->exception(function() use ($value) { $this->newTestedInstance($value); })
+		$this->exception(function() use ($value) { metric\bucket::ofName($value); })
 			->isInstanceOf('domainException')
-			->hasMessage('Bucket should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %')
+			->hasMessage('Bucket name should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %')
 		;
 	}
 
@@ -43,7 +42,7 @@ class bucket extends units\test
 	 */
 	function testValidateWithValidValue($value)
 	{
-		$this->boolean(testedClass::validate($value))->isTrue;
+		$this->boolean(metric\bucket::validate($value))->isTrue;
 	}
 
 	/**
@@ -51,20 +50,20 @@ class bucket extends units\test
 	 */
 	function testValidateWithInvalidValue($value)
 	{
-		$this->boolean(testedClass::validate($value))->isFalse;
+		$this->boolean(metric\bucket::validate($value))->isFalse;
 	}
 
 	function testParentIs()
 	{
 		$this
 			->given(
-				$parent = $this->newTestedInstance(uniqid())
+				$parent = metric\bucket::ofName(uniqid())
 			)
 			->if(
-				$this->newTestedInstance(uniqid())
+				$bucket = metric\bucket::ofName(uniqid())
 			)
 			->then
-				->object($this->testedInstance->parentIs($parent))->isEqualTo($this->newTestedInstance($parent . '.' . $this->testedInstance))
+				->object($bucket->parentIs($parent))->isEqualTo(metric\bucket::ofName($parent . '.' . $bucket))
 		;
 	}
 

@@ -29,7 +29,7 @@ class timer extends units\test
 		$this
 			->given(
 				$client = new statsd\client,
-				$bucket = new metric\bucket(uniqid()),
+				$bucket = metric\bucket::ofName(uniqid()),
 				$this->function->microtime[1] = $start = 1418733215.0566,
 				$this->function->microtime[2] = $stop = 1418733220.6586
 			)

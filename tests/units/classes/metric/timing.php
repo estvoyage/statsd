@@ -29,7 +29,7 @@ class timing extends units\test
 	{
 		$this
 			->given(
-				$bucket = new metric\bucket(uniqid()),
+				$bucket = metric\bucket::ofName(uniqid()),
 				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 			->if(
@@ -48,7 +48,7 @@ class timing extends units\test
 				$value = rand(1, PHP_INT_MAX)
 			)
 			->if(
-				$this->newTestedInstance(new metric\bucket($bucket), new metric\value($value))
+				$this->newTestedInstance(metric\bucket::ofName($bucket), new metric\value($value))
 			)
 			->then
 				->object(metric\timing::from($bucket, $value))->isEqualTo($this->testedInstance)

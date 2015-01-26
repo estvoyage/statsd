@@ -12,4 +12,9 @@ final class set extends statsd\metric
 	{
 		parent::__construct($bucket, $value, type\set::build());
 	}
+
+	static function from($bucketAsString, $valueAsInteger)
+	{
+		return new self(bucket::ofName($bucketAsString), new value($valueAsInteger));
+	}
 }

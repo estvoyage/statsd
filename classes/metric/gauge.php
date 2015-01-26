@@ -15,6 +15,6 @@ final class gauge extends statsd\metric
 
 	static function from($bucketAsString, $valueAsInteger)
 	{
-		return new self(new bucket($bucketAsString), new value($valueAsInteger));
+		return new self(bucket::ofName($bucketAsString), new value($valueAsInteger));
 	}
 }

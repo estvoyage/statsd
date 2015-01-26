@@ -6,37 +6,43 @@ use
 	estvoyage\value
 ;
 
-final class bucket extends value\string
+final class bucket
 {
-	const allowedCharacters = '-+a-z0-9_{}:%\]\[';
-
-	function __construct($value)
-	{
-		$domainException = null;
-
-		try
-		{
-			parent::__construct($value);
-		}
-		catch (\exception $domainException) {}
-
-		if ($domainException || ! self::isValidBucket($value))
-		{
-			throw new \domainException('Bucket should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %');
-		}
+	use value\world\string {
+		__construct as private;
+		validate as isString;
 	}
+
+	const allowedCharacters = '-+a-z0-9_{}:%\]\[';
 
 	function parentIs(self $parent)
 	{
-		return new self($parent . '.' . $this);
+		return self::ofName($parent . '.' . $this);
 	}
 
-	static function validate($value)
+	static function validate($name)
 	{
-		return parent::validate($value) && self::isValidBucket($value);
+		return self::isString($name) && self::containsAllowedCharacters($name);
 	}
 
-	private static function isValidBucket($string)
+	static function ofName($name)
+	{
+		static $buckets = [];
+
+		if (! self::validate($name))
+		{
+			throw new \domainException('Bucket name should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %');
+		}
+
+		if (! isset($buckets[$name]))
+		{
+			$buckets[$name] = new self($name);
+		}
+
+		return $buckets[$name];
+	}
+
+	private static function containsAllowedCharacters($string)
 	{
 		return preg_match('/^(?:[' . self::allowedCharacters . ']+\.)*[' . self::allowedCharacters . ']+$/i', $string);
 	}

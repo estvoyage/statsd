@@ -2,10 +2,14 @@
 
 namespace estvoyage\statsd\metric;
 
-class bucket extends \estvoyage\value\string
+class bucket
 {
-	function __construct($value = '')
+	use \estvoyage\value\world\string {
+		__construct as private;
+	}
+
+	static function ofName($value)
 	{
-		parent::__construct($value);
+		return new self($value);
 	}
 }

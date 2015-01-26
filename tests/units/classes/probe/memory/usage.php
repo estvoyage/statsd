@@ -29,7 +29,7 @@ class usage extends units\test
 		$this
 			->given(
 				$client = new statsd\client,
-				$bucket = new metric\bucket(uniqid()),
+				$bucket = metric\bucket::ofName(uniqid()),
 				$this->function->memory_get_usage[1] = $start = rand(2000, 3000),
 				$this->function->memory_get_usage[2] = $stop = rand(4000, 5000)
 			)
