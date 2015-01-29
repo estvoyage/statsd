@@ -14,6 +14,7 @@ class sampling extends units\test
 	function testClass()
 	{
 		$this->testedClass
+			->isFinal
 			->extends('estvoyage\value\float\unsigned')
 		;
 	}

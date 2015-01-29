@@ -23,7 +23,7 @@ class bucket extends units\test
 	 */
 	function testContructorWithValidValue($value)
 	{
-		$this->string(metric\bucket::ofName($value)->asString)->isIdenticalTo($value);
+		$this->string($this->newTestedInstance($value)->asString)->isIdenticalTo($value);
 	}
 
 	/**
@@ -31,7 +31,7 @@ class bucket extends units\test
 	 */
 	function testContructorWithInvalidValue($value)
 	{
-		$this->exception(function() use ($value) { metric\bucket::ofName($value); })
+		$this->exception(function() use ($value) { $this->newTestedInstance($value); })
 			->isInstanceOf('domainException')
 			->hasMessage('Bucket name should be a string which contains alphanumeric characters, -, +, _, {, }, [, ], %')
 		;
@@ -57,13 +57,13 @@ class bucket extends units\test
 	{
 		$this
 			->given(
-				$parent = metric\bucket::ofName(uniqid())
+				$parent = $this->newTestedInstance(uniqid())
 			)
 			->if(
-				$bucket = metric\bucket::ofName(uniqid())
+				$bucket = $this->newTestedInstance(uniqid())
 			)
 			->then
-				->object($bucket->parentIs($parent))->isEqualTo(metric\bucket::ofName($parent . '.' . $bucket))
+				->object($bucket->parentIs($parent))->isEqualTo($this->newTestedInstance($parent . '.' . $bucket))
 		;
 	}
 

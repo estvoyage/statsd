@@ -10,7 +10,7 @@ final class gauge extends statsd\metric
 {
 	function __construct(bucket $bucket, value $value)
 	{
-		parent::__construct($bucket, $value, type\gauge::build());
+		parent::__construct($bucket, $value, new type('g'));
 	}
 
 	static function from($bucketAsString, $valueAsInteger)

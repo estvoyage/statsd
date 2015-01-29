@@ -22,15 +22,8 @@ use
 
 (new statsd\client(new statsd\connection))
 
-	->newMetric(new counting(bucket::ofName('gauge')))
-	->newMetric(counting::from(uniqid()))
-
-	->newMetric(new timing(bucket::ofName(uniqid()), new value(rand(1, 100))))
-	->newMetric(timing::from(uniqid(), rand(1, 100)))
-
-	->newMetric(new gauge(bucket::ofName(uniqid()), new value(rand(1, 100))))
-	->newMetric(gauge::from(uniqid(), rand(1, 100)))
-
-	->newMetric(new set(bucket::ofName(uniqid()), new value(rand(1, 100))))
-	->newMetric(set::from(uniqid(), rand(1, 100)))
+	->newMetric(new counting(new bucket(uniqid())))
+	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
+	->newMetric(new gauge(new bucket(uniqid()), new value(rand(1, 100))))
+	->newMetric(new set(new bucket(uniqid()), new value(rand(1, 100))))
 ;

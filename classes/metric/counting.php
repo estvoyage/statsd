@@ -13,7 +13,7 @@ final class counting extends statsd\metric
 		parent::__construct(
 			$bucket,
 			$value ?: new value(1),
-			type\counting::build(),
+			new type('c'),
 			$sampling === null ? new sampling(1.0) : $sampling
 		);
 	}

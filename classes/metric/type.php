@@ -2,27 +2,6 @@
 
 namespace estvoyage\statsd\metric;
 
-use
-	estvoyage\value\world
-;
-
-abstract class type
+final class type extends \estvoyage\value\string
 {
-	use world\string {
-		__construct as private;
-	}
-
-	private static
-		$instances
-	;
-
-	protected static function buildType($value)
-	{
-		if (! isset(self::$instances[$value]))
-		{
-			self::$instances[$value] = new static($value);
-		}
-
-		return self::$instances[$value];
-	}
 }

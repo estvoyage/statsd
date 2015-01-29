@@ -6,7 +6,6 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd,
-	estvoyage\statsd\value\type,
 	estvoyage\statsd\tests\units
 ;
 

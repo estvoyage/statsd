@@ -36,7 +36,7 @@ class gauge extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value . '|' . metric\type\gauge::build())
+				->castToString($this->testedInstance)->isEqualTo($bucket . ':' . $value . '|' . new metric\type('g'))
 		;
 	}
 

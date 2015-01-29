@@ -6,7 +6,7 @@ use
 	estvoyage\value\float
 ;
 
-class sampling extends float\unsigned
+final class sampling extends float\unsigned
 {
 	function __construct($value = 1.0)
 	{

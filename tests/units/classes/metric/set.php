@@ -36,7 +36,7 @@ class set extends units\test
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
-				->string($this->testedInstance->asString)->isEqualTo($bucket . ':' . $value . '|' . metric\type\set::build())
+				->string($this->testedInstance->asString)->isEqualTo($bucket . ':' . $value . '|' . new metric\type('s'))
 		;
 	}
 

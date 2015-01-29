@@ -10,7 +10,7 @@ final class timing extends statsd\metric
 {
 	function __construct(bucket $bucket, value $value)
 	{
-		parent::__construct($bucket, $value, type\timing::build());
+		parent::__construct($bucket, $value, new type('ms'));
 	}
 
 	static function from($bucketAsString, $valueAsInteger)
