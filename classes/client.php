@@ -49,7 +49,11 @@ final class client implements statsd\client
 
 	private function writePacketOnConnection()
 	{
-		$this->connection->newPacket(new packet(... $this->metrics));
+		$this->connection
+			->newPacket(
+				new packet(... $this->metrics)
+			)
+		;
 
 		return $this;
 	}
