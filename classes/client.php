@@ -22,7 +22,7 @@ final class client implements statsd\client
 
 	function __destruct()
 	{
-		$this->noMoreValue();
+		$this->writePacketOnConnection();
 	}
 
 	function valueGoesInto(metric\value $value, metric\bucket $bucket)
@@ -34,14 +34,22 @@ final class client implements statsd\client
 
 	function noMoreValue()
 	{
-		$this->connection->newPacket(new packet(... $this->metrics));
-
-		return $this->init();
+		return $this
+			->writePacketOnConnection()
+				->init()
+		;
 	}
 
 	private function init()
 	{
 		$this->metrics = [];
+
+		return $this;
+	}
+
+	private function writePacketOnConnection()
+	{
+		$this->connection->newPacket(new packet(... $this->metrics));
 
 		return $this;
 	}
