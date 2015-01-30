@@ -24,7 +24,29 @@ class usage extends units\test
 		;
 	}
 
-	function testUseBucket()
+	function testStartMission()
+	{
+		$this
+			->given(
+				$client = new statsd\client,
+				$bucket = new metric\bucket(uniqid())
+			)
+			->if(
+				$this->newTestedInstance($client, $bucket)
+			)
+			->then
+				->object($this->testedInstance->startOfMission())->isTestedInstance
+
+				->exception(function() {
+						$this->testedInstance->startOfMission();
+					}
+				)
+					->isInstanceOf('logicException')
+					->hasMessage('Mission is already started')
+		;
+	}
+
+	function testEndOfMission()
 	{
 		$this
 			->given(
@@ -33,12 +55,28 @@ class usage extends units\test
 				$this->function->memory_get_usage[1] = $start = rand(2000, 3000),
 				$this->function->memory_get_usage[2] = $stop = rand(4000, 5000)
 			)
+
 			->if(
-				$this->newTestedInstance($client)
+				$this->newTestedInstance($client, $bucket)
 			)
 			->then
-				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
-				->mock($client)->call('valueGoesInto')->withArguments(metric\value::gauge($stop - $start), $bucket)->once
+				->exception(function() {
+						$this->testedInstance->endOfMission();
+					}
+				)
+					->isInstanceOf('logicException')
+					->hasMessage('Mission is not started')
+
+			->if(
+				$this->testedInstance
+					->startOfMission()
+						->endOfMission()
+			)
+			->then
+				->mock($client)
+					->call('valueGoesInto')
+						->withArguments(metric\value::gauge($stop - $start), $bucket)
+							->once
 		;
 	}
 }
