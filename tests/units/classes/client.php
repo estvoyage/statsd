@@ -76,7 +76,6 @@ class client extends test
 			->then
 				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket1, $value1)))->once
 
-
 			->when(
 				function() use ($connection, $bucket2, $value2, $bucket3,$value3) {
 					(new testedClass($connection))
