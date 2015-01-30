@@ -4,12 +4,13 @@ namespace estvoyage\statsd\metric;
 
 class bucket
 {
-	use \estvoyage\value\world\string {
-		__construct as private;
+	function __construct($value = '')
+	{
+		$this->value = $value;
 	}
 
-	static function ofName($value)
+	function __toString()
 	{
-		return new self($value);
+		return (string) $this->value;
 	}
 }

@@ -23,7 +23,11 @@ use
 (new statsd\client(new statsd\connection))
 
 	->newMetric(new counting(new bucket(uniqid())))
+
 	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
+	->newTiming(new bucket(uniqid()), new value(rand(1, 100)))
+
 	->newMetric(new gauge(new bucket(uniqid()), new value(rand(1, 100))))
+
 	->newMetric(new set(new bucket(uniqid()), new value(rand(1, 100))))
 ;

@@ -12,9 +12,4 @@ final class timing extends statsd\metric
 	{
 		parent::__construct($bucket, $value, new type('ms'));
 	}
-
-	static function from($bucketAsString, $valueAsInteger)
-	{
-		return new self(bucket::ofName($bucketAsString), new value($valueAsInteger));
-	}
 }

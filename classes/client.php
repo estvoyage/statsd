@@ -39,6 +39,16 @@ final class client implements statsd\client
 		return $this;
 	}
 
+	function newTiming(metric\bucket $bucket, metric\value $value)
+	{
+		return $this->newMetric(new metric\timing($bucket, $value));
+	}
+
+	function newCounting(metric\bucket $bucket, metric\value $value = null)
+	{
+		return $this->newMetric(new metric\counting($bucket, $value));
+	}
+
 	function newMetrics(metric $metric1, metric $metric2, metric... $metrics)
 	{
 		array_unshift($metrics, $metric1, $metric2);

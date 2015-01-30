@@ -7,6 +7,7 @@ require __DIR__ . '/../runner.php';
 use
 	estvoyage\statsd\tests\units,
 	estvoyage\statsd\client as testedClass,
+	estvoyage\statsd,
 	estvoyage\statsd\packet,
 	mock\estvoyage\statsd\world as mock
 ;
@@ -15,7 +16,17 @@ class client extends test
 {
 	function beforeTestMethod($method)
 	{
-		require_once 'mock/statsd/metric.php';
+		switch ($method)
+		{
+			case 'test__destruct':
+			case 'testNoMoreMetric':
+			case 'testNewMetrics':
+				require_once 'mock/statsd/metric.php';
+				break;
+		}
+
+		require_once 'mock/statsd/metric/bucket.php';
+		require_once 'mock/statsd/metric/value.php';
 	}
 
 	function testClass()
@@ -26,14 +37,65 @@ class client extends test
 		;
 	}
 
+	function testNewCounting()
+	{
+		$this
+			->given(
+				$bucket = new statsd\metric\bucket(uniqid()),
+				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
+			)
+
+			->if(
+				$this->newTestedInstance(new mock\connection)
+			)
+			->then
+				->object($this->testedInstance->newCounting($bucket))->isTestedInstance
+				->object($this->testedInstance->newCounting($bucket, $value))->isTestedInstance
+		;
+	}
+
+	function testNewTiming()
+	{
+		$this
+			->given(
+				$bucket = new statsd\metric\bucket(uniqid()),
+				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
+			)
+
+			->if(
+				$this->newTestedInstance(new mock\connection)
+			)
+			->then
+				->object($this->testedInstance->newTiming($bucket, $value))->isTestedInstance
+		;
+	}
+
+	function testNewMetrics()
+	{
+		$this
+			->given(
+				$metric1 = new statsd\metric(uniqid()),
+				$metric2 = new statsd\metric(uniqid()),
+				$metric3 = new statsd\metric(uniqid())
+			)
+
+			->if(
+				$this->newTestedInstance(new mock\connection)
+			)
+			->then
+				->object($this->testedInstance->newMetrics($metric1, $metric2))->isTestedInstance
+				->object($this->testedInstance->newMetrics($metric1, $metric2, $metric3))->isTestedInstance
+		;
+	}
+
 	function test__destruct()
 	{
 		$this
 			->given(
 				$connection = new mock\connection,
-				$metric1 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric2 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric3 = new \mock\estvoyage\statsd\metric(uniqid())
+				$metric1 = new statsd\metric(uniqid()),
+				$metric2 = new statsd\metric(uniqid()),
+				$metric3 = new statsd\metric(uniqid())
 			)
 
 			->when(
@@ -67,9 +129,11 @@ class client extends test
 		$this
 			->given(
 				$connection = new mock\connection,
-				$metric1 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric2 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric3 = new \mock\estvoyage\statsd\metric(uniqid())
+				$metric1 = new statsd\metric(uniqid()),
+				$metric2 = new statsd\metric(uniqid()),
+				$metric3 = new statsd\metric(uniqid()),
+				$bucket = new statsd\metric\bucket(uniqid()),
+				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 
 			->if(
@@ -84,24 +148,12 @@ class client extends test
 
 				->object($this->testedInstance->newMetrics($metric2, $metric3)->noMoreMetric())->isTestedInstance
 				->mock($connection)->call('newPacket')->withArguments(new packet($metric2, $metric3))->once
-		;
-	}
 
-	function testNewMetrics()
-	{
-		$this
-			->given(
-				$metric1 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric2 = new \mock\estvoyage\statsd\metric(uniqid()),
-				$metric3 = new \mock\estvoyage\statsd\metric(uniqid())
-			)
+				->object($this->testedInstance->newMetrics($metric2, $metric3)->noMoreMetric())->isTestedInstance
+				->mock($connection)->call('newPacket')->withArguments(new packet($metric2, $metric3))->twice
 
-			->if(
-				$this->newTestedInstance(new mock\connection)
-			)
-			->then
-				->object($this->testedInstance->newMetrics($metric1, $metric2))->isTestedInstance
-				->object($this->testedInstance->newMetrics($metric1, $metric2, $metric3))->isTestedInstance
+				->object($this->testedInstance->newCounting($bucket)->noMoreMetric())->isTestedInstance
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric\counting($bucket)))->once
 		;
 	}
 }

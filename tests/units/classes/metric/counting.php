@@ -30,7 +30,7 @@ class counting extends units\test
 	{
 		$this
 			->given(
-				$bucket = metric\bucket::ofName(uniqid()),
+				$bucket = new metric\bucket(uniqid()),
 				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX)),
 				$sampling = new metric\sampling(rand(1, 100) / 1000)
 			)

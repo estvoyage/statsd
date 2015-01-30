@@ -30,7 +30,7 @@ class metric extends test
 	{
 		$this
 			->given(
-				$bucket = statsd\metric\bucket::ofName(uniqid()),
+				$bucket = new statsd\metric\bucket(uniqid()),
 				$value = new statsd\metric\value(rand(1, PHP_INT_MAX)),
 				$type = new statsd\metric\type(uniqid()),
 				$noSampling = new statsd\metric\sampling(1.),

@@ -29,7 +29,7 @@ class set extends units\test
 	{
 		$this
 			->given(
-				$bucket = metric\bucket::ofName(uniqid()),
+				$bucket = new metric\bucket(uniqid()),
 				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 			->if(
@@ -37,21 +37,6 @@ class set extends units\test
 			)
 			->then
 				->string($this->testedInstance->asString)->isEqualTo($bucket . ':' . $value . '|' . new metric\type('s'))
-		;
-	}
-
-	function testFrom()
-	{
-		$this
-			->given(
-				$bucket = uniqid(),
-				$value = rand(1, PHP_INT_MAX)
-			)
-			->if(
-				$this->newTestedInstance(metric\bucket::ofName($bucket), new metric\value($value))
-			)
-			->then
-				->object(metric\set::from($bucket, $value))->isEqualTo($this->testedInstance)
 		;
 	}
 }
