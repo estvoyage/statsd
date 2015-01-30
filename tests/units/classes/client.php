@@ -16,15 +16,7 @@ class client extends test
 {
 	function beforeTestMethod($method)
 	{
-		switch ($method)
-		{
-			case 'test__destruct':
-			case 'testNoMoreMetric':
-			case 'testNewMetrics':
-				require_once 'mock/statsd/metric.php';
-				break;
-		}
-
+		require_once 'mock/statsd/metric.php';
 		require_once 'mock/statsd/metric/bucket.php';
 		require_once 'mock/statsd/metric/value.php';
 	}
@@ -37,54 +29,18 @@ class client extends test
 		;
 	}
 
-	function testNewCounting()
+	function testValueGoesInto()
 	{
 		$this
 			->given(
 				$bucket = new statsd\metric\bucket(uniqid()),
 				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
-
 			->if(
 				$this->newTestedInstance(new mock\connection)
 			)
 			->then
-				->object($this->testedInstance->newCounting($bucket))->isTestedInstance
-				->object($this->testedInstance->newCounting($bucket, $value))->isTestedInstance
-		;
-	}
-
-	function testNewTiming()
-	{
-		$this
-			->given(
-				$bucket = new statsd\metric\bucket(uniqid()),
-				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
-			)
-
-			->if(
-				$this->newTestedInstance(new mock\connection)
-			)
-			->then
-				->object($this->testedInstance->newTiming($bucket, $value))->isTestedInstance
-		;
-	}
-
-	function testNewMetrics()
-	{
-		$this
-			->given(
-				$metric1 = new statsd\metric(uniqid()),
-				$metric2 = new statsd\metric(uniqid()),
-				$metric3 = new statsd\metric(uniqid())
-			)
-
-			->if(
-				$this->newTestedInstance(new mock\connection)
-			)
-			->then
-				->object($this->testedInstance->newMetrics($metric1, $metric2))->isTestedInstance
-				->object($this->testedInstance->newMetrics($metric1, $metric2, $metric3))->isTestedInstance
+				->object($this->testedInstance->valueGoesInto($value, $bucket))->isTestedInstance
 		;
 	}
 
@@ -93,9 +49,15 @@ class client extends test
 		$this
 			->given(
 				$connection = new mock\connection,
-				$metric1 = new statsd\metric(uniqid()),
-				$metric2 = new statsd\metric(uniqid()),
-				$metric3 = new statsd\metric(uniqid())
+
+				$value1 = new statsd\metric\value(uniqid()),
+				$bucket1 = new statsd\metric\bucket(uniqid()),
+
+				$value2 = new statsd\metric\value(uniqid()),
+				$bucket2 = new statsd\metric\bucket(uniqid()),
+
+				$value3 = new statsd\metric\value(uniqid()),
+				$bucket3 = new statsd\metric\bucket(uniqid())
 			)
 
 			->when(
@@ -107,53 +69,66 @@ class client extends test
 				->mock($connection)->call('newPacket')->withArguments(new packet)->once
 
 			->when(
-				function() use ($connection, $metric1) {
-					(new testedClass($connection))->newMetric($metric1);
+				function() use ($connection, $value1, $bucket1) {
+					(new testedClass($connection))->valueGoesInto($value1, $bucket1);
 				}
 			)
 			->then
-				->mock($connection)->call('newPacket')->withArguments(new packet($metric1))->once
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket1, $value1)))->once
+
 
 			->when(
-				function() use ($connection, $metric2, $metric3) {
-					(new testedClass($connection))->newMetrics($metric2, $metric3);
+				function() use ($connection, $bucket2, $value2, $bucket3,$value3) {
+					(new testedClass($connection))
+						->valueGoesInto($value2, $bucket2)
+						->valueGoesInto($value3, $bucket3)
+					;
 				}
 			)
 			->then
-				->mock($connection)->call('newPacket')->withArguments(new packet($metric2, $metric3))->once
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket2, $value2), new statsd\metric($bucket3, $value3)))->once
 		;
 	}
 
-	function testNoMoreMetric()
+	function testNoMoreValue()
 	{
 		$this
 			->given(
 				$connection = new mock\connection,
-				$metric1 = new statsd\metric(uniqid()),
-				$metric2 = new statsd\metric(uniqid()),
-				$metric3 = new statsd\metric(uniqid()),
-				$bucket = new statsd\metric\bucket(uniqid()),
-				$value = new statsd\metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
+
+				$value1 = new statsd\metric\value(uniqid()),
+				$bucket1 = new statsd\metric\bucket(uniqid()),
+
+				$value2 = new statsd\metric\value(uniqid()),
+				$bucket2 = new statsd\metric\bucket(uniqid()),
+
+				$value3 = new statsd\metric\value(uniqid()),
+				$bucket3 = new statsd\metric\bucket(uniqid())
 			)
 
 			->if(
 				$this->newTestedInstance($connection)
 			)
 			->then
-				->object($this->testedInstance->noMoreMetric())->isTestedInstance
+				->object($this->testedInstance->noMoreValue())->isTestedInstance
 				->mock($connection)->call('newPacket')->withArguments(new packet)->once
 
-				->object($this->testedInstance->newMetric($metric1)->noMoreMetric())->isTestedInstance
-				->mock($connection)->call('newPacket')->withArguments(new packet($metric1))->once
+				->object($this->testedInstance
+						->valueGoesInto($value1, $bucket1)
+							->noMoreValue())->isTestedInstance
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket1, $value1)))->once
 
-				->object($this->testedInstance->newMetrics($metric2, $metric3)->noMoreMetric())->isTestedInstance
-				->mock($connection)->call('newPacket')->withArguments(new packet($metric2, $metric3))->once
+				->object($this->testedInstance
+						->valueGoesInto($value2, $bucket2)
+							->valueGoesInto($value3, $bucket3)
+								->noMoreValue())->isTestedInstance
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket2, $value2), new statsd\metric($bucket3, $value3)))->once
 
-				->object($this->testedInstance->newMetrics($metric2, $metric3)->noMoreMetric())->isTestedInstance
-				->mock($connection)->call('newPacket')->withArguments(new packet($metric2, $metric3))->twice
-
-				->object($this->testedInstance->newCounting($bucket)->noMoreMetric())->isTestedInstance
-				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric\counting($bucket)))->once
+				->object($this->testedInstance
+						->valueGoesInto($value2, $bucket2)
+							->valueGoesInto($value3, $bucket3)
+								->noMoreValue())->isTestedInstance
+				->mock($connection)->call('newPacket')->withArguments(new packet(new statsd\metric($bucket2, $value2), new statsd\metric($bucket3, $value3)))->twice
 		;
 	}
 }

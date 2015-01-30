@@ -2,10 +2,19 @@
 
 namespace estvoyage\statsd\metric;
 
-class value extends \estvoyage\value\integer
+class value
 {
-	function __construct($value = 0)
+	private
+		$value
+	;
+
+	function __construct($value)
 	{
-		parent::__construct($value);
+		$this->value = $value;
+	}
+
+	function __toString()
+	{
+		return (string) $this->value;
 	}
 }

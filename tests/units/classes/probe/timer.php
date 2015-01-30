@@ -38,7 +38,7 @@ class timer extends units\test
 			)
 			->then
 				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
-				->mock($client)->call('newMetric')->withArguments(new metric\timing($bucket, new metric\value(($stop * 10000) - ($start * 10000))))->once
+				->mock($client)->call('valueGoesInto')->withArguments(metric\value::timing(($stop * 10000) - ($start * 10000)), $bucket)->once
 		;
 	}
 }

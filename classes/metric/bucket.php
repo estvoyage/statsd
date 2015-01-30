@@ -2,10 +2,6 @@
 
 namespace estvoyage\statsd\metric;
 
-use
-	estvoyage\value
-;
-
 final class bucket extends \estvoyage\value\string
 {
 	const allowedCharacters = '-+a-z0-9_{}:%\]\[';

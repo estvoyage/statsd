@@ -22,7 +22,7 @@ final class timer
 
 	function useBucket(metric\bucket $bucket)
 	{
-		$this->client->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
+		$this->client->valueGoesInto(metric\value::timing(self::now() - $this->start), $bucket);
 
 		return $this;
 	}

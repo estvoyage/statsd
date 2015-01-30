@@ -22,40 +22,21 @@ final class client implements statsd\client
 
 	function __destruct()
 	{
-		$this->noMoreMetric();
+		$this->noMoreValue();
 	}
 
-	function noMoreMetric()
+	function valueGoesInto(metric\value $value, metric\bucket $bucket)
+	{
+		$this->metrics[] = new metric($bucket, $value);
+
+		return $this;
+	}
+
+	function noMoreValue()
 	{
 		$this->connection->newPacket(new packet(... $this->metrics));
 
 		return $this->init();
-	}
-
-	function newMetric(metric $metric)
-	{
-		$this->metrics[] = $metric;
-
-		return $this;
-	}
-
-	function newTiming(metric\bucket $bucket, metric\value $value)
-	{
-		return $this->newMetric(new metric\timing($bucket, $value));
-	}
-
-	function newCounting(metric\bucket $bucket, metric\value $value = null)
-	{
-		return $this->newMetric(new metric\counting($bucket, $value));
-	}
-
-	function newMetrics(metric $metric1, metric $metric2, metric... $metrics)
-	{
-		array_unshift($metrics, $metric1, $metric2);
-
-		$this->metrics = array_merge($this->metrics, $metrics);
-
-		return $this;
 	}
 
 	private function init()

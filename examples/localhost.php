@@ -13,21 +13,14 @@ require __DIR__ . '/../vendor/autoload.php';
 use
 	estvoyage\statsd,
 	estvoyage\statsd\metric\bucket,
-	estvoyage\statsd\metric\value,
-	estvoyage\statsd\metric\counting,
-	estvoyage\statsd\metric\timing,
-	estvoyage\statsd\metric\gauge,
-	estvoyage\statsd\metric\set
+	estvoyage\statsd\metric\value
 ;
 
 (new statsd\client(new statsd\connection))
 
-	->newMetric(new counting(new bucket(uniqid())))
-
-	->newMetric(new timing(new bucket(uniqid()), new value(rand(1, 100))))
-	->newTiming(new bucket(uniqid()), new value(rand(1, 100)))
-
-	->newMetric(new gauge(new bucket(uniqid()), new value(rand(1, 100))))
-
-	->newMetric(new set(new bucket(uniqid()), new value(rand(1, 100))))
+	->valueGoesInto(value::counting(), new bucket(uniqid()))
+	->valueGoesInto(value::counting(-1), new bucket(uniqid()))
+	->valueGoesInto(value::counting(42), new bucket(uniqid()))
+	->valueGoesInto(value::counting(666, rand(1, 100) / 1000), new bucket(uniqid()))
+	->valueGoesInto(value::counting(- 999, rand(1, 100) / 1000), new bucket(uniqid()))
 ;

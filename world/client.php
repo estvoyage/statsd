@@ -11,7 +11,6 @@ use
 
 interface client
 {
-	function noMoreMetric();
-	function newMetric(metric $metric);
-	function newMetrics(metric $metric1, metric $metric2, metric... $metrics);
+	function valueGoesInto(metric\value $value, metric\bucket $bucket);
+	function noMoreValue();
 }

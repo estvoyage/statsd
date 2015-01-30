@@ -22,7 +22,7 @@ final class usage
 
 	function useBucket(metric\bucket $bucket)
 	{
-		$this->client->newMetric(new metric\gauge($bucket, new metric\value(memory_get_usage(true) - $this->start)));
+		$this->client->valueGoesInto(metric\value::gauge(memory_get_usage(true) - $this->start), $bucket);
 
 		return $this;
 	}

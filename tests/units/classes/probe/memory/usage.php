@@ -38,7 +38,7 @@ class usage extends units\test
 			)
 			->then
 				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
-				->mock($client)->call('newMetric')->withArguments(new metric\gauge($bucket, new metric\value($stop - $start)))->once
+				->mock($client)->call('valueGoesInto')->withArguments(metric\value::gauge($stop - $start), $bucket)->once
 		;
 	}
 }
