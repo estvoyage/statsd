@@ -154,22 +154,22 @@ class value extends units\test
 				$value = rand(- PHP_INT_MAX, PHP_INT_MAX),
 				$type = uniqid(),
 				1.0,
-				$metric = $value . '|' . $type,
+				$metric = $value . '|' . $type . PHP_EOL,
 				$metric
 			],
 			'sampling is not equal to 1.0' => [
 				$value = rand(- PHP_INT_MAX, PHP_INT_MAX),
 				$type = uniqid(),
 				$sampling = rand(1, 100) / 1000,
-				$metric = $value . '|' . $type,
-				$metric .= '|@' . $sampling
+				($metric = $value . '|' . $type) . PHP_EOL,
+				$metric .= '|@' . $sampling . PHP_EOL
 			],
 			'Value is an integer as string' => [
 				$value = (string) rand(- PHP_INT_MAX, PHP_INT_MAX),
 				$type = uniqid(),
 				$sampling = rand(1, 100) / 1000,
-				$metric = $value . '|' . $type,
-				$metric .= '|@' . $sampling
+				($metric = $value . '|' . $type) . PHP_EOL,
+				$metric .= '|@' . $sampling . PHP_EOL
 			]
 		];
 	}

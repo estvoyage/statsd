@@ -28,7 +28,7 @@ final class value extends string
 			throw new \domainException('Sampling should be a float greater than 0.');
 		}
 
-		parent::__construct($value . '|' . $type . ($sampling == 1. ? '' : '|@' . $sampling));
+		parent::__construct($value . '|' . $type . ($sampling == 1. ? '' : '|@' . $sampling) . PHP_EOL);
 	}
 
 	static function gauge($value)
