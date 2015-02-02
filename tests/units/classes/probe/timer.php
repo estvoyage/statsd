@@ -24,7 +24,7 @@ class timer extends units\test
 		;
 	}
 
-	function testUseMetric()
+	function testValueGoesInto()
 	{
 		$this
 			->given(
@@ -37,7 +37,7 @@ class timer extends units\test
 				$this->newTestedInstance($client)
 			)
 			->then
-				->object($this->testedInstance->useBucket($bucket))->isTestedInstance
+				->object($this->testedInstance->bucketIs($bucket))->isTestedInstance
 				->mock($client)->call('valueGoesInto')->withArguments(metric\value::timing(($stop * 10000) - ($start * 10000)), $bucket)->once
 		;
 	}

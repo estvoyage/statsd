@@ -11,39 +11,21 @@ final class usage
 {
 	private
 		$client,
-		$bucket,
 		$start
 	;
 
-	function __construct(statsd\client $client, metric\bucket $bucket)
+	function __construct(statsd\client $client)
 	{
 		$this->client = $client;
-		$this->bucket = $bucket;
-	}
-
-	function startOfMission()
-	{
-		if ($this->start)
-		{
-			throw new \logicException('Mission is already started');
-		}
-
 		$this->start = memory_get_usage(true);
-
-		return $this;
 	}
 
-	function endOfMission()
+	function bucketIs(metric\bucket $bucket)
 	{
-		if (! $this->start)
-		{
-			throw new \logicException('Mission is not started');
-		}
-
 		$this->client
 			->valueGoesInto(
 				metric\value::gauge(memory_get_usage(true) - $this->start),
-				$this->bucket
+				$bucket
 			)
 		;
 

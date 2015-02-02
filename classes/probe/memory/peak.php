@@ -10,19 +10,17 @@ use
 final class peak
 {
 	private
-		$client,
-		$start
+		$client
 	;
 
 	function __construct(statsd\client $client)
 	{
 		$this->client = $client;
-		$this->start = memory_get_peak_usage(true);
 	}
 
-	function useBucket(metric\bucket $bucket)
+	function bucketIs(metric\bucket $bucket)
 	{
-		$this->client->valueGoesInto(metric\value::gauge(memory_get_peak_usage(true) - $this->start), $bucket);
+		$this->client->valueGoesInto(metric\value::gauge(memory_get_peak_usage(true)), $bucket);
 
 		return $this;
 	}
