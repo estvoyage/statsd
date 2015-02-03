@@ -32,7 +32,7 @@ class packet extends test
 		$this
 			->given(
 				$socket = new socket,
-				$mtu = net\mtu::build(5),
+				$mtu = net\mtu::build(6),
 				$metric1 = new statsd\metric('12'),
 				$metric2 = new statsd\metric('45'),
 				$metric3 = new statsd\metric('78'),
@@ -44,14 +44,14 @@ class packet extends test
 			)
 			->then
 				->object($this->testedInstance->socketHasMtu($socket, $mtu))->isTestedInstance
-				->mock($socket)->call('bufferContains')->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12')), new net\socket\data('12'))->once
+				->mock($socket)->call('bufferContains')->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12') . "\n"), new net\socket\data('12') . "\n")->once
 
 			->if(
 				$this->newTestedInstance($metric1, $metric2)
 			)
 			->then
 				->object($this->testedInstance->socketHasMtu($socket, $mtu))->isTestedInstance
-				->mock($socket)->call('bufferContains')->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12' . "\n" . '45')), new net\socket\data('12' . "\n" . '45'))->once
+				->mock($socket)->call('bufferContains')->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12' . "\n" . '45' . "\n")), new net\socket\data('12' . "\n" . '45' . "\n"))->once
 
 			->if(
 				$this->newTestedInstance($metricGreaterThanMtu)
@@ -68,8 +68,8 @@ class packet extends test
 				->object($this->testedInstance->socketHasMtu($socket, $mtu))->isTestedInstance
 				->mock($socket)
 					->call('bufferContains')
-						->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12' . "\n" . '45')), new net\socket\data('12' . "\n" . '45'))->twice
-						->withArguments(new statsd\packet\buffer($socket, new net\socket\data('78')), new net\socket\data('78'))->once
+						->withArguments(new statsd\packet\buffer($socket, new net\socket\data('12' . "\n" . '45' . "\n")), new net\socket\data('12' . "\n" . '45' . "\n"))->twice
+						->withArguments(new statsd\packet\buffer($socket, new net\socket\data('78' . "\n")), new net\socket\data('78' . "\n"))->once
 		;
 	}
 }

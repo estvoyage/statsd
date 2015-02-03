@@ -18,30 +18,40 @@ final class packet implements statsd\packet
 
 	function __construct(metric ...$metrics)
 	{
-		$this->metrics = join("\n", $metrics);
+		$this->metrics = $metrics;
 	}
 
 	function socketHasMtu(socket $socket, mtu $mtu)
 	{
-		$metrics = $this->metrics;
-
-		if ($metrics)
+		if ($this->metrics)
 		{
+			$metrics = '';
+
 			$buffer = new packet\buffer($socket);
 
-			while (strlen($metrics) > $mtu->asInteger)
+			while ($this->metrics)
 			{
-				if (! ($endOfPacket = strrpos($metrics, "\n", $mtu->asInteger)))
+				$metric = array_shift($this->metrics) . "\n";
+
+				if (strlen($metric) > $mtu->asInteger && ! $metrics)
 				{
 					throw new mtu\overflow('Unable to split packet according to MTU');
 				}
 
-				$buffer->newData(new data(substr($metrics, 0, $endOfPacket)));
+				if (strlen($metrics . $metric) > $mtu->asInteger)
+				{
+					$buffer->newData(new data($metrics));
 
-				$metrics = substr($metrics, $endOfPacket + 1);
+					$metrics = '';
+				}
+
+				$metrics .= $metric;
 			}
 
-			$buffer->newData(new data($metrics));
+			if ($metrics)
+			{
+				$buffer->newData(new data($metrics));
+			}
 		}
 
 		return $this;
