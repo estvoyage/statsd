@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-final class peak
+final class peak implements statsd\probe
 {
 	private
 		$client

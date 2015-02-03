@@ -21,6 +21,7 @@ class peak extends units\test
 	{
 		$this->testedClass
 			->isFinal
+			->implements('estvoyage\statsd\world\probe')
 		;
 	}
 

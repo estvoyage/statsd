@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-final class timer
+final class timer implements statsd\probe
 {
 	private
 		$client,

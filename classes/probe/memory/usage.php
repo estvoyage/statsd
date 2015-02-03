@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\world as statsd
 ;
 
-final class usage
+final class usage implements statsd\probe
 {
 	private
 		$client,
