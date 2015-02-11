@@ -17,7 +17,6 @@ use
 	estvoyage\statsd\metric\value
 ;
 
-#TODO Uncomment when connection builder was ready.
 (new statsd\client(new statsd\connection(new net\socket\client\sockets\udp(new net\host('127.0.0.1'), new net\port(8125)))))
 
 	->valueGoesInto(value::counting(), new bucket(uniqid()))
