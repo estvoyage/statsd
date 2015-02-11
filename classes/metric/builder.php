@@ -1,12 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\world;
+namespace estvoyage\statsd\metric;
 
 use
 	estvoyage\statsd\metric
 ;
 
-interface probe
+interface builder
 {
 	function bucketIs(metric\bucket $bucket);
 }

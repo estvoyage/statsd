@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "d41db4b49d8a7d2a6927ba3d0b9f63ad14bf7b98"
+                "reference": "c4580a676f83a8f44f0738ce9fa72ce378ba1382"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/d41db4b49d8a7d2a6927ba3d0b9f63ad14bf7b98",
-                "reference": "d41db4b49d8a7d2a6927ba3d0b9f63ad14bf7b98",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/c4580a676f83a8f44f0738ce9fa72ce378ba1382",
+                "reference": "c4580a676f83a8f44f0738ce9fa72ce378ba1382",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2015-01-25 20:19:45"
+            "time": "2015-02-11 20:11:46"
         },
         {
             "name": "estvoyage/value",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "bbd1a2a675c4fc1b816c85657e79e0af45ef3201"
+                "reference": "741dc711864fa683aa4e514b4eba503bf34aed38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/bbd1a2a675c4fc1b816c85657e79e0af45ef3201",
-                "reference": "bbd1a2a675c4fc1b816c85657e79e0af45ef3201",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/741dc711864fa683aa4e514b4eba503bf34aed38",
+                "reference": "741dc711864fa683aa4e514b4eba503bf34aed38",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2014-12-11 19:27:52"
+            "time": "2015-02-11 19:59:47"
         }
     ],
     "packages-dev": [
@@ -116,12 +116,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "84ca944fd09e401b4a7b153566ec12ef28d7404f"
+                "reference": "d59bdaadcd986cd64c20999d79c0ee67d2ef8517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/84ca944fd09e401b4a7b153566ec12ef28d7404f",
-                "reference": "84ca944fd09e401b4a7b153566ec12ef28d7404f",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/d59bdaadcd986cd64c20999d79c0ee67d2ef8517",
+                "reference": "d59bdaadcd986cd64c20999d79c0ee67d2ef8517",
                 "shasum": ""
             },
             "require": {
@@ -187,7 +187,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-02 08:29:18"
+            "time": "2015-02-11 13:37:55"
         }
     ],
     "aliases": [],

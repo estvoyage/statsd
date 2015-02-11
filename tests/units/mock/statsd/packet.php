@@ -2,14 +2,14 @@
 
 namespace estvoyage\statsd;
 
-final class packet
-{
-	private
-		$metrics
-	;
+use
+	estvoyage\net\mtu,
+	estvoyage\net\socket
+;
 
-	function __construct(metric ...$metrics)
+class packet implements connection\writer
+{
+	function socketHasMtu(socket\client\socket $socket, mtu $mtu)
 	{
-		$this->metrics = $metrics;
 	}
 }

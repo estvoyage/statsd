@@ -1,13 +1,12 @@
 <?php
 
-namespace estvoyage\statsd\world;
+namespace estvoyage\statsd\metric\value;
 
 use
-	estvoyage\statsd\world as statsd,
 	estvoyage\statsd\metric
 ;
 
-interface client
+interface collector
 {
 	function valueGoesInto(metric\value $value, metric\bucket $bucket);
 	function noMoreValue();

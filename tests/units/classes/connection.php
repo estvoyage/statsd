@@ -7,19 +7,26 @@ require __DIR__ . '/../runner.php';
 use
 	estvoyage\net,
 	estvoyage\statsd,
-	mock\estvoyage\net\world\socket,
-	mock\estvoyage\statsd\world\packet
+	mock\estvoyage\statsd\packet,
+	mock\estvoyage\net\socket\client\socket
 ;
 
 require_once 'mock/net/mtu.php';
 
 class connection extends test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/statsd/packet.php';
+
+		$this->mockGenerator->allIsInterface();
+	}
+
 	function testClass()
 	{
 		$this->testedClass
 			->isFinal
-			->implements('estvoyage\statsd\world\connection')
+			->implements('estvoyage\statsd\packet\collector')
 		;
 	}
 
@@ -27,24 +34,17 @@ class connection extends test
 	{
 		$this
 			->given(
-				$packet = new packet,
 				$socket = new socket,
-				$mtu = net\mtu::build()
+				$packet = new packet,
+				$mtu = new net\mtu
 			)
-
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->newPacket($packet))->isTestedInstance
-				->mock($packet)->call('socketHasMtu')->withArguments(new net\socket\udp(new net\host('127.0.0.1'), new net\port(8125)), net\mtu::build(512))->once
 
 			->if(
 				$this->newTestedInstance($socket)
 			)
 			->then
 				->object($this->testedInstance->newPacket($packet))->isTestedInstance
-				->mock($packet)->call('socketHasMtu')->withArguments($socket, net\mtu::build(512))->once
+				->mock($packet)->call('socketHasMtu')->withArguments($socket, new net\mtu(512))->once
 
 			->if(
 				$this->newTestedInstance($socket, $mtu)

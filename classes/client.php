@@ -7,22 +7,22 @@ use
 	estvoyage\statsd\metric
 ;
 
-final class client implements statsd\client
+final class client implements metric\value\collector
 {
 	private
-		$connection
+		$packetCollector
 	;
 
-	function __construct(statsd\connection $connection)
+	function __construct(packet\collector $packetCollector)
 	{
-		$this->connection = $connection;
+		$this->packetCollector = $packetCollector;
 
 		$this->init();
 	}
 
 	function __destruct()
 	{
-		$this->writePacketOnConnection();
+		$this->buildPacketForCollector();
 	}
 
 	function valueGoesInto(metric\value $value, metric\bucket $bucket)
@@ -35,7 +35,7 @@ final class client implements statsd\client
 	function noMoreValue()
 	{
 		return $this
-			->writePacketOnConnection()
+			->buildPacketForCollector()
 				->init()
 		;
 	}
@@ -47,9 +47,9 @@ final class client implements statsd\client
 		return $this;
 	}
 
-	private function writePacketOnConnection()
+	private function buildPacketForCollector()
 	{
-		$this->connection
+		$this->packetCollector
 			->newPacket(
 				new packet(... $this->metrics)
 			)

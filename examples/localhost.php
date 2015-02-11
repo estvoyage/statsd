@@ -11,12 +11,14 @@ This script send three different type of metric to a local statsd server which l
 require __DIR__ . '/../vendor/autoload.php';
 
 use
+	estvoyage\net,
 	estvoyage\statsd,
 	estvoyage\statsd\metric\bucket,
 	estvoyage\statsd\metric\value
 ;
 
-(new statsd\client(new statsd\connection))
+#TODO Uncomment when connection builder was ready.
+(new statsd\client(new statsd\connection(new net\socket\client\sockets\udp(new net\host('127.0.0.1'), new net\port(8125)))))
 
 	->valueGoesInto(value::counting(), new bucket(uniqid()))
 	->valueGoesInto(value::counting(-1), new bucket(uniqid()))

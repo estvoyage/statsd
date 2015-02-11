@@ -4,14 +4,12 @@ namespace estvoyage\net;
 
 class mtu
 {
-	static function build($value = 68)
-	{
-		return new self($value);
-	}
+	public
+		$asInteger
+	;
 
-	private function __construct($value = 68)
+	function __construct($value = 68)
 	{
 		$this->asInteger = $value;
 	}
-
 }

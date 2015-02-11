@@ -3,24 +3,23 @@
 namespace estvoyage\statsd\probe\memory;
 
 use
-	estvoyage\statsd\metric,
-	estvoyage\statsd\world as statsd
+	estvoyage\statsd\metric
 ;
 
-final class peak implements statsd\probe
+final class peak implements metric\builder
 {
 	private
-		$client
+		$collector
 	;
 
-	function __construct(statsd\client $client)
+	function __construct(metric\value\collector $valueCollector)
 	{
-		$this->client = $client;
+		$this->valueCollector = $valueCollector;
 	}
 
 	function bucketIs(metric\bucket $bucket)
 	{
-		$this->client->valueGoesInto(metric\value::gauge(memory_get_peak_usage(true)), $bucket);
+		$this->valueCollector->valueGoesInto(metric\value::gauge(memory_get_peak_usage(true)), $bucket);
 
 		return $this;
 	}

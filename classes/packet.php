@@ -4,13 +4,12 @@ namespace estvoyage\statsd;
 
 use
 	estvoyage\net\mtu,
-	estvoyage\net\address,
+	estvoyage\net\socket,
 	estvoyage\net\socket\data,
-	estvoyage\net\world\socket,
-	estvoyage\statsd\world as statsd
+	estvoyage\net\socket\client\writeBuffer
 ;
 
-final class packet implements statsd\packet
+final class packet implements connection\writer
 {
 	private
 		$metrics
@@ -21,17 +20,17 @@ final class packet implements statsd\packet
 		$this->metrics = $metrics;
 	}
 
-	function socketHasMtu(socket $socket, mtu $mtu)
+	function socketHasMtu(socket\client\socket $socket, mtu $mtu)
 	{
 		if ($this->metrics)
 		{
 			$metrics = '';
 
-			$buffer = new packet\buffer($socket);
+			$buffer = $socket->buildWriteBuffer();
 
-			while ($this->metrics)
+			foreach ($this->metrics as $metric)
 			{
-				$metric = array_shift($this->metrics) . "\n";
+				$metric .= "\n";
 
 				if (strlen($metric) > $mtu->asInteger && ! $metrics)
 				{
