@@ -4,7 +4,7 @@ use mageekguy\atoum\reports;
 
 $runner
 	->addTestsFromDirectory(__DIR__ . '/tests/units/classes')
-	->disallowUndefinedMethodInInterface()
+	->disallowUsageOfUndefinedMethodInMock()
 ;
 
 $runner->getScore()->getCoverage()->excludeDirectory(__DIR__ . '/tests/units/mock');

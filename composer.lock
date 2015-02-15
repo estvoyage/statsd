@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a90775a219c5c5071f0d49424b39326c",
+    "hash": "8611f78b4038eece04b3b16b6b73c6c9",
     "packages": [
         {
             "name": "estvoyage/net",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "c4580a676f83a8f44f0738ce9fa72ce378ba1382"
+                "reference": "69c584f47b70235fabc65e6f517d932f820f9ae0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/c4580a676f83a8f44f0738ce9fa72ce378ba1382",
-                "reference": "c4580a676f83a8f44f0738ce9fa72ce378ba1382",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/69c584f47b70235fabc65e6f517d932f820f9ae0",
+                "reference": "69c584f47b70235fabc65e6f517d932f820f9ae0",
                 "shasum": ""
             },
             "require": {
@@ -31,7 +31,6 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "estvoyage\\net\\tests\\units\\mock\\": "tests/units/mock",
                     "estvoyage\\net\\tests\\units\\": "tests/units",
                     "estvoyage\\net\\world\\": "world",
                     "estvoyage\\net\\": "classes"
@@ -57,7 +56,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2015-02-11 20:11:46"
+            "time": "2015-02-11 20:21:12"
         },
         {
             "name": "estvoyage/value",
@@ -65,25 +64,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "741dc711864fa683aa4e514b4eba503bf34aed38"
+                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/741dc711864fa683aa4e514b4eba503bf34aed38",
-                "reference": "741dc711864fa683aa4e514b4eba503bf34aed38",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/2287c9acb000f287927e8278dbb5fb0c78e75501",
+                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "atoum/atoum": "dev-master"
+                "mageekguy/atoum": "dev-master"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "estvoyage\\value\\tests\\units\\": "tests/units",
-                    "estvoyage\\value\\world\\": "world",
                     "estvoyage\\value\\": "classes"
                 }
             },
@@ -106,23 +104,17 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-02-11 19:59:47"
+            "time": "2015-02-15 19:51:00"
         }
     ],
     "packages-dev": [
         {
-            "name": "atoum/atoum",
+            "name": "mageekguy/atoum",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/atoum/atoum.git",
-                "reference": "d59bdaadcd986cd64c20999d79c0ee67d2ef8517"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/d59bdaadcd986cd64c20999d79c0ee67d2ef8517",
-                "reference": "d59bdaadcd986cd64c20999d79c0ee67d2ef8517",
-                "shasum": ""
+                "url": "https://github.com/mageekguy/atoum.git",
+                "reference": "6b16dc76420426e007b380c6c391195eafe7e001"
             },
             "require": {
                 "ext-hash": "*",
@@ -131,9 +123,6 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "php": ">=5.3.3"
-            },
-            "replace": {
-                "mageekguy/atoum": "*"
             },
             "suggest": {
                 "ext-mbstring": "Provides support for UTF-8 strings"
@@ -152,7 +141,6 @@
                     "classes/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -179,7 +167,7 @@
                     "email": "ludovic.fleury@atoum.org"
                 }
             ],
-            "description": "Simple modern and intuitive unit testing framework for PHP 5.3+",
+            "description": "The root and a fork of the simple modern and intuitive unit testing framework for PHP 5.3+",
             "homepage": "http://www.atoum.org",
             "keywords": [
                 "TDD",
@@ -187,14 +175,14 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-11 13:37:55"
+            "time": "2015-02-15 19:49:24"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
         "estvoyage/net": 20,
-        "atoum/atoum": 20
+        "mageekguy/atoum": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
