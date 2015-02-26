@@ -5,7 +5,7 @@
 	"description": "An east-oriented StatsD client",
 	"keywords": [ "StatsD", "Client", "East" ],
 	"homepage": "http://github.com/estvoyage/statsd",
-	"license": "BSD",
+	"license": "BSD-2-Clause",
 	"authors": [
 		{
 			"name": "Frédéric Hardy",
@@ -28,8 +28,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"estvoyage\\statsd\\tests\\units\\": "tests/units",
 			"estvoyage\\statsd\\": "classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"estvoyage\\statsd\\tests\\units\\": "tests/units"
 		}
 	}
 }
