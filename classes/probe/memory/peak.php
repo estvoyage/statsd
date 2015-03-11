@@ -3,11 +3,11 @@
 namespace estvoyage\statsd\probe\memory;
 
 use
-	estvoyage\statsd,
+	estvoyage\statsd\probe,
 	estvoyage\statsd\metric
 ;
 
-final class peak extends statsd\probe
+final class peak extends probe\generic
 {
 	function newStatsdBucket(metric\bucket $bucket)
 	{

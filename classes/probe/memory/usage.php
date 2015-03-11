@@ -3,11 +3,11 @@
 namespace estvoyage\statsd\probe\memory;
 
 use
-	estvoyage\statsd,
+	estvoyage\statsd\probe,
 	estvoyage\statsd\metric
 ;
 
-final class usage extends statsd\probe
+final class usage extends probe\generic
 {
 	private
 		$start

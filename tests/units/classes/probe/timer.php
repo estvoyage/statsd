@@ -16,7 +16,7 @@ class timer extends units\test
 	{
 		$this->testedClass
 			->isFinal
-			->implements('estvoyage\statsd\metric\provider')
+			->implements('estvoyage\statsd\probe')
 		;
 	}
 

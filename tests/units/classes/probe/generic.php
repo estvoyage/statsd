@@ -1,8 +1,8 @@
 <?php
 
-namespace estvoyage\statsd\tests\units;
+namespace estvoyage\statsd\tests\units\probe;
 
-require __DIR__ . '/../runner.php';
+require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\statsd\tests\units,
@@ -10,13 +10,13 @@ use
 	mock\estvoyage\statsd as mockOfStatsd
 ;
 
-class probe extends units\test
+class generic extends units\test
 {
 	function testClass()
 	{
 		$this->testedClass
 			->isAbstract
-			->implements('estvoyage\statsd\metric\provider')
+			->implements('estvoyage\statsd\probe')
 		;
 	}
 

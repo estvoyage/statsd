@@ -3,11 +3,11 @@
 namespace estvoyage\statsd\probe;
 
 use
-	estvoyage\statsd,
+	estvoyage\statsd\probe,
 	estvoyage\statsd\metric
 ;
 
-final class timer extends statsd\probe
+final class timer extends probe\generic
 {
 	private
 		$start
