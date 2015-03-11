@@ -6,7 +6,7 @@ use
 	estvoyage\data
 ;
 
-interface metric
+interface metric extends metric\provider
 {
 	function statsdMetricTemplateIs(metric\template $template);
 }

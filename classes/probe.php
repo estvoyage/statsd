@@ -32,11 +32,11 @@ abstract class probe implements metric\provider
 		return $this;
 	}
 
-	abstract function newBucket(metric\bucket $bucket);
+	abstract function newStatsdBucket(metric\bucket $bucket);
 
-	protected function newMetric(metric $metric)
+	protected function newStatsdMetric(metric $metric)
 	{
-		$this->packet->newMetric($metric);
+		$this->packet->newStatsdMetric($metric);
 
 		return $this;
 	}

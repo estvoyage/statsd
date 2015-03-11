@@ -20,7 +20,7 @@ class peak extends units\test
 		;
 	}
 
-	function testNewBucket()
+	function testNewStatsdBucket()
 	{
 		$this
 			->given(
@@ -31,7 +31,7 @@ class peak extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->newBucket($bucket))->isTestedInstance
+				->object($this->testedInstance->newStatsdBucket($bucket))->isTestedInstance
 		;
 	}
 
@@ -74,13 +74,13 @@ class peak extends units\test
 				$this->function->memory_get_peak_usage = $peak = rand(- PHP_INT_MAX, PHP_INT_MAX),
 
 				$this->newTestedInstance
-					->newBucket($bucket)
+					->newStatsdBucket($bucket)
 						->statsdMetricFactoryIs($factory)
 			)
 			->then
 				->mock($factory)
 					->receive('newStatsdMetric')
-						->withArguments((new metric\packet)->newMetric(new metric\gauge($bucket, new metric\value($peak))))
+						->withArguments((new metric\packet)->newStatsdMetric(new metric\gauge($bucket, new metric\value($peak))))
 							->once
 		;
 	}

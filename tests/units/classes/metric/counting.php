@@ -27,6 +27,46 @@ class counting extends units\test
 		;
 	}
 
+	function testStatsdClientIs()
+	{
+		$this
+			->given(
+				$statsdClient = new mockOfStatsd\client
+			)
+			->if(
+				$bucket = new metric\bucket(uniqid()),
+				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX)),
+				$this->newTestedInstance($bucket, $value)
+			)
+			->then
+				->object($this->testedInstance->statsdClientIs($statsdClient))->isTestedInstance
+				->mock($statsdClient)
+					->receive('newStatsdMetric')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testStatsdMetricFactoryIs()
+	{
+		$this
+			->given(
+				$statsdMetricFactory = new mockOfStatsd\metric\factory
+			)
+			->if(
+				$bucket = new metric\bucket(uniqid()),
+				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX)),
+				$this->newTestedInstance($bucket, $value)
+			)
+			->then
+				->object($this->testedInstance->statsdMetricFactoryIs($statsdMetricFactory))->isTestedInstance
+				->mock($statsdMetricFactory)
+					->receive('newStatsdMetric')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
 	function testStatsdMetricTemplateIs()
 	{
 		$this

@@ -20,7 +20,7 @@ class usage extends units\test
 		;
 	}
 
-	function testNewBucket()
+	function testNewStatsdBucket()
 	{
 		$this
 			->given(
@@ -31,7 +31,7 @@ class usage extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->newBucket($bucket))->isTestedInstance
+				->object($this->testedInstance->newStatsdBucket($bucket))->isTestedInstance
 		;
 	}
 
@@ -75,13 +75,13 @@ class usage extends units\test
 				$this->function->memory_get_usage[3] = $atBucket = 300,
 
 				$this->newTestedInstance
-					->newBucket($bucket)
+					->newStatsdBucket($bucket)
 						->statsdMetricFactoryIs($factory)
 			)
 			->then
 				->mock($factory)
 					->receive('newStatsdMetric')
-						->withArguments((new metric\packet)->newMetric(new metric\gauge($bucket, new metric\value(200))))
+						->withArguments((new metric\packet)->newStatsdMetric(new metric\gauge($bucket, new metric\value(200))))
 							->once
 		;
 	}

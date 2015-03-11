@@ -15,11 +15,48 @@ class packet extends units\test
 	{
 		$this->testedClass
 			->isFinal
+			->implements('estvoyage\statsd\client')
 			->implements('estvoyage\statsd\metric')
 		;
 	}
 
-	function testNewMetric()
+	function testStatsdClientIs()
+	{
+		$this
+			->given(
+				$client = new mockOfStatsd\client
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdClientIs($client))->isTestedInstance
+				->mock($client)
+					->receive('newStatsdMetric')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testStatsdMetricProviderIs()
+	{
+		$this
+			->given(
+				$provider = new mockOfStatsd\metric\provider
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdMetricProviderIs($provider))->isTestedInstance
+				->mock($provider)
+					->receive('statsdClientIs')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testNewStatdMetric()
 	{
 		$this
 			->given(
@@ -29,7 +66,25 @@ class packet extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->newTestedInstance->newMetric($metric))->isTestedInstance
+				->object($this->newTestedInstance->newStatsdMetric($metric))->isTestedInstance
+		;
+	}
+
+	function testStatsdMetricFactoryIs()
+	{
+		$this
+			->given(
+				$factory = new mockOfStatsd\metric\factory
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
+				->mock($factory)
+					->receive('newStatsdMetric')
+						->withArguments($this->testedInstance)
+							->once
 		;
 	}
 
@@ -52,7 +107,7 @@ class packet extends units\test
 				$metric = new mockOfStatsd\metric,
 
 				$this->testedInstance
-					->newMetric($metric)
+					->newStatsdMetric($metric)
 						->statsdMetricTemplateIs($template)
 			)
 			->then
@@ -72,8 +127,8 @@ class packet extends units\test
 
 			->if(
 				$this->testedInstance
-					->newMetric($metric)
-						->newMetric($metric)
+					->newStatsdMetric($metric)
+						->newStatsdMetric($metric)
 							->statsdMetricTemplateIs($template)
 			)
 			->then

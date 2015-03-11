@@ -20,8 +20,8 @@ final class usage extends statsd\probe
 		$this->start = memory_get_usage(true);
 	}
 
-	function newBucket(metric\bucket $bucket)
+	function newStatsdBucket(metric\bucket $bucket)
 	{
-		return $this->newMetric(new metric\gauge($bucket, new metric\value(memory_get_usage(true) - $this->start)));
+		return $this->newStatsdMetric(new metric\gauge($bucket, new metric\value(memory_get_usage(true) - $this->start)));
 	}
 }

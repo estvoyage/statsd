@@ -69,13 +69,13 @@ class timer extends units\test
 				$this->function->microtime[2] = $atBucket = 3,
 
 				$this->newTestedInstance
-					->newBucket($bucket)
+					->newStatsdBucket($bucket)
 						->statsdMetricFactoryIs($factory)
 			)
 			->then
 				->mock($factory)
 					->receive('newStatsdMetric')
-						->withArguments((new metric\packet)->newMetric(new metric\timing($bucket, new metric\value(20000))))
+						->withArguments((new metric\packet)->newStatsdMetric(new metric\timing($bucket, new metric\value(20000))))
 							->once
 		;
 	}

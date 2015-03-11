@@ -9,8 +9,8 @@ use
 
 final class peak extends statsd\probe
 {
-	function newBucket(metric\bucket $bucket)
+	function newStatsdBucket(metric\bucket $bucket)
 	{
-		return $this->newMetric(new metric\gauge($bucket, new metric\value(memory_get_peak_usage(true))));
+		return $this->newStatsdMetric(new metric\gauge($bucket, new metric\value(memory_get_peak_usage(true))));
 	}
 }

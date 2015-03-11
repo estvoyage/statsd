@@ -20,9 +20,9 @@ final class timer extends statsd\probe
 		$this->start = self::now();
 	}
 
-	function newBucket(metric\bucket $bucket)
+	function newStatsdBucket(metric\bucket $bucket)
 	{
-		return $this->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
+		return $this->newStatsdMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
 	}
 
 	private static function now()
