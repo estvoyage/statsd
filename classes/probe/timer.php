@@ -7,38 +7,22 @@ use
 	estvoyage\statsd\metric
 ;
 
-final class timer implements metric\provider
+final class timer extends statsd\probe
 {
 	private
-		$packet,
 		$start
 	;
 
 	function __construct()
 	{
-		$this->packet = new metric\packet;
+		parent::__construct();
+
 		$this->start = self::now();
 	}
 
 	function newBucket(metric\bucket $bucket)
 	{
-		$this->packet->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
-
-		return $this;
-	}
-
-	function statsdClientIs(statsd\client $client)
-	{
-		$client->statsdMetricProviderIs($this);
-
-		return $this;
-	}
-
-	function statsdMetricFactoryIs(metric\factory $factory)
-	{
-		$factory->newStatsdMetric($this->packet);
-
-		return $this;
+		return $this->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
 	}
 
 	private static function now()
