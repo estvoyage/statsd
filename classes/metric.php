@@ -2,10 +2,11 @@
 
 namespace estvoyage\statsd;
 
-final class metric extends \estvoyage\value\string
+use
+	estvoyage\data
+;
+
+interface metric
 {
-	function __construct(metric\bucket $bucket, metric\value $value)
-	{
-		parent::__construct($bucket . ':' . $value);
-	}
+	function statsdMetricTemplateIs(metric\template $template);
 }

@@ -7,45 +7,81 @@ require __DIR__ . '/../../../runner.php';
 use
 	estvoyage\statsd\tests\units,
 	estvoyage\statsd\metric,
-	mock\estvoyage\statsd as mock
+	mock\estvoyage\statsd as mockOfStatsd
 ;
 
 class peak extends units\test
 {
-	function beforeTestMethod($method)
-	{
-		require_once 'mock/statsd/metric/bucket.php';
-	}
-
 	function testClass()
 	{
 		$this->testedClass
 			->isFinal
-			->implements('estvoyage\statsd\metric\builder')
+			->implements('estvoyage\statsd\metric\provider')
 		;
 	}
 
-	function testBucketIs()
+	function testNewBucket()
 	{
 		$this
 			->given(
-				$valueCollector = new mock\metric\value\collector,
 				$bucket = new metric\bucket(uniqid()),
-				$this->function->memory_get_peak_usage[1] = $firstPeak = rand(2000, 3000),
-				$this->function->memory_get_peak_usage[2] = $secondPeak = rand(4000, 5000)
+				$this->function->memory_get_peak_usage = rand(- PHP_INT_MAX, PHP_INT_MAX)
 			)
 			->if(
-				$this->newTestedInstance($valueCollector)
+				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->bucketIs($bucket))->isTestedInstance
-				->mock($valueCollector)->call('valueGoesInto')->withArguments(metric\value::gauge($firstPeak), $bucket)->once
+				->object($this->testedInstance->newBucket($bucket))->isTestedInstance
+		;
+	}
+
+	function testStatsdClientIs()
+	{
+		$this
+			->given(
+				$client = new mockOfStatsd\client
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdClientIs($client))->isTestedInstance
+				->mock($client)
+					->receive('statsdMetricProviderIs')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testStatsdMetricTemplateIs()
+	{
+		$this
+			->given(
+				$factory = new mockOfStatsd\metric\factory
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
+				->mock($factory)
+					->receive('newStatsdMetric')
+						->withArguments(new metric\packet)
+							->once
 
 			->if(
-				$this->testedInstance->bucketIs($bucket)
+				$bucket = new metric\bucket(uniqid()),
+				$this->function->memory_get_peak_usage = $peak = rand(- PHP_INT_MAX, PHP_INT_MAX),
+
+				$this->newTestedInstance
+					->newBucket($bucket)
+						->statsdMetricFactoryIs($factory)
 			)
 			->then
-				->mock($valueCollector)->call('valueGoesInto')->withArguments(metric\value::gauge($secondPeak), $bucket)->once
+				->mock($factory)
+					->receive('newStatsdMetric')
+						->withArguments((new metric\packet)->newMetric(new metric\gauge($bucket, new metric\value($peak))))
+							->once
 		;
 	}
 }

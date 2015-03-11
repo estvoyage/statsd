@@ -8,13 +8,13 @@ use
 	estvoyage\statsd\tests\units
 ;
 
-class value extends units\test
+class sampling extends units\test
 {
 	function testClass()
 	{
 		$this->testedClass
 			->isFinal
-			->extends('estvoyage\value\integer')
+			->extends('estvoyage\value\float\unsigned')
 		;
 	}
 }

@@ -7,39 +7,76 @@ require __DIR__ . '/../../runner.php';
 use
 	estvoyage\statsd\tests\units,
 	estvoyage\statsd\metric,
-	mock\estvoyage\statsd as mock
+	mock\estvoyage\statsd as mockOfStatsd
 ;
 
 class timer extends units\test
 {
-	function beforeTestMethod($method)
-	{
-		require_once 'mock/statsd/metric/bucket.php';
-	}
-
 	function testClass()
 	{
 		$this->testedClass
 			->isFinal
-			->implements('estvoyage\statsd\metric\builder')
+			->implements('estvoyage\statsd\metric\provider')
 		;
 	}
 
-	function testValueGoesInto()
+	function testStatsdClientIs()
 	{
 		$this
 			->given(
-				$valueCollector = new mock\metric\value\collector,
-				$bucket = new metric\bucket(uniqid()),
-				$this->function->microtime[1] = $start = 1418733215.0566,
-				$this->function->microtime[2] = $stop = 1418733220.6586
+				$client = new mockOfStatsd\client
 			)
 			->if(
-				$this->newTestedInstance($valueCollector)
+				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->bucketIs($bucket))->isTestedInstance
-				->mock($valueCollector)->call('valueGoesInto')->withArguments(metric\value::timing(($stop * 10000) - ($start * 10000)), $bucket)->once
+				->object($this->testedInstance->statsdClientIs($client))->isTestedInstance
+				->mock($client)
+					->receive('statsdMetricProviderIs')
+						->withArguments($this->testedInstance)
+							->once
+		;
+	}
+
+	function testStatsdMetricTemplateIsWithNoNewBucket()
+	{
+		$this
+			->given(
+				$this->function->microtime = 1,
+				$factory = new mockOfStatsd\metric\factory
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
+				->mock($factory)
+					->receive('newStatsdMetric')
+						->withArguments(new metric\packet)
+							->once
+		;
+	}
+
+	function testStatsdMetricTemplateIsWithNewBucket()
+	{
+		$this
+			->given(
+				$this->function->microtime = 1,
+				$factory = new mockOfStatsd\metric\factory
+			)
+			->if(
+				$bucket = new metric\bucket(uniqid()),
+				$this->function->microtime[2] = $atBucket = 3,
+
+				$this->newTestedInstance
+					->newBucket($bucket)
+						->statsdMetricFactoryIs($factory)
+			)
+			->then
+				->mock($factory)
+					->receive('newStatsdMetric')
+						->withArguments((new metric\packet)->newMetric(new metric\timing($bucket, new metric\value(20000))))
+							->once
 		;
 	}
 }

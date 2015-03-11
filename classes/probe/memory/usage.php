@@ -3,30 +3,44 @@
 namespace estvoyage\statsd\probe\memory;
 
 use
+	estvoyage\statsd,
 	estvoyage\statsd\metric
 ;
 
-final class usage implements metric\builder
+final class usage implements metric\provider
 {
 	private
-		$valueCollector,
+		$packet,
 		$start
 	;
 
-	function __construct(metric\value\collector $valueCollector)
+	function __construct()
 	{
-		$this->valueCollector = $valueCollector;
+		$this->packet = new metric\packet;
 		$this->start = memory_get_usage(true);
 	}
 
-	function bucketIs(metric\bucket $bucket)
+	function newBucket(metric\bucket $bucket)
 	{
-		$this->valueCollector
-			->valueGoesInto(
-				metric\value::gauge(memory_get_usage(true) - $this->start),
-				$bucket
+		$this->packet
+			->newMetric(
+				new metric\gauge($bucket, new metric\value(memory_get_usage(true) - $this->start))
 			)
 		;
+
+		return $this;
+	}
+
+	function statsdClientIs(statsd\client $client)
+	{
+		$client->statsdMetricProviderIs($this);
+
+		return $this;
+	}
+
+	function statsdMetricFactoryIs(metric\factory $factory)
+	{
+		$factory->newStatsdMetric($this->packet);
 
 		return $this;
 	}

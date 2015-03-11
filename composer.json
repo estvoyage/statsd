@@ -17,14 +17,22 @@
 		{
 			"url": "https://github.com/mageekguy/atoum.git",
 			"type": "git"
+		},
+		{
+			"url": "/Users/fch/Estvoyage/Net",
+			"type": "vcs"
+		},
+		{
+			"url": "/Users/fch/Estvoyage/Data",
+			"type": "vcs"
 		}
 	],
 	"require": {
 		"php": ">=5.6.0",
-		"estvoyage/net": "dev-master"
+		"estvoyage/net": "@dev"
 	},
 	"require-dev": {
-		"mageekguy/atoum": "dev-master"
+		"mageekguy/atoum": "@dev"
 	},
 	"autoload": {
 		"psr-4": {

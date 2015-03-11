@@ -2,14 +2,11 @@
 
 namespace estvoyage\net;
 
-class mtu
-{
-	public
-		$asInteger
-	;
+use
+	estvoyage\data,
+	estvoyage\value
+;
 
-	function __construct($value = 68)
-	{
-		$this->asInteger = $value;
-	}
+class mtu extends value\integer\unsigned
+{
 }

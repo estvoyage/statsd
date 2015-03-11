@@ -4,41 +4,82 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8611f78b4038eece04b3b16b6b73c6c9",
+    "hash": "fa76ff492197d25b7ed62baa82efde47",
     "packages": [
+        {
+            "name": "estvoyage/data",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "/Users/fch/Estvoyage/Data",
+                "reference": "2bcdba9f73684eb1f35c6b965a9ca8d0c2e62fd5"
+            },
+            "require": {
+                "estvoyage/value": "@dev",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "mageekguy/atoum": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\data\\": "classes"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "estvoyage\\data\\tests\\units\\": "tests/units"
+                }
+            },
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "Interfaces and classes to manipulate data in an east-oriented manner",
+            "homepage": "http://github.com/estvoyage/data",
+            "keywords": [
+                "East",
+                "data"
+            ],
+            "time": "2015-03-08 20:08:47"
+        },
         {
             "name": "estvoyage/net",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/estvoyage/net.git",
-                "reference": "69c584f47b70235fabc65e6f517d932f820f9ae0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/69c584f47b70235fabc65e6f517d932f820f9ae0",
-                "reference": "69c584f47b70235fabc65e6f517d932f820f9ae0",
-                "shasum": ""
+                "url": "/Users/fch/Estvoyage/Net",
+                "reference": "f80dd6df4e3618a6dc5eb7939034b6c3b02ae303"
             },
             "require": {
-                "estvoyage/value": "dev-master",
+                "estvoyage/data": "@dev",
+                "estvoyage/value": "@dev",
                 "ext-sockets": "*",
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "atoum/atoum": "dev-master"
+                "mageekguy/atoum": "@dev"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "estvoyage\\net\\tests\\units\\": "tests/units",
-                    "estvoyage\\net\\world\\": "world",
                     "estvoyage\\net\\": "classes"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "estvoyage\\net\\tests\\units\\": "tests/units"
+                }
+            },
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -51,12 +92,12 @@
             "homepage": "http://github.com/estvoyage/net",
             "keywords": [
                 "East",
+                "Network",
                 "Socket",
-                "network",
-                "tcp",
-                "udp"
+                "TCP",
+                "UDP"
             ],
-            "time": "2015-02-11 20:21:12"
+            "time": "2015-03-08 19:51:44"
         },
         {
             "name": "estvoyage/value",
@@ -64,12 +105,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501"
+                "reference": "cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/2287c9acb000f287927e8278dbb5fb0c78e75501",
-                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6",
+                "reference": "cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6",
                 "shasum": ""
             },
             "require": {
@@ -81,13 +122,12 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "estvoyage\\value\\tests\\units\\": "tests/units",
                     "estvoyage\\value\\": "classes"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -104,7 +144,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-02-15 19:51:00"
+            "time": "2015-02-26 12:04:10"
         }
     ],
     "packages-dev": [
@@ -114,7 +154,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mageekguy/atoum.git",
-                "reference": "6b16dc76420426e007b380c6c391195eafe7e001"
+                "reference": "da4a6926c7e721834bea45e6be081bbe4b9c8d76"
             },
             "require": {
                 "ext-hash": "*",
@@ -142,7 +182,7 @@
                 ]
             },
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -175,7 +215,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-15 19:49:24"
+            "time": "2015-02-26 12:08:02"
         }
     ],
     "aliases": [],

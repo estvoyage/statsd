@@ -15,6 +15,7 @@ class bucket extends units\test
 	{
 		$this->testedClass
 			->isFinal
+			->extends('estvoyage\value\string')
 		;
 	}
 
@@ -51,20 +52,6 @@ class bucket extends units\test
 	function testValidateWithInvalidValue($value)
 	{
 		$this->boolean(metric\bucket::validate($value))->isFalse;
-	}
-
-	function testParentIs()
-	{
-		$this
-			->given(
-				$parent = $this->newTestedInstance(uniqid())
-			)
-			->if(
-				$bucket = $this->newTestedInstance(uniqid())
-			)
-			->then
-				->object($bucket->parentIs($parent))->isEqualTo($this->newTestedInstance($parent . '.' . $bucket))
-		;
 	}
 
 	protected function validValueProvider()

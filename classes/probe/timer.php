@@ -3,25 +3,40 @@
 namespace estvoyage\statsd\probe;
 
 use
+	estvoyage\statsd,
 	estvoyage\statsd\metric
 ;
 
-final class timer implements metric\builder
+final class timer implements metric\provider
 {
 	private
-		$valueCollector,
+		$packet,
 		$start
 	;
 
-	function __construct(metric\value\collector $valueCollector)
+	function __construct()
 	{
-		$this->valueCollector = $valueCollector;
+		$this->packet = new metric\packet;
 		$this->start = self::now();
 	}
 
-	function bucketIs(metric\bucket $bucket)
+	function newBucket(metric\bucket $bucket)
 	{
-		$this->valueCollector->valueGoesInto(metric\value::timing(self::now() - $this->start), $bucket);
+		$this->packet->newMetric(new metric\timing($bucket, new metric\value(self::now() - $this->start)));
+
+		return $this;
+	}
+
+	function statsdClientIs(statsd\client $client)
+	{
+		$client->statsdMetricProviderIs($this);
+
+		return $this;
+	}
+
+	function statsdMetricFactoryIs(metric\factory $factory)
+	{
+		$factory->newStatsdMetric($this->packet);
 
 		return $this;
 	}
