@@ -22,6 +22,23 @@ class etsy extends units\test
 		;
 	}
 
+	function testDataConsumerIs()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer,
+				$this->newTestedInstance($dataConsumer)
+			)
+			->if(
+				$otherDataConsumer = new mockOfData\consumer
+			)
+			->then
+				->object($this->testedInstance->dataConsumerIs($otherDataConsumer))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance($otherDataConsumer))
+		;
+	}
+
 	function testNewStatsdMetric()
 	{
 		$this

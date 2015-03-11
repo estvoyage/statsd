@@ -2,7 +2,11 @@
 
 namespace estvoyage\statsd;
 
-interface client
+use
+	estvoyage\data
+;
+
+interface client extends data\provider
 {
 	function newStatsdMetric(metric $metric);
 	function statsdMetricProviderIs(metric\provider $provider);

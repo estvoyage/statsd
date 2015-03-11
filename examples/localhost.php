@@ -11,17 +11,36 @@ This script send three different type of metric to a local statsd server which l
 require __DIR__ . '/../vendor/autoload.php';
 
 use
-	estvoyage\net,
+	estvoyage\data,
 	estvoyage\statsd,
+	estvoyage\statsd\metric,
 	estvoyage\statsd\metric\bucket,
 	estvoyage\statsd\metric\value
 ;
 
-(new statsd\client(new statsd\connection(new net\socket\client\sockets\udp(new net\host('127.0.0.1'), new net\port(8125)))))
+class console implements data\consumer
+{
+	function dataProviderIs(data\provider $dataProvider)
+	{
+	}
 
-	->valueGoesInto(value::counting(), new bucket(uniqid()))
-	->valueGoesInto(value::counting(-1), new bucket(uniqid()))
-	->valueGoesInto(value::counting(42), new bucket(uniqid()))
-	->valueGoesInto(value::counting(666, rand(1, 100) / 1000), new bucket(uniqid()))
-	->valueGoesInto(value::counting(- 999, rand(1, 100) / 1000), new bucket(uniqid()))
+	function newData(data\data $data)
+	{
+		echo $data . PHP_EOL;
+
+		return $this;
+	}
+
+	function noMoreData()
+	{
+		return $this;
+	}
+}
+
+(new statsd\client\etsy(new console))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid()), new value(1)))
+//	->newStatsdMetric(value::counting(-1), new bucket(uniqid()))
+//	->newStatsdMetric(value::counting(42), new bucket(uniqid()))
+//	->newStatsdMetric(value::counting(666, rand(1, 100) / 1000), new bucket(uniqid()))
+//	->newStatsdMetric(value::counting(- 999, rand(1, 100) / 1000), new bucket(uniqid()))
 ;

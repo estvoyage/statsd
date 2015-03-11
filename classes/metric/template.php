@@ -7,7 +7,7 @@ use
 	estvoyage\statsd\metric
 ;
 
-interface template
+interface template extends data\provider
 {
 	function newStatsdMetric(metric $metric);
 	function statsdCountingContainsBucketAndValueAndSampling(metric\bucket $bucket, metric\value $value, metric\sampling $sampling = null);
