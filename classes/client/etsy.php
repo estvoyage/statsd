@@ -9,21 +9,10 @@ use
 	estvoyage\statsd\metric
 ;
 
-final class etsy implements statsd\client
+final class etsy extends generic
 {
-	private
-		$metricFactory
-	;
-
-	function __construct(data\consumer $dataConsumer, net\mtu $mtu)
+	function __construct(data\consumer $dataConsumer)
 	{
-		$this->metricFactory = new metric\factory\etsy(new metric\consumer($dataConsumer, $mtu));
-	}
-
-	function statsdMetricProviderIs(metric\provider $provider)
-	{
-		$provider->statsdMetricFactoryIs($this->metricFactory);
-
-		return $this;
+		parent::__construct(new metric\factory\etsy($dataConsumer));
 	}
 }

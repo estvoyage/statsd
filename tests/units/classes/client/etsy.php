@@ -14,11 +14,6 @@ use
 
 class etsy extends units\test
 {
-	function beforeTestMethod($method)
-	{
-		require_once 'mock/net/mtu.php';
-	}
-
 	function testClass()
 	{
 		$this->testedClass
@@ -32,8 +27,7 @@ class etsy extends units\test
 		$this
 			->given(
 				$dataConsumer = new mockOfData\consumer,
-				$mtu = new net\mtu(rand(0, PHP_INT_MAX)),
-				$this->newTestedInstance($dataConsumer, $mtu)
+				$this->newTestedInstance($dataConsumer)
 			)
 			->if(
 				$statsdMetricProvider = new mockOfStatsd\metric\provider
@@ -43,7 +37,8 @@ class etsy extends units\test
 					->isTestedInstance
 				->mock($statsdMetricProvider)
 					->receive('statsdMetricFactoryIs')
-						->withArguments(new metric\factory\etsy(new metric\consumer($dataConsumer, $mtu)))->once
+						->withArguments(new metric\factory\etsy($dataConsumer))
+							->once
 		;
 	}
 }
