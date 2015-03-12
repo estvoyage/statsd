@@ -6,7 +6,7 @@ use
 	estvoyage\data
 ;
 
-interface client extends data\provider
+interface client
 {
 	function newStatsdMetric(metric $metric);
 	function statsdMetricProviderIs(metric\provider $provider);

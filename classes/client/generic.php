@@ -20,14 +20,6 @@ abstract class generic implements statsd\client
 		$this->metricFactory = $metricFactory;
 	}
 
-	function dataConsumerIs(data\consumer $dataConsumer)
-	{
-		$client = clone $this;
-		$client->metricFactory = $client->metricFactory->dataConsumerIs($dataConsumer);
-
-		return $client;
-	}
-
 	function newStatsdMetric(metric $metric)
 	{
 		return $this->statsdMetricProviderIs($metric);
