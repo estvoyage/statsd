@@ -27,6 +27,20 @@ class counting extends units\test
 		;
 	}
 
+	function testConstructor()
+	{
+		$this
+			->given(
+				$bucket = new metric\bucket(uniqid())
+			)
+			->if(
+				$this->newTestedInstance($bucket)
+			)
+			->then
+				->object($this->testedInstance)->isEqualTo($this->newTestedInstance($bucket, new metric\value(1)))
+		;
+	}
+
 	function testStatsdClientIs()
 	{
 		$this
@@ -51,11 +65,11 @@ class counting extends units\test
 	{
 		$this
 			->given(
-				$statsdMetricFactory = new mockOfStatsd\metric\factory
+				$statsdMetricFactory = new mockOfStatsd\metric\factory,
+				$bucket = new metric\bucket(uniqid()),
+				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 			->if(
-				$bucket = new metric\bucket(uniqid()),
-				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX)),
 				$this->newTestedInstance($bucket, $value)
 			)
 			->then
