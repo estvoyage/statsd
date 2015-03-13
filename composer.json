@@ -17,14 +17,6 @@
 		{
 			"url": "https://github.com/mageekguy/atoum.git",
 			"type": "git"
-		},
-		{
-			"url": "/Users/fch/Estvoyage/Net",
-			"type": "vcs"
-		},
-		{
-			"url": "/Users/fch/Estvoyage/Data",
-			"type": "vcs"
 		}
 	],
 	"require": {

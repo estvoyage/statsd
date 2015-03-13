@@ -4,15 +4,21 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fa76ff492197d25b7ed62baa82efde47",
+    "hash": "03c4c782d414ca2adae5b58114ab2aca",
     "packages": [
         {
             "name": "estvoyage/data",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "/Users/fch/Estvoyage/Data",
-                "reference": "2bcdba9f73684eb1f35c6b965a9ca8d0c2e62fd5"
+                "url": "https://github.com/estvoyage/data.git",
+                "reference": "5b6eec060addab770bc433314ddec3e3ce6653f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/5b6eec060addab770bc433314ddec3e3ce6653f5",
+                "reference": "5b6eec060addab770bc433314ddec3e3ce6653f5",
+                "shasum": ""
             },
             "require": {
                 "estvoyage/value": "@dev",
@@ -27,11 +33,7 @@
                     "estvoyage\\data\\": "classes"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "estvoyage\\data\\tests\\units\\": "tests/units"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-2-Clause"
             ],
@@ -48,15 +50,21 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-08 20:08:47"
+            "time": "2015-03-12 12:39:00"
         },
         {
             "name": "estvoyage/net",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "/Users/fch/Estvoyage/Net",
-                "reference": "f80dd6df4e3618a6dc5eb7939034b6c3b02ae303"
+                "url": "https://github.com/estvoyage/net.git",
+                "reference": "11af965db46bfe4f47ecb0ce335f234b8504b0a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/11af965db46bfe4f47ecb0ce335f234b8504b0a3",
+                "reference": "11af965db46bfe4f47ecb0ce335f234b8504b0a3",
+                "shasum": ""
             },
             "require": {
                 "estvoyage/data": "@dev",
@@ -73,11 +81,7 @@
                     "estvoyage\\net\\": "classes"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "estvoyage\\net\\tests\\units\\": "tests/units"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-2-Clause"
             ],
@@ -92,12 +96,12 @@
             "homepage": "http://github.com/estvoyage/net",
             "keywords": [
                 "East",
-                "Network",
                 "Socket",
-                "TCP",
-                "UDP"
+                "network",
+                "tcp",
+                "udp"
             ],
-            "time": "2015-03-08 19:51:44"
+            "time": "2015-03-12 16:12:20"
         },
         {
             "name": "estvoyage/value",
