@@ -19,6 +19,23 @@ class etsy extends units\test
 		$this->testedClass
 			->isFinal
 			->implements('estvoyage\statsd\client')
+			->implements('estvoyage\data\provider')
+		;
+	}
+
+	function testDataConsumerIs()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer
+			)
+			->if(
+				$this->newTestedInstance(new mockOfData\consumer)
+			)
+			->then
+				->object($this->testedInstance->dataConsumerIs($dataConsumer))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance($dataConsumer))
 		;
 	}
 
