@@ -75,7 +75,7 @@ class consumer extends units\test
 							->never
 
 			->exception(function() { $this->testedInstance->newData(new data\data('ccc')); })
-				->isInstanceOf('estvoyage\net\mtu\exception\overflow')
+				->isInstanceOf('estvoyage\statsd\metric\consumer\exception\overflow')
 				->hasMessage('Length of data \'ccc\' exceed MTU 2')
 		;
 	}

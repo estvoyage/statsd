@@ -37,7 +37,7 @@ final class consumer implements data\consumer
 		switch (true)
 		{
 			case $dataLength > $this->mtu->asInteger:
-				throw new net\mtu\exception\overflow('Length of data \'' . $data . '\' exceed MTU ' . $this->mtu);
+				throw new consumer\exception\overflow('Length of data \'' . $data . '\' exceed MTU ' . $this->mtu);
 
 			case $dataLength + strlen($this->buffer) > $this->mtu->asInteger:
 				$this->noMoreData();

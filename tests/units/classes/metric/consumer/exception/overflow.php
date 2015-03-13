@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd\tests\units\metric\factory\exception;
+namespace estvoyage\statsd\tests\units\metric\consumer\exception;
 
 require __DIR__ . '/../../../../runner.php';
 
@@ -13,7 +13,7 @@ class overflow extends units\test
 	function testClass()
 	{
 		$this->testedClass
-			->implements('estvoyage\statsd\metric\factory\exception')
+			->implements('estvoyage\statsd\metric\consumer\exception')
 			->extends('overflowException')
 		;
 	}

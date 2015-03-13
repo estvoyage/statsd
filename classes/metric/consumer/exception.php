@@ -1,6 +1,6 @@
 <?php
 
-namespace estvoyage\statsd\metric\factory;
+namespace estvoyage\statsd\metric\consumer;
 
 use
 	estvoyage\statsd
