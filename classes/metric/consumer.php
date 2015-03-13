@@ -19,8 +19,12 @@ final class consumer implements data\consumer
 	{
 		$this->dataConsumer = $dataConsumer;
 		$this->mtu = $mtu;
+		$this->buffer = new data\data;
+	}
 
-		$this->bufferIsEmpty();
+	function __destruct()
+	{
+		$this->dataConsumer->newData($this->buffer);
 	}
 
 	function dataProviderIs(data\provider $dataProvider)
@@ -40,24 +44,20 @@ final class consumer implements data\consumer
 				throw new consumer\exception\overflow('Length of data \'' . $data . '\' exceed MTU ' . $this->mtu);
 
 			case $dataLength + strlen($this->buffer) > $this->mtu->asInteger:
-				$this->noMoreData();
-		}
+				$this->dataConsumer->newData($this->buffer);
+				$this->buffer = $data;
+				break;
 
-		$this->buffer = $this->buffer->newData($data);
+			default:
+				$this->buffer = $this->buffer->newData($data);
+		}
 
 		return $this;
 	}
 
 	function noMoreData()
 	{
-		$this->dataConsumer->newData($this->buffer);
-
-		return $this->bufferIsEmpty();
-	}
-
-	private function bufferIsEmpty()
-	{
-		$this->buffer = new data\data;
+		$this->dataConsumer->noMoreData();
 
 		return $this;
 	}

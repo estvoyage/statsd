@@ -10,7 +10,8 @@ use
 final class etsy implements metric\template
 {
 	private
-		$dataConsumer
+		$dataConsumer,
+		$metric
 	;
 
 	function __construct(data\consumer $dataConsumer)
@@ -25,10 +26,9 @@ final class etsy implements metric\template
 
 	function newStatsdMetric(metric $metric)
 	{
-		return $this
-			->newMetric($metric)
-			->noMoreMetric()
-		;
+		$metric->statsdMetricTemplateIs($this);
+
+		return $this;
 	}
 
 	function statsdCountingContainsBucketAndValueAndSampling(metric\bucket $bucket, metric\value $value, metric\sampling $sampling = null)
@@ -56,18 +56,6 @@ final class etsy implements metric\template
 		return $this->newBucketAndValueAndTypeAndSampling($bucket, new data\data((string) $value), new data\data('s'));
 	}
 
-	private function newMetric(metric $metric)
-	{
-		$etsy = clone $this;
-		$etsy->metric = $metric;
-
-		$metric->statsdMetricTemplateIs($etsy);
-
-		$etsy->metric = null;
-
-		return $etsy;
-	}
-
 	private function newBucketAndValueAndTypeAndSampling(metric\bucket $bucket, data\data $value, data\data $type, metric\sampling $sampling = null)
 	{
 		if ($sampling)
@@ -76,13 +64,6 @@ final class etsy implements metric\template
 		}
 
 		$this->dataConsumer->newData(new data\data($bucket . ':' . $value . '|' . $type . $sampling . "\n"));
-
-		return $this->noMoreMetric();
-	}
-
-	private function noMoreMetric()
-	{
-		$this->dataConsumer->noMoreData();
 
 		return $this;
 	}

@@ -46,8 +46,6 @@ class etsy extends units\test
 					->receive('newData')
 						->withArguments(new data\data($bucket . ':' . $value . '|c' . "\n"))
 							->once
-					->receive('noMoreData')
-						->once
 
 			->if(
 				$samplingLessThan1 = new metric\sampling(rand(0, 9) / 10)
@@ -91,12 +89,11 @@ class etsy extends units\test
 				$metric = new mockOfStatsd\metric
 			)
 			->then
-				->object($this->testedInstance->newStatsdMetric($metric))
-					->isNotTestedInstance
-					->isInstanceOf($this->testedInstance)
-				->mock($dataConsumer)
-					->call('noMoreData')
-						->once
+				->object($this->testedInstance->newStatsdMetric($metric))->isTestedInstance
+				->mock($metric)
+					->receive('statsdMetricTemplateIs')
+						->withArguments($this->testedInstance)
+							->once
 		;
 	}
 
@@ -117,8 +114,6 @@ class etsy extends units\test
 					->receive('newData')
 						->withArguments(new data\data($bucket . ':' . $value . '|ms' . "\n"))
 							->once
-					->receive('noMoreData')
-						->once
 		;
 	}
 
@@ -139,8 +134,6 @@ class etsy extends units\test
 					->receive('newData')
 						->withArguments(new data\data($bucket . ':' . $value . '|g' . "\n"))
 							->once
-					->receive('noMoreData')
-						->once
 		;
 	}
 
@@ -161,8 +154,6 @@ class etsy extends units\test
 					->receive('newData')
 						->withArguments(new data\data($bucket . ':+' . $value . '|g' . "\n"))
 							->once
-					->receive('noMoreData')
-						->once
 
 			->if(
 				$value = new metric\value(rand(- PHP_INT_MAX, -1)),
@@ -193,8 +184,6 @@ class etsy extends units\test
 					->receive('newData')
 						->withArguments(new data\data($bucket . ':' . $value . '|s' . "\n"))
 							->once
-					->receive('noMoreData')
-						->once
 		;
 	}
 }

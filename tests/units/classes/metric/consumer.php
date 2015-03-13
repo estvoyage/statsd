@@ -26,6 +26,36 @@ class consumer extends units\test
 		;
 	}
 
+	function test__destruct()
+	{
+		$this
+			->given(
+				$mtu = new net\mtu(rand(3, PHP_INT_MAX)),
+				$dataConsumer = new mockOfData\consumer,
+				$dataProvider = new mockOfData\provider
+			)
+
+			->if(
+				$this->newTestedInstance($dataConsumer, $mtu)->__destruct()
+			)
+			->then
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(new data\data)
+							->once
+
+			->if(
+				$data = new data\data('bb'),
+				$this->testedInstance->newData(new data\data('bb'))->__destruct()
+			)
+			->then
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(new data\data('bb'))
+							->once
+		;
+	}
+
 	function testDataProviderIs()
 	{
 		$this
@@ -55,23 +85,25 @@ class consumer extends units\test
 			)
 
 			->if(
+				$a = new data\data('a'),
 				$this->newTestedInstance($dataConsumer, $mtu)
 			)
 			->then
-				->object($this->testedInstance->newData(new data\data('a')))->isTestedInstance
+				->object($this->testedInstance->newData($a))->isTestedInstance
 				->mock($dataConsumer)
 					->receive('newData')
 						->never
 
 			->if(
-				$this->testedInstance->newData(new data\data('bb'))
+				$b = new data\data('bb'),
+				$this->testedInstance->newData($b)
 			)
 			->then
 				->mock($dataConsumer)
 					->receive('newData')
-						->withArguments('a')
+						->withArguments($a)
 							->once
-						->withArguments('bb')
+						->withArguments($b)
 							->never
 
 			->exception(function() { $this->testedInstance->newData(new data\data('ccc')); })
@@ -94,19 +126,8 @@ class consumer extends units\test
 			->then
 				->object($this->testedInstance->noMoreData())->isTestedInstance
 				->mock($dataConsumer)
-					->receive('newData')
-						->withArguments(new data\data)
-							->once
-
-			->if(
-				$data = new data\data('a'),
-				$this->testedInstance->newData($data)->noMoreData()
-			)
-			->then
-				->mock($dataConsumer)
-					->receive('newData')
-						->withArguments($data)
-							->once
+					->receive('noMoreData')
+						->once
 		;
 	}
 }
