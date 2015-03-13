@@ -10,8 +10,7 @@ use
 final class etsy implements metric\template
 {
 	private
-		$dataConsumer,
-		$metric
+		$dataConsumer
 	;
 
 	function __construct(data\consumer $dataConsumer)
@@ -83,10 +82,7 @@ final class etsy implements metric\template
 
 	private function noMoreMetric()
 	{
-		if (! $this->metric)
-		{
-			$this->dataConsumer->noMoreData();
-		}
+		$this->dataConsumer->noMoreData();
 
 		return $this;
 	}
