@@ -13,6 +13,11 @@ final class packet implements statsd\metric, statsd\client
 		$metrics
 	;
 
+	function __construct()
+	{
+		$this->metrics = [];
+	}
+
 	function statsdClientIs(statsd\client $client)
 	{
 		$client->newStatsdMetric($this);
@@ -43,14 +48,9 @@ final class packet implements statsd\metric, statsd\client
 
 	function statsdMetricTemplateIs(metric\template $template)
 	{
-		if ($this->metrics)
+		foreach ($this->metrics as $metric)
 		{
-			foreach ($this->metrics as $metric)
-			{
-				$template->newStatsdMetric($metric);
-			}
-
-			$this->metrics = null;
+			$template->newStatsdMetric($metric);
 		}
 
 		return $this;
