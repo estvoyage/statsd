@@ -31,7 +31,7 @@ class console implements data\consumer
 
 	function newData(data\data $data)
 	{
-		echo 'New data: <' . str_replace("\n", '\n' , $data) . '>' . PHP_EOL;
+		echo 'New metric: <' . str_replace("\n", '\n' , $data) . '>' . PHP_EOL;
 
 		return $this;
 	}
@@ -42,7 +42,7 @@ class console implements data\consumer
 	}
 }
 
-(new statsd\client\etsy(new console))
+(new statsd\client\etsy(new metric\consumer\dataConsumer(new console)))
 	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
 ;
 
@@ -54,27 +54,35 @@ $packet = (new metric\packet)
 	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
 ;
 
-(new statsd\client\etsy(new console))
+(new statsd\client\etsy(new metric\consumer\dataConsumer(new console)))
 	->newStatsdMetric($packet)
 ;
 
-(new statsd\client\etsy(new metric\consumer(new console, new net\mtu(68))))
+$packet = (new metric\packet)
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+;
+
+(new statsd\client\etsy(new metric\consumer\dataConsumerWithMtu(new console, new net\mtu(68))))
 	->newStatsdMetric($packet)
 ;
 
-//$packet = (new metric\packet)
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//;
-//
-//$packet->statsdClientIs(new statsd\client\etsy(new console));
-//
-//(new statsd\client\etsy(new net\socket\client\native\udp(new net\host('127.0.0.1'), new net\port(8125))))
-//	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
-//;
+$packet = (new metric\packet)
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+;
+
+$packet->statsdClientIs(new statsd\client\etsy(new metric\consumer\dataConsumer(new console)));
+
+(new statsd\client\etsy(new metric\consumer\dataConsumer(new net\socket\client\native\udp(new net\host('127.0.0.1'), new net\port(8125)))))
+	->newStatsdMetric(new metric\counting(new bucket(uniqid())))
+;
 
 /* Output should be something like:
 5502fb162590a:1|c

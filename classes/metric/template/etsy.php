@@ -30,26 +30,28 @@ final class etsy implements metric\template
 
 	function mtuOfStatsdMetricConsumerIs(metric\consumer $metricConsumer, net\mtu $mtu)
 	{
-		$data = (string) $this->data;
-		$metrics = '';
+		$metrics = new data\data;
 
-		while ($data)
+		while (strlen($this->data))
 		{
-			$metric = substr($data, 0, strpos($data, "\n") + 1);
+			$metric = new data\data(substr($this->data, 0, strpos($this->data, "\n") + 1));
 
-			if (strlen($metrics . $metric) > $mtu->asInteger)
+			switch (true)
 			{
-				$metricConsumer->newDataFromStatsdMetricTemplate(new data\data($metrics), $this);
-				$metrics = '';
+				case strlen($metric) > $mtu->asInteger:
+					throw new net\mtu\exception\overflow('Unable to split metric \'' . $metric . '\' according to MTU ' . $mtu);
+
+				case strlen($metrics . $metric) > $mtu->asInteger:
+					$metricConsumer->newDataFromStatsdMetricTemplate($metrics, $this);
+					$metrics = new data\data;
 			}
 
-			$data = substr($data, strlen($metric));
-			$metrics .= $metric;
+			$this->data = new data\data(substr($this->data, strlen($metric)) ?: '');
+
+			$metrics = $metrics->newData($metric);
 		}
 
-		$metricConsumer->newDataFromStatsdMetricTemplate(new data\data($metrics), $this);
-
-		$this->data = new data\data;
+		$metricConsumer->newDataFromStatsdMetricTemplate($metrics, $this);
 
 		return $this;
 	}

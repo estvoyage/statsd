@@ -95,6 +95,18 @@ class etsy extends units\test
 							->twice
 						->withArguments(new data\data($otherBucket . ':' . $otherValue . '|c' . "\n"), $this->testedInstance)
 							->once
+
+			->given(
+				$mtu = new net\mtu(10)
+			)
+			->if(
+				$this->testedInstance
+					->statsdCountingContainsBucketAndValueAndSampling($bucket, $value)
+			)
+			->then
+				->exception(function() use ($statsdMetricConsumer, $mtu) { $this->testedInstance->mtuOfStatsdMetricConsumerIs($statsdMetricConsumer, $mtu); })
+					->isInstanceOf('estvoyage\net\mtu\exception\overflow')
+					->hasMessage('Unable to split metric \'' . $bucket . ':' . $value . '|c' . "\n" . '\' according to MTU ' . $mtu)
 		;
 	}
 
