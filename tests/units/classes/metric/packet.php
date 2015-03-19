@@ -70,24 +70,6 @@ class packet extends units\test
 		;
 	}
 
-	function testStatsdMetricFactoryIs()
-	{
-		$this
-			->given(
-				$factory = new mockOfStatsd\metric\factory
-			)
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
-				->mock($factory)
-					->receive('newStatsdMetric')
-						->withArguments($this->testedInstance)
-							->once
-		;
-	}
-
 	function testStatsdMetricTemplateIs()
 	{
 		$this

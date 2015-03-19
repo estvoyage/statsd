@@ -24,7 +24,8 @@ class timer extends units\test
 	{
 		$this
 			->given(
-				$client = new mockOfStatsd\client
+				$client = new mockOfStatsd\client,
+				$this->function->microtime = 1
 			)
 			->if(
 				$this->newTestedInstance
@@ -32,48 +33,19 @@ class timer extends units\test
 			->then
 				->object($this->testedInstance->statsdClientIs($client))->isTestedInstance
 				->mock($client)
-					->receive('statsdMetricProviderIs')
-						->withArguments($this->testedInstance)
-							->once
-		;
-	}
-
-	function testStatsdMetricTemplateIsWithNoNewBucket()
-	{
-		$this
-			->given(
-				$this->function->microtime = 1,
-				$factory = new mockOfStatsd\metric\factory
-			)
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
-				->mock($factory)
 					->receive('newStatsdMetric')
 						->withArguments(new metric\packet)
 							->once
-		;
-	}
 
-	function testStatsdMetricTemplateIsWithNewBucket()
-	{
-		$this
 			->given(
-				$this->function->microtime = 1,
-				$factory = new mockOfStatsd\metric\factory
+				$bucket = new metric\bucket(uniqid()),
+				$this->function->microtime[3] = $atBucket = 3
 			)
 			->if(
-				$bucket = new metric\bucket(uniqid()),
-				$this->function->microtime[2] = $atBucket = 3,
-
-				$this->newTestedInstance
-					->newStatsdBucket($bucket)
-						->statsdMetricFactoryIs($factory)
+				$this->newTestedInstance->newStatsdBucket($bucket)->statsdClientIs($client)
 			)
 			->then
-				->mock($factory)
+				->mock($client)
 					->receive('newStatsdMetric')
 						->withArguments((new metric\packet)->newStatsdMetric(new metric\timing($bucket, new metric\value(20000))))
 							->once

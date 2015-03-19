@@ -39,7 +39,8 @@ class usage extends units\test
 	{
 		$this
 			->given(
-				$client = new mockOfStatsd\client
+				$client = new mockOfStatsd\client,
+				$this->function->memory_get_usage = $start = 100
 			)
 			->if(
 				$this->newTestedInstance
@@ -47,39 +48,19 @@ class usage extends units\test
 			->then
 				->object($this->testedInstance->statsdClientIs($client))->isTestedInstance
 				->mock($client)
-					->receive('statsdMetricProviderIs')
-						->withArguments($this->testedInstance)
-							->once
-		;
-	}
-
-	function testStatsdMetricTemplateIs()
-	{
-		$this
-			->given(
-				$this->function->memory_get_usage = $start = 100,
-				$factory = new mockOfStatsd\metric\factory
-			)
-			->if(
-				$this->newTestedInstance
-			)
-			->then
-				->object($this->testedInstance->statsdMetricFactoryIs($factory))->isTestedInstance
-				->mock($factory)
 					->receive('newStatsdMetric')
 						->withArguments(new metric\packet)
 							->once
 
-			->if(
+			->given(
 				$bucket = new metric\bucket(uniqid()),
-				$this->function->memory_get_usage[3] = $atBucket = 300,
-
-				$this->newTestedInstance
-					->newStatsdBucket($bucket)
-						->statsdMetricFactoryIs($factory)
+				$this->function->memory_get_usage[3] = $atBucket = 300
+			)
+			->if(
+				$this->newTestedInstance->newStatsdBucket($bucket)->statsdClientIs($client)
 			)
 			->then
-				->mock($factory)
+				->mock($client)
 					->receive('newStatsdMetric')
 						->withArguments((new metric\packet)->newStatsdMetric(new metric\gauge($bucket, new metric\value(200))))
 							->once

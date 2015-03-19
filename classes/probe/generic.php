@@ -20,14 +20,7 @@ abstract class generic implements statsd\probe
 
 	function statsdClientIs(statsd\client $client)
 	{
-		$client->statsdMetricProviderIs($this);
-
-		return $this;
-	}
-
-	function statsdMetricFactoryIs(metric\factory $factory)
-	{
-		$factory->newStatsdMetric($this->packet);
+		$client->newStatsdMetric($this->packet);
 
 		return $this;
 	}

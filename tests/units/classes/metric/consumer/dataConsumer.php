@@ -12,13 +12,8 @@ use
 	mock\estvoyage\statsd as mockOfStatsd
 ;
 
-class dataConsumerWithMtu extends units\test
+class dataConsumer extends units\test
 {
-	function beforeTestMethod($method)
-	{
-		require_once 'mock/net/mtu.php';
-	}
-
 	function testClass()
 	{
 		$this->testedClass
@@ -34,7 +29,7 @@ class dataConsumerWithMtu extends units\test
 				$statsdMetricTemplate = new mockOfStatsd\metric\template
 			)
 			->if(
-				$this->newTestedInstance(new mockOfData\consumer, new net\mtu(rand(0, PHP_INT_MAX)))
+				$this->newTestedInstance(new mockOfData\consumer)
 			)
 			->then
 				->object($this->testedInstance->statsdMetricTemplateIs($statsdMetricTemplate))->isTestedInstance
@@ -50,35 +45,18 @@ class dataConsumerWithMtu extends units\test
 		$this
 			->given(
 				$data = new data\data('a'),
-				$mtu = new net\mtu(2),
 				$dataConsumer = new mockOfData\consumer,
 				$statsdMetricTemplate = new mockOfStatsd\metric\template
 			)
 
 			->if(
-				$this->newTestedInstance($dataConsumer, $mtu)
+				$this->newTestedInstance($dataConsumer)
 			)
 			->then
 				->object($this->testedInstance->newDataFromStatsdMetricTemplate($data, $statsdMetricTemplate))->isTestedInstance
 				->mock($dataConsumer)
 					->receive('newData')
 						->withArguments($data)
-							->once
-
-			->given(
-				$dataExceedMtu = new data\data('bbb')
-			)
-			->if(
-				$this->testedInstance->newDataFromStatsdMetricTemplate($dataExceedMtu, $statsdMetricTemplate)
-			)
-			->then
-				->mock($dataConsumer)
-					->receive('newData')
-						->withArguments($dataExceedMtu)
-							->never
-				->mock($statsdMetricTemplate)
-					->receive('mtuOfStatsdMetricConsumerIs')
-						->withArguments($this->testedInstance, $mtu)
 							->once
 		;
 	}

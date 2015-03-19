@@ -28,13 +28,6 @@ abstract class generic implements statsd\metric
 		return $this;
 	}
 
-	function statsdMetricFactoryIs(statsd\metric\factory $factory)
-	{
-		$factory->newStatsdMetric($this);
-
-		return $this;
-	}
-
 	protected function isCountingAndStatsdMetricTemplateIs(template $template)
 	{
 		$template->statsdCountingContainsBucketAndValueAndSampling($this->bucket, $this->value, $this->sampling);

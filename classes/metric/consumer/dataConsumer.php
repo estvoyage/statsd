@@ -8,17 +8,15 @@ use
 	estvoyage\statsd\metric
 ;
 
-final class dataConsumerWithMtu implements metric\consumer
+final class dataConsumer implements metric\consumer
 {
 	private
-		$dataConsumer,
-		$mtu
+		$dataConsumer
 	;
 
-	function __construct(data\consumer $dataConsumer, net\mtu $mtu)
+	function __construct(data\consumer $dataConsumer)
 	{
 		$this->dataConsumer = $dataConsumer;
-		$this->mtu = $mtu;
 	}
 
 	function statsdMetricTemplateIs(metric\template $metricTemplate)
@@ -30,15 +28,7 @@ final class dataConsumerWithMtu implements metric\consumer
 
 	function newDataFromStatsdMetricTemplate(data\data $data, metric\template $metricTemplate)
 	{
-		switch (true)
-		{
-			case strlen($data) > $this->mtu->asInteger:
-				$metricTemplate->mtuOfStatsdMetricConsumerIs($this, $this->mtu);
-				break;
-
-			default:
-				$this->dataConsumer->newData($data);
-		}
+		$this->dataConsumer->newData($data);
 
 		return $this;
 	}

@@ -39,13 +39,6 @@ final class packet implements statsd\metric, statsd\client
 		return $this;
 	}
 
-	function statsdMetricFactoryIs(metric\factory $factory)
-	{
-		$factory->newStatsdMetric($this);
-
-		return $this;
-	}
-
 	function statsdMetricTemplateIs(metric\template $template)
 	{
 		foreach ($this->metrics as $metric)
