@@ -3,6 +3,7 @@
 namespace estvoyage\statsd\metric\template;
 
 use
+	estvoyage\net,
 	estvoyage\data,
 	estvoyage\statsd\metric
 ;
@@ -10,18 +11,47 @@ use
 final class etsy implements metric\template
 {
 	private
-		$dataConsumer,
-		$metric
+		$data
 	;
 
-	function __construct(data\consumer $dataConsumer)
+	function __construct()
 	{
-		$this->dataConsumer = $dataConsumer;
+		$this->data = new data\data;
 	}
 
-	function dataConsumerIs(data\consumer $dataConsumer)
+	function statsdMetricConsumerIs(metric\consumer $metricConsumer)
 	{
-		return new self($dataConsumer);
+		$metricConsumer->newDataFromStatsdMetricTemplate($this->data, $this);
+
+		$this->data = new data\data;
+
+		return $this;
+	}
+
+	function mtuOfStatsdMetricConsumerIs(metric\consumer $metricConsumer, net\mtu $mtu)
+	{
+		$data = (string) $this->data;
+		$metrics = '';
+
+		while ($data)
+		{
+			$metric = substr($data, 0, strpos($data, "\n") + 1);
+
+			if (strlen($metrics . $metric) > $mtu->asInteger)
+			{
+				$metricConsumer->newDataFromStatsdMetricTemplate(new data\data($metrics), $this);
+				$metrics = '';
+			}
+
+			$data = substr($data, strlen($metric));
+			$metrics .= $metric;
+		}
+
+		$metricConsumer->newDataFromStatsdMetricTemplate(new data\data($metrics), $this);
+
+		$this->data = new data\data;
+
+		return $this;
 	}
 
 	function newStatsdMetric(metric $metric)
@@ -63,7 +93,7 @@ final class etsy implements metric\template
 			$sampling = $sampling->asFloat == 1. ? '' : '|@' . $sampling;
 		}
 
-		$this->dataConsumer->newData(new data\data($bucket . ':' . $value . '|' . $type . $sampling . "\n"));
+		$this->data = $this->data->newData(new data\data($bucket . ':' . $value . '|' . $type . $sampling . "\n"));
 
 		return $this;
 	}

@@ -13,14 +13,16 @@ final class etsy implements metric\factory
 		$metricTemplate
 	;
 
-	function __construct(data\consumer $dataConsumer)
+	function __construct()
 	{
-		$this->metricTemplate = new metric\template\etsy($dataConsumer);
+		$this->metricTemplate = new metric\template\etsy;
 	}
 
-	function dataConsumerIs(data\consumer $dataConsumer)
+	function statsdMetricConsumerIs(metric\consumer $metricConsumer)
 	{
-		return new self($dataConsumer);
+		$metricConsumer->statsdMetricTemplateIs($this->metricTemplate);
+
+		return $this;
 	}
 
 	function newStatsdMetric(metric $metric)

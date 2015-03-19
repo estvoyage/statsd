@@ -9,15 +9,10 @@ use
 	estvoyage\statsd\metric
 ;
 
-final class etsy extends generic implements data\provider
+final class etsy extends generic
 {
-	function __construct(data\consumer $dataConsumer)
+	function __construct(metric\consumer $metricConsumer)
 	{
-		parent::__construct(new metric\factory\etsy($dataConsumer));
-	}
-
-	function dataConsumerIs(data\consumer $dataConsumer)
-	{
-		return new self($dataConsumer);
+		parent::__construct($metricConsumer, new metric\template\etsy);
 	}
 }

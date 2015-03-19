@@ -3,6 +3,7 @@
 namespace estvoyage\statsd\metric;
 
 use
+	estvoyage\net,
 	estvoyage\statsd
 ;
 

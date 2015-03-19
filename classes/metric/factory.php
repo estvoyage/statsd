@@ -3,12 +3,12 @@
 namespace estvoyage\statsd\metric;
 
 use
-	estvoyage\data,
 	estvoyage\statsd
 ;
 
-interface factory extends data\provider
+interface factory
 {
+	function statsdMetricConsumerIs(consumer $consumer);
 	function newStatsdMetric(statsd\metric $metric);
 	function statsdMetricProviderIs(provider $provider);
 }

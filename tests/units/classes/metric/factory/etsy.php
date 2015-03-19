@@ -21,19 +21,22 @@ class etsy extends units\test
 		;
 	}
 
-	function testDataConsumerIs()
+	function testStatsdMetricConsumerIs()
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer
+				$statsdMetricConsumer = new mockOfStatsd\metric\consumer
 			)
 			->if(
-				$this->newTestedInstance(new mockOfData\consumer)
+				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance->dataConsumerIs($dataConsumer))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($dataConsumer))
+				->object($this->testedInstance->statsdMetricConsumerIs($statsdMetricConsumer))
+					->isTestedInstance
+				->mock($statsdMetricConsumer)
+					->receive('statsdMetricTemplateIs')
+						->withArguments(new metric\template\etsy)
+							->once
 		;
 	}
 
@@ -41,11 +44,8 @@ class etsy extends units\test
 	{
 		$this
 			->given(
-				$this->newTestedInstance(
-					$dataConsumer = new mockOfData\consumer
-				)
+				$this->newTestedInstance
 			)
-
 			->if(
 				$metric = new mockOfStatsd\metric
 			)
@@ -54,7 +54,7 @@ class etsy extends units\test
 					->isTestedInstance
 				->mock($metric)
 					->receive('statsdMetricTemplateIs')
-						->withArguments(new metric\template\etsy($dataConsumer))
+						->withArguments(new metric\template\etsy)
 							->once
 		;
 	}
@@ -63,11 +63,10 @@ class etsy extends units\test
 	{
 		$this
 			->given(
-				$provider = new mockOfStatsd\metric\provider,
-				$dataConsumer = new mockOfData\consumer
+				$provider = new mockOfStatsd\metric\provider
 			)
 			->if(
-				$this->newTestedInstance($dataConsumer)
+				$this->newTestedInstance
 			)
 			->then
 				->object($this->testedInstance->statsdMetricProviderIs($provider))->isTestedInstance

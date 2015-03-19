@@ -1,24 +1,30 @@
 <?php
 
-namespace estvoyage\statsd\metric\etsy;
+namespace estvoyage\statsd\metric\factory;
 
 use
 	estvoyage\data,
-	estvoyage\statsd
+	estvoyage\statsd\metric
 ;
 
-class factory implements statsd\metric\factory
+class etsy implements metric\factory
 {
 	private
-		$dataConsumer
+		$provider
 	;
 
-	function __construct(data\consumer $dataConsumer)
+	function newStatsdMetric(metric $metric)
 	{
-		$this->dataConsumer = $dataConsumer;
 	}
 
-	function newStatsdMetric(statsd\metric $metric)
+	function statsdMetricProviderIs(metric\provider $provider)
+	{
+		$this->provider = $provider;
+
+		return $this;
+	}
+
+	function statsdMetricConsumerIs(metric\consumer $consumer)
 	{
 	}
 }

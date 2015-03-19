@@ -12,22 +12,27 @@ use
 abstract class generic implements statsd\client
 {
 	private
-		$metricFactory
+		$metricConsumer,
+		$metricTemplate
 	;
 
-	function __construct(metric\factory $metricFactory)
+	function __construct(metric\consumer $metricConsumer, metric\template $metricTemplate)
 	{
-		$this->metricFactory = $metricFactory;
+		$this->metricConsumer = $metricConsumer;
+		$this->metricTemplate = $metricTemplate;
 	}
 
 	function newStatsdMetric(metric $metric)
 	{
-		return $this->statsdMetricProviderIs($metric);
+		$this->metricTemplate->newStatsdMetric($metric);
+		$this->metricConsumer->statsdMetricTemplateIs($this->metricTemplate);
+
+		return $this;
 	}
 
 	function statsdMetricProviderIs(metric\provider $provider)
 	{
-		$provider->statsdMetricFactoryIs($this->metricFactory);
+		$provider->statsdClientIs($this);
 
 		return $this;
 	}

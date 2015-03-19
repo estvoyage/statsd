@@ -14,28 +14,16 @@ use
 
 class etsy extends units\test
 {
+	function beforeTestMethod($method)
+	{
+		require_once 'mock/statsd/metric/template/etsy.php';
+	}
+
 	function testClass()
 	{
 		$this->testedClass
 			->isFinal
 			->implements('estvoyage\statsd\client')
-			->implements('estvoyage\data\provider')
-		;
-	}
-
-	function testDataConsumerIs()
-	{
-		$this
-			->given(
-				$dataConsumer = new mockOfData\consumer
-			)
-			->if(
-				$this->newTestedInstance(new mockOfData\consumer)
-			)
-			->then
-				->object($this->testedInstance->dataConsumerIs($dataConsumer))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($dataConsumer))
 		;
 	}
 
@@ -43,8 +31,8 @@ class etsy extends units\test
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer,
-				$this->newTestedInstance($dataConsumer)
+				$metricConsumer = new mockOfStatsd\metric\consumer,
+				$this->newTestedInstance($metricConsumer)
 			)
 			->if(
 				$metric = new mockOfStatsd\metric
@@ -52,9 +40,9 @@ class etsy extends units\test
 			->then
 				->object($this->testedInstance->newStatsdMetric($metric))
 					->isTestedInstance
-				->mock($metric)
-					->receive('statsdMetricFactoryIs')
-						->withArguments(new metric\factory\etsy($dataConsumer))
+				->mock($metricConsumer)
+					->receive('statsdMetricTemplateIs')
+						->withArguments((new metric\template\etsy)->newStatsdMetric($metric))
 							->once
 		;
 	}
@@ -63,8 +51,7 @@ class etsy extends units\test
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer,
-				$this->newTestedInstance($dataConsumer)
+				$this->newTestedInstance(new mockOfStatsd\metric\consumer)
 			)
 			->if(
 				$statsdMetricProvider = new mockOfStatsd\metric\provider
@@ -73,8 +60,8 @@ class etsy extends units\test
 				->object($this->testedInstance->statsdMetricProviderIs($statsdMetricProvider))
 					->isTestedInstance
 				->mock($statsdMetricProvider)
-					->receive('statsdMetricFactoryIs')
-						->withArguments(new metric\factory\etsy($dataConsumer))
+					->receive('statsdClientIs')
+						->withArguments($this->testedInstance)
 							->once
 		;
 	}

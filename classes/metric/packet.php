@@ -53,6 +53,8 @@ final class packet implements statsd\metric, statsd\client
 			$template->newStatsdMetric($metric);
 		}
 
+		$this->metrics = [];
+
 		return $this;
 	}
 }
