@@ -85,12 +85,9 @@ $packet->statsdClientIs(new statsd\client\etsy(new metric\consumer\dataConsumer(
 ;
 
 /* Output should be something like:
-5502fb162590a:1|c
-
-5502fb1626b79:1|c
-5502fb1626ba5:1|c
-5502fb1626bbd:1|c
-
-5502fb1626bd4:1|c
-5502fb1626bea:1|c
+New metric: <550b3df58f0f3:1|c\n>
+New metric: <550b3df58f33c:1|c\n550b3df58f35d:1|c\n550b3df58f374:1|c\n550b3df58f38a:1|c\n550b3df58f3a1:1|c\n>
+New metric: <550b3df58f466:1|c\n550b3df58f47f:1|c\n550b3df58f493:1|c\n>
+New metric: <550b3df58f4a8:1|c\n550b3df58f4bd:1|c\n>
+New metric: <550b3df58f80c:1|c\n550b3df58f829:1|c\n550b3df58f83e:1|c\n550b3df58f853:1|c\n550b3df58f867:1|c\n>
 */
