@@ -27,6 +27,6 @@ final class timer extends probe\generic
 
 	private static function now()
 	{
-		return microtime(true) * 10000;
+		return (int) microtime(true) * 10000;
 	}
 }

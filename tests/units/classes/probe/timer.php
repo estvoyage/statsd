@@ -25,7 +25,7 @@ class timer extends units\test
 		$this
 			->given(
 				$client = new mockOfStatsd\client,
-				$this->function->microtime = 1
+				$this->function->microtime = 1426855928.0208
 			)
 			->if(
 				$this->newTestedInstance
@@ -39,7 +39,7 @@ class timer extends units\test
 
 			->given(
 				$bucket = new metric\bucket(uniqid()),
-				$this->function->microtime[3] = $atBucket = 3
+				$this->function->microtime[3] = $atBucket = 1426855931.0212
 			)
 			->if(
 				$this->newTestedInstance->newStatsdBucket($bucket)->statsdClientIs($client)
@@ -47,7 +47,7 @@ class timer extends units\test
 			->then
 				->mock($client)
 					->receive('newStatsdMetric')
-						->withArguments((new metric\packet)->newStatsdMetric(new metric\timing($bucket, new metric\value(20000))))
+						->withArguments((new metric\packet)->newStatsdMetric(new metric\timing($bucket, new metric\value(30000))))
 							->once
 		;
 	}
