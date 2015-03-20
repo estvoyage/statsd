@@ -128,15 +128,15 @@ class worker implements metric\provider
 			->statsdClientIs(new statsd\client\etsy(new metric\consumer\dataConsumer(new console)))
 ;
 
-//(new statsd\client\etsy(new metric\consumer\dataConsumer(new net\socket\client\native\udp(new net\host('127.0.0.1'), new net\port(8125)))))
-//	->newStatsdMetric(new metric\counting(new bucket('gorets')))
-//	->newStatsdMetric(new metric\counting(new bucket('gorets'), new value(666)))
-//	->newStatsdMetric(new metric\counting(new bucket('gorets'), new value(999), new sampling(.1)))
-//	->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320)))
-//	->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320), new sampling(.1)))
-//	->newStatsdMetric(new metric\gauge(new bucket('gaugor'), new value(333)))
-//	->newStatsdMetric(new metric\set(new bucket('uniques'), new value(765)))
-//;
+(new statsd\client\etsy(new metric\consumer\dataConsumer(new net\socket\client\native\udp(new net\host('127.0.0.1'), new net\port(8125)))))
+	->newStatsdMetric(new metric\counting(new bucket('gorets')))
+	->newStatsdMetric(new metric\counting(new bucket('gorets'), new value(666)))
+	->newStatsdMetric(new metric\counting(new bucket('gorets'), new value(999), new sampling(.1)))
+	->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320)))
+	->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320), new sampling(.1)))
+	->newStatsdMetric(new metric\gauge(new bucket('gaugor'), new value(333)))
+	->newStatsdMetric(new metric\set(new bucket('uniques'), new value(765)))
+;
 
 /* Output should be something like:
 New metric: <gorets:1|c\n>
