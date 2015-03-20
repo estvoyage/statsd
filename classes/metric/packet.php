@@ -18,6 +18,16 @@ final class packet implements statsd\metric, statsd\client
 		$this->metrics = [];
 	}
 
+	function parentBucketIs(metric\bucket $bucket)
+	{
+		foreach ($this->metrics as & $metric)
+		{
+			$metric = $metric->parentBucketIs($bucket);
+		}
+
+		return $this;
+	}
+
 	function statsdClientIs(statsd\client $client)
 	{
 		$client->newStatsdMetric($this);

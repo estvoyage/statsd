@@ -19,6 +19,20 @@ class bucket extends units\test
 		;
 	}
 
+	function testParentBucketIs()
+	{
+		$this
+			->given(
+				$bucket = $this->newTestedInstance(uniqid())
+			)
+			->if(
+				$this->newTestedInstance(uniqid())
+			)
+			->then
+				->object($this->testedInstance->parentBucketIs($bucket))->isEqualTo($this->newTestedInstance($bucket . '.' . $this->testedInstance))
+		;
+	}
+
 	/**
 	 * @dataProvider validValueProvider
 	 */

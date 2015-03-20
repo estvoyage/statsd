@@ -28,6 +28,14 @@ abstract class generic implements statsd\metric
 		return $this;
 	}
 
+	function parentBucketIs(bucket $bucket)
+	{
+		$metric = clone $this;
+		$metric->bucket = $this->bucket->parentBucketIs($bucket);
+
+		return $metric;
+	}
+
 	protected function isCountingAndStatsdMetricTemplateIs(template $template)
 	{
 		$template->statsdCountingContainsBucketAndValueAndSampling($this->bucket, $this->value, $this->sampling);

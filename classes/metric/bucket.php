@@ -22,6 +22,11 @@ final class bucket extends \estvoyage\value\string
 		}
 	}
 
+	function parentBucketIs(self $bucket)
+	{
+		return new self($bucket . '.' . $this);
+	}
+
 	static function validate($name)
 	{
 		return parent::validate($name) && self::containsAllowedCharacters($name);
