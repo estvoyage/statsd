@@ -150,4 +150,5 @@ New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:3
 New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:333|g\n>
 New metric: <uniques:765|s\n>
 New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:333|g\nuniques:765|s\n>
+New metric: <nap:1|c\nnapDuration:30000|ms\nnap:1|c\nnapDuration:40000|ms\n>
 */
