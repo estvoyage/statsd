@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7"
+                "reference": "cce165d5b4e38abb0d5e525d2f9ca2c020d8e065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/3c4fe39bb074627ed72ab37f900c42ac395c35d7",
-                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/cce165d5b4e38abb0d5e525d2f9ca2c020d8e065",
+                "reference": "cce165d5b4e38abb0d5e525d2f9ca2c020d8e065",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-13 20:20:05"
+            "time": "2015-03-18 21:25:11"
         },
         {
             "name": "estvoyage/net",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "11af965db46bfe4f47ecb0ce335f234b8504b0a3"
+                "reference": "97b27dd5d86c91ddea4dd1f8b1cce53494684089"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/11af965db46bfe4f47ecb0ce335f234b8504b0a3",
-                "reference": "11af965db46bfe4f47ecb0ce335f234b8504b0a3",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/97b27dd5d86c91ddea4dd1f8b1cce53494684089",
+                "reference": "97b27dd5d86c91ddea4dd1f8b1cce53494684089",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2015-03-12 16:12:20"
+            "time": "2015-03-20 12:37:47"
         },
         {
             "name": "estvoyage/value",
@@ -109,12 +109,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "aa7fda2ea45f65c1997d06db8285c25a3f927704"
+                "reference": "5274328b2b959fec2df1899aed4fcff6d6f2c046"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/aa7fda2ea45f65c1997d06db8285c25a3f927704",
-                "reference": "aa7fda2ea45f65c1997d06db8285c25a3f927704",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/5274328b2b959fec2df1899aed4fcff6d6f2c046",
+                "reference": "5274328b2b959fec2df1899aed4fcff6d6f2c046",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +148,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-03-14 20:19:48"
+            "time": "2015-03-14 20:30:17"
         }
     ],
     "packages-dev": [
