@@ -136,6 +136,7 @@ class etsy extends units\test
 					->receive('newDataFromStatsdMetricTemplate')
 						->withArguments(new data\data($bucket . ':' . $value . '|c' . "\n"), $this->testedInstance)
 							->once
+
 			->given(
 				$samplingLessThan1 = new metric\sampling(rand(0, 9) / 10)
 			)
@@ -180,7 +181,7 @@ class etsy extends units\test
 		;
 	}
 
-	function testStatsdTimingContainsBucketAndValue()
+	function testStatsdTimingContainsBucketAndValueAndSampling()
 	{
 		$this
 			->given(
@@ -192,7 +193,7 @@ class etsy extends units\test
 				$value = new metric\value(rand(- PHP_INT_MAX, PHP_INT_MAX))
 			)
 			->then
-				->object($this->testedInstance->statsdTimingContainsBucketAndValue($bucket, $value))->isTestedInstance
+				->object($this->testedInstance->statsdTimingContainsBucketAndValueAndSampling($bucket, $value))->isTestedInstance
 
 			->given(
 				$statsdMetricConsumer = new mockOfStatsd\metric\consumer
@@ -206,6 +207,48 @@ class etsy extends units\test
 				->mock($statsdMetricConsumer)
 					->receive('newDataFromStatsdMetricTemplate')
 						->withArguments(new data\data($bucket . ':' . $value . '|ms' . "\n"))
+							->once
+
+			->given(
+				$samplingLessThan1 = new metric\sampling(rand(0, 9) / 10)
+			)
+			->if(
+				$this->testedInstance
+					->statsdTimingContainsBucketAndValueAndSampling($bucket, $value, $samplingLessThan1)
+						->statsdMetricConsumerIs($statsdMetricConsumer)
+			)
+			->then
+				->mock($statsdMetricConsumer)
+					->receive('newDataFromStatsdMetricTemplate')
+						->withArguments(new data\data($bucket . ':' . $value . '|ms|@' . $samplingLessThan1 . "\n"), $this->testedInstance)
+							->once
+
+			->given(
+				$samplingEqualTo1 = new metric\sampling(1.)
+			)
+			->if(
+				$this->testedInstance
+					->statsdTimingContainsBucketAndValueAndSampling($bucket, $value, $samplingEqualTo1)
+						->statsdMetricConsumerIs($statsdMetricConsumer)
+			)
+			->then
+				->mock($statsdMetricConsumer)
+					->receive('newDataFromStatsdMetricTemplate')
+						->withArguments(new data\data($bucket . ':' . $value . '|ms' . "\n"), $this->testedInstance)
+							->twice
+
+			->given(
+				$samplingGreaterThan1 = new metric\sampling(1 + (rand(1, 9) / 10))
+			)
+			->if(
+				$this->testedInstance
+					->statsdTimingContainsBucketAndValueAndSampling($bucket, $value, $samplingGreaterThan1)
+						->statsdMetricConsumerIs($statsdMetricConsumer)
+			)
+			->then
+				->mock($statsdMetricConsumer)
+					->receive('newDataFromStatsdMetricTemplate')
+						->withArguments(new data\data($bucket . ':' . $value . '|ms|@' . $samplingGreaterThan1 . "\n"))
 							->once
 		;
 	}

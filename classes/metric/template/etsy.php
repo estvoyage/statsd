@@ -68,9 +68,9 @@ final class etsy implements metric\template
 		return $this->newBucketAndValueAndTypeAndSampling($bucket, new data\data((string) $value), new data\data('c'), $sampling);
 	}
 
-	function statsdTimingContainsBucketAndValue(metric\bucket $bucket, metric\value $value)
+	function statsdTimingContainsBucketAndValueAndSampling(metric\bucket $bucket, metric\value $value, metric\sampling $sampling = null)
 	{
-		return $this->newBucketAndValueAndTypeAndSampling($bucket, new data\data((string) $value), new data\data('ms'));
+		return $this->newBucketAndValueAndTypeAndSampling($bucket, new data\data((string) $value), new data\data('ms'), $sampling);
 	}
 
 	function statsdGaugeContainsBucketAndValue(metric\bucket $bucket, metric\value $value)

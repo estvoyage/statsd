@@ -33,7 +33,7 @@ class etsy implements metric\template
 	{
 	}
 
-	function statsdTimingContainsBucketAndValue(metric\bucket $bucket, metric\value $value)
+	function statsdTimingContainsBucketAndValueAndSampling(metric\bucket $bucket, metric\value $value, metric\sampling $sampling = null)
 	{
 	}
 

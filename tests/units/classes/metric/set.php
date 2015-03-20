@@ -10,7 +10,7 @@ use
 	mock\estvoyage\statsd as mockOfStatsd
 ;
 
-class timing extends units\test
+class set extends units\test
 {
 	function beforeTestMethod($method)
 	{
@@ -41,19 +41,8 @@ class timing extends units\test
 			->then
 				->object($this->testedInstance->statsdMetricTemplateIs($statsdMetricTemplate))->isTestedInstance
 				->mock($statsdMetricTemplate)
-					->receive('statsdTimingContainsBucketAndValueAndSampling')
-						->withArguments($bucket, $value, null)
-							->once
-
-			->if(
-				$sampling = new metric\sampling(0.2),
-				$this->newTestedInstance($bucket, $value, $sampling)
-			)
-			->then
-				->object($this->testedInstance->statsdMetricTemplateIs($statsdMetricTemplate))->isTestedInstance
-				->mock($statsdMetricTemplate)
-					->receive('statsdTimingContainsBucketAndValueAndSampling')
-						->withArguments($bucket, $value, $sampling)
+					->receive('statsdSetContainsBucketAndValue')
+						->withArguments($bucket, $value)
 							->once
 		;
 	}

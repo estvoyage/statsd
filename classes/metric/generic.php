@@ -44,7 +44,14 @@ abstract class generic implements statsd\metric
 
 	protected function isTimingAndStatsdMetricTemplateIs(template $template)
 	{
-		$template->statsdTimingContainsBucketAndValue($this->bucket, $this->value);
+		$template->statsdTimingContainsBucketAndValueAndSampling($this->bucket, $this->value, $this->sampling);
+
+		return $this;
+	}
+
+	protected function isSetAndStatsdMetricTemplateIs(template $template)
+	{
+		$template->statsdSetContainsBucketAndValue($this->bucket, $this->value);
 
 		return $this;
 	}
