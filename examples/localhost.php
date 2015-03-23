@@ -159,8 +159,9 @@ New metric: <glork:320|ms|@0.1\n>
 New metric: <gaugor:333|g\n>
 New metric: <uniques:765|s\n>
 New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:333|g\nuniques:765|s\n>
+New metric: <myapp.gorets:1|c\nmyapp.gorets:666|c\nmyapp.glork:320|ms\nmyapp.glork:320|ms|@0.1\nmyapp.gaugor:333|g\nmyapp.uniques:765|s\n>
 New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:333|g\n>
 New metric: <uniques:765|s\n>
 New metric: <gorets:1|c\ngorets:666|c\nglork:320|ms\nglork:320|ms|@0.1\ngaugor:333|g\nuniques:765|s\n>
-New metric: <nap:1|c\nnapDuration:30000|ms\nnap:1|c\nnapDuration:40000|ms\n>
+New metric: <nap:1|c\nnapDuration:40000|ms\nnap:1|c\nnapDuration:40000|ms\n>
 */
