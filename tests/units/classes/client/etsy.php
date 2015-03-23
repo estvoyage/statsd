@@ -23,7 +23,7 @@ class etsy extends units\test
 	{
 		$this->testedClass
 			->isFinal
-			->implements('estvoyage\statsd\client')
+			->extends('estvoyage\statsd\client\generic')
 		;
 	}
 
@@ -43,6 +43,26 @@ class etsy extends units\test
 				->mock($metricConsumer)
 					->receive('statsdMetricTemplateIs')
 						->withArguments((new metric\template\etsy)->newStatsdMetric($metric))
+							->once
+
+			->given(
+				$parentBucket = new metric\bucket(uniqid()),
+				$this->newTestedInstance($metricConsumer, $parentBucket)
+			)
+			->if(
+				$this->calling($metric)->parentBucketIs = function($parentBucket) use (& $metricWithParentBucket) {
+					$metricWithParentBucket = new mockOfStatsd\metric;
+					$metricWithParentBucket->parentBucket = $parentBucket;
+
+					return $metricWithParentBucket;
+				}
+			)
+			->then
+				->object($this->testedInstance->newStatsdMetric($metric))
+					->isTestedInstance
+				->mock($metricConsumer)
+					->receive('statsdMetricTemplateIs')
+						->withArguments((new metric\template\etsy)->newStatsdMetric($metricWithParentBucket))
 							->once
 		;
 	}

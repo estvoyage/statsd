@@ -100,6 +100,18 @@ class worker implements metric\provider
 	)
 ;
 
+(new statsd\client\etsy(new metric\consumer\dataConsumer(new console), new metric\bucket('myapp')))
+	->newStatsdMetric(
+		(new metric\packet)
+			->newStatsdMetric(new metric\counting(new bucket('gorets')))
+			->newStatsdMetric(new metric\counting(new bucket('gorets'), new value(666)))
+			->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320)))
+			->newStatsdMetric(new metric\timing(new bucket('glork'), new value(320), new sampling(.1)))
+			->newStatsdMetric(new metric\gauge(new bucket('gaugor'), new value(333)))
+			->newStatsdMetric(new metric\set(new bucket('uniques'), new value(765)))
+	)
+;
+
 (new statsd\client\etsy(new metric\consumer\dataConsumerWithMtu(new console, new net\mtu(68))))
 	->newStatsdMetric(
 		(new metric\packet)

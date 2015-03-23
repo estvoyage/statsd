@@ -11,8 +11,8 @@ use
 
 final class etsy extends generic
 {
-	function __construct(metric\consumer $metricConsumer)
+	function __construct(metric\consumer $metricConsumer, metric\bucket $parentBucket = null)
 	{
-		parent::__construct($metricConsumer, new metric\template\etsy);
+		parent::__construct($metricConsumer, new metric\template\etsy, $parentBucket);
 	}
 }

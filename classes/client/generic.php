@@ -16,16 +16,20 @@ abstract class generic implements statsd\client
 		$metricTemplate
 	;
 
-	function __construct(metric\consumer $metricConsumer, metric\template $metricTemplate)
+	function __construct(metric\consumer $metricConsumer, metric\template $metricTemplate, metric\bucket $parentBucket = null)
 	{
 		$this->metricConsumer = $metricConsumer;
 		$this->metricTemplate = $metricTemplate;
+		$this->parentBucket = $parentBucket;
 	}
 
 	function newStatsdMetric(metric $metric)
 	{
-		$this->metricTemplate->newStatsdMetric($metric);
-		$this->metricConsumer->statsdMetricTemplateIs($this->metricTemplate);
+		$this->metricConsumer
+			->statsdMetricTemplateIs($this->metricTemplate
+				->newStatsdMetric(! $this->parentBucket ? $metric : $metric->parentBucketIs($this->parentBucket))
+			)
+		;
 
 		return $this;
 	}
