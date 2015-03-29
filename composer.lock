@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "cce165d5b4e38abb0d5e525d2f9ca2c020d8e065"
+                "reference": "d3e61e9c8740eed218681a304aeb6d47701883b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/cce165d5b4e38abb0d5e525d2f9ca2c020d8e065",
-                "reference": "cce165d5b4e38abb0d5e525d2f9ca2c020d8e065",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/d3e61e9c8740eed218681a304aeb6d47701883b0",
+                "reference": "d3e61e9c8740eed218681a304aeb6d47701883b0",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-18 21:25:11"
+            "time": "2015-03-29 19:21:20"
         },
         {
             "name": "estvoyage/net",
@@ -58,16 +58,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/net.git",
-                "reference": "97b27dd5d86c91ddea4dd1f8b1cce53494684089"
+                "reference": "886d95cdbe113cec827167c953813e4475c78eff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/net/zipball/97b27dd5d86c91ddea4dd1f8b1cce53494684089",
-                "reference": "97b27dd5d86c91ddea4dd1f8b1cce53494684089",
+                "url": "https://api.github.com/repos/estvoyage/net/zipball/886d95cdbe113cec827167c953813e4475c78eff",
+                "reference": "886d95cdbe113cec827167c953813e4475c78eff",
                 "shasum": ""
             },
             "require": {
                 "estvoyage/data": "@dev",
+                "estvoyage/object": "@dev",
                 "estvoyage/value": "@dev",
                 "ext-sockets": "*",
                 "php": ">=5.5.0"
@@ -101,7 +102,53 @@
                 "tcp",
                 "udp"
             ],
-            "time": "2015-03-20 12:37:47"
+            "time": "2015-03-29 19:12:45"
+        },
+        {
+            "name": "estvoyage/object",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/estvoyage/object.git",
+                "reference": "ec302be52f85cee1779c391d0eb63b6d6a8a845c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/object/zipball/ec302be52f85cee1779c391d0eb63b6d6a8a845c",
+                "reference": "ec302be52f85cee1779c391d0eb63b6d6a8a845c",
+                "shasum": ""
+            },
+            "require": {
+                "estvoyage/value": "@dev",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "mageekguy/atoum": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\object\\": "classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "Interfaces and classes to manipulate class instance",
+            "homepage": "http://github.com/estvoyage/object",
+            "keywords": [
+                "East",
+                "object"
+            ],
+            "time": "2015-03-24 19:40:14"
         },
         {
             "name": "estvoyage/value",

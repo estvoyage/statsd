@@ -24,4 +24,9 @@ class console implements data\consumer
 	{
 		return $this;
 	}
+
+	function dataConsumerControllerIs(data\consumer\controller $controller)
+	{
+		return $this;
+	}
 }
