@@ -82,7 +82,7 @@ New metric: <uniques:765|s\n>
 ```
 
 A working script is available in the bundled `examples` directory, just do `php examples/nutshell.php` to execute it.
-The `examples` directory contains serveral other examples about packet, mtu, socket and metric provider.
+The `examples` directory contains several more interesting examples about packet, mtu, socket and metric provider.
 
 ## Unit Tests
 
