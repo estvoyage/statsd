@@ -10,7 +10,7 @@ In fact, using east-oriented principle force using abstraction via interface and
 ## Installation
 
 Minimal PHP version to use *estvoyage\statsd* is 5.6.  
-The recommended way to install Negotiation is through [Composer](http://getcomposer.org/), just add this in your `composer.json` and execute `php composer.phar install`:
+The recommended way to install it is through [Composer](http://getcomposer.org/), just add this in your `composer.json` and execute `php composer.phar install`:
 
 ``` json
 {
